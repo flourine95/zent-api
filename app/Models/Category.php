@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Category extends Model
 {
-    use HasFactory, Sluggable, SoftDeletes;
+    use HasFactory, SoftDeletes, Sluggable;
 
     protected $fillable = [
         'parent_id',
@@ -39,7 +39,8 @@ class Category extends Model
     public function children(): HasMany
     {
         return $this->hasMany(Category::class, 'parent_id')
-            ->orderBy('name');
+            ->orderBy('name')
+            ->chaperone();
     }
 
     public function parent(): BelongsTo
