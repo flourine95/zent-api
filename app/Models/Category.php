@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Category extends Model
 {
-    use HasFactory, SoftDeletes, Sluggable;
+    use HasFactory, Sluggable, SoftDeletes;
 
     protected $fillable = [
         'parent_id',
@@ -22,9 +22,12 @@ class Category extends Model
         'is_visible',
     ];
 
-    protected $casts = [
-        'is_visible' => 'boolean',
-    ];
+    public function casts(): array
+    {
+        return [
+            'is_visible' => 'boolean',
+        ];
+    }
 
     public function sluggable(): array
     {

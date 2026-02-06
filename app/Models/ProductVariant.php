@@ -13,12 +13,15 @@ class ProductVariant extends Model
 
     protected $fillable = ['product_id', 'sku', 'price', 'original_price', 'images', 'options'];
 
-    protected $casts = [
-        'options' => 'array',
-        'images' => 'array',
-        'price' => 'decimal:2',
-        'original_price' => 'decimal:2',
-    ];
+    public function casts(): array
+    {
+        return [
+            'options' => 'array',
+            'images' => 'array',
+            'price' => 'decimal:2',
+            'original_price' => 'decimal:2',
+        ];
+    }
 
     public function product(): BelongsTo
     {

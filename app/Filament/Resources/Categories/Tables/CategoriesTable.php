@@ -24,6 +24,8 @@ class CategoriesTable
             ->columns([
                 ImageColumn::make('image')
                     ->label('Hình ảnh')
+                    ->disk('public')
+                    ->visibility('public')
                     ->circular()
                     ->defaultImageUrl(url('/images/placeholder.svg'))
                     ->size(40),

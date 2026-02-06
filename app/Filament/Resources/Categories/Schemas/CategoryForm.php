@@ -86,7 +86,9 @@ class CategoryForm
                         FileUpload::make('image')
                             ->label('Hình ảnh')
                             ->image()
+                            ->disk('public')
                             ->directory('categories')
+                            ->visibility('public')
                             ->imageEditor()
                             ->imageEditorAspectRatios([
                                 '16:9',
@@ -94,6 +96,9 @@ class CategoryForm
                                 '1:1',
                             ])
                             ->maxSize(2048)
+                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                            ->downloadable()
+                            ->openable()
                             ->helperText('Kích thước tối đa: 2MB'),
 
                         Toggle::make('is_visible')

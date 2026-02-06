@@ -79,6 +79,8 @@ class VariantsRelationManager extends RelationManager
                     ->maxSize(2048)
                     ->maxFiles(10)
                     ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                    ->downloadable()
+                    ->openable()
                     ->helperText('Tối đa 10 ảnh, mỗi ảnh không quá 2MB')
                     ->columnSpanFull(),
             ]);
@@ -92,7 +94,6 @@ class VariantsRelationManager extends RelationManager
                 ImageColumn::make('images')
                     ->label('Hình ảnh')
                     ->disk('public')
-                    ->visibility('public')
                     ->size(60)
                     ->circular()
                     ->stacked()

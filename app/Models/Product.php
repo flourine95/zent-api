@@ -15,10 +15,13 @@ class Product extends Model
 
     protected $fillable = ['category_id', 'name', 'slug', 'description', 'thumbnail', 'specs', 'is_active'];
 
-    protected $casts = [
-        'specs' => 'array',
-        'is_active' => 'boolean',
-    ];
+    public function casts(): array
+    {
+        return [
+            'specs' => 'array',
+            'is_active' => 'boolean',
+        ];
+    }
 
     public function sluggable(): array
     {

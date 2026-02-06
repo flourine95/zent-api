@@ -108,6 +108,8 @@ class ProductForm
                             ->imageResizeTargetHeight('800')
                             ->maxSize(2048)
                             ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                            ->downloadable()
+                            ->openable()
                             ->helperText('Kích thước tối đa: 2MB'),
 
                         Toggle::make('is_active')
