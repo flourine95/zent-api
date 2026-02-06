@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Kho Tổng TP.HCM',
             'code' => 'WH-HCM-MAIN',
             'address' => 'Số 1 Võ Văn Ngân, Thủ Đức',
-            'is_active' => true
+            'is_active' => true,
         ]);
 
         // Tạo thêm kho phụ chơi chơi (để test multi-warehouse sau này)
@@ -40,13 +40,17 @@ class DatabaseSeeder extends Seeder
 
             // Tạo 10 sản phẩm cho mỗi danh mục
             $products = Product::factory(10)->create([
-                'category_id' => $category->id
+                'category_id' => $category->id,
             ]);
 
             foreach ($products as $product) {
                 $this->createVariantsForProduct($product, $mainWarehouse);
             }
         }
+
+        $this->call([
+            RolePermissionSeeder::class,
+        ]);
     }
 
     /**
@@ -68,15 +72,15 @@ class DatabaseSeeder extends Seeder
                 // Tạo Variant
                 $variant = ProductVariant::create([
                     'product_id' => $product->id,
-                    'sku' => strtoupper(Str::slug($product->name)) . "-{$color}-{$size}-" . Str::random(3),
+                    'sku' => strtoupper(Str::slug($product->name))."-{$color}-{$size}-".Str::random(3),
                     'price' => fake()->randomElement([150000, 200000, 350000, 500000]),
-                    'image' => fake()->imageUrl(300, 300, 'clothes'),
+                    'images' => null, // Null để test fallback
 
-                    // JSONB Options: Quan trọng
+                    // JSONB Options: Vietnamese only
                     'options' => [
-                        'size' => $size,
-                        'color' => $color
-                    ]
+                        'size' => $size === 'S' ? 'Nhỏ' : ($size === 'M' ? 'Vừa' : ($size === 'L' ? 'Lớn' : 'Rất lớn')),
+                        'color' => $color === 'Red' ? 'Đỏ' : ($color === 'Blue' ? 'Xanh' : ($color === 'Black' ? 'Đen' : 'Trắng')),
+                    ],
                 ]);
 
                 // Nhập kho luôn (Inventory)
@@ -84,7 +88,7 @@ class DatabaseSeeder extends Seeder
                     'warehouse_id' => $warehouse->id, // Nhập vào kho tổng ID 1
                     'product_variant_id' => $variant->id,
                     'quantity' => fake()->numberBetween(0, 50), // Có cái hết hàng (0) để test case hết hàng
-                    'shelf_location' => 'Kệ ' . fake()->randomLetter() . '-' . fake()->numberBetween(1, 10)
+                    'shelf_location' => 'Kệ '.fake()->randomLetter().'-'.fake()->numberBetween(1, 10),
                 ]);
             }
         }

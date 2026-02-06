@@ -15,20 +15,18 @@ return new class extends Migration
             $table->id();
             $table->foreignId('category_id')->nullable()->constrained()->onDelete('set null');
 
-            $table->json('name'); // Translatable field
+            $table->string('name');
             $table->string('slug')->unique();
-            $table->json('description')->nullable(); // Translatable field
+            $table->text('description')->nullable();
             $table->string('thumbnail')->nullable();
 
-            // JSONB: Lưu thông số (Brand, Material...)
-            $table->jsonb('specs')->nullable();
+            // JSON for specs (key-value pairs like Brand, Material)
+            $table->json('specs')->nullable();
 
             $table->boolean('is_active')->default(true);
             $table->softDeletes();
             $table->timestamps();
         });
-
-        DB::statement('CREATE INDEX products_specs_gin_index ON products USING gin (specs)');
     }
 
     /**

@@ -8,14 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\Translatable\HasTranslations;
 
 class Category extends Model
 {
-    use HasFactory, SoftDeletes, Sluggable, HasTranslations;
+    use HasFactory, Sluggable, SoftDeletes;
 
-    public $translatable = ['name', 'description'];
-    
     protected $fillable = [
         'parent_id',
         'name',
@@ -28,11 +25,6 @@ class Category extends Model
     protected $casts = [
         'is_visible' => 'boolean',
     ];
-    
-    public function getAvailableLocales(): array
-    {
-        return config('app.available_locales', ['vi', 'en']);
-    }
 
     public function sluggable(): array
     {
@@ -40,14 +32,14 @@ class Category extends Model
             'slug' => [
                 'source' => 'name',
                 'onUpdate' => true,
-            ]
+            ],
         ];
     }
 
     public function children(): HasMany
     {
         return $this->hasMany(Category::class, 'parent_id')
-            ->orderByRaw("name->>'vi'");
+            ->orderBy('name');
     }
 
     public function parent(): BelongsTo
@@ -64,15 +56,16 @@ class Category extends Model
     {
         return static::with('allChildren')
             ->whereNull('parent_id')
-            ->orderByRaw("name->>'vi'")
+            ->orderBy('name')
             ->get();
     }
 
     public function getFullNameAttribute(): string
     {
         if ($this->parent) {
-            return $this->parent->full_name . ' > ' . $this->name;
+            return $this->parent->full_name.' > '.$this->name;
         }
+
         return $this->name;
     }
 }

@@ -4,7 +4,6 @@ namespace App\Filament\Widgets;
 
 use App\Models\Category;
 use App\Models\Order;
-use App\Models\Post;
 use App\Models\Product;
 use App\Models\User;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
@@ -34,11 +33,6 @@ class StatsOverviewWidget extends BaseWidget
                 ->descriptionIcon('heroicon-m-shopping-cart')
                 ->color('warning')
                 ->chart([5, 7, 4, 8, 6, 9, 7, 10]),
-
-            Stat::make(__('resources.posts.label'), Post::count())
-                ->description(__('resources.posts.stats_description'))
-                ->descriptionIcon('heroicon-m-document-text')
-                ->color('primary'),
 
             Stat::make(__('resources.categories.label'), Category::count())
                 ->description(__('resources.categories.stats_description'))

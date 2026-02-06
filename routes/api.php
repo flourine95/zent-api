@@ -16,17 +16,14 @@ use Illuminate\Support\Facades\Route;
 
 // Public API routes
 Route::prefix('v1')->group(function () {
-    
-    // Products API - Multilingual support
+
+    // Products API
     Route::prefix('products')->group(function () {
         Route::get('/', [ProductController::class, 'index'])
             ->name('api.products.index');
-        
+
         Route::get('/{identifier}', [ProductController::class, 'show'])
             ->name('api.products.show');
-        
-        Route::get('/{identifier}/translations', [ProductController::class, 'translations'])
-            ->name('api.products.translations');
     });
-    
+
 });

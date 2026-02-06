@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('parent_id')->nullable()->constrained('categories')->nullOnDelete();
 
-            $table->json('name'); // Translatable field
+            $table->string('name');
             $table->string('slug')->unique();
-            $table->json('description')->nullable(); // Translatable field
+            $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->boolean('is_visible')->default(true);
 

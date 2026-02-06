@@ -11,8 +11,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Tabs;
-use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
@@ -28,42 +26,22 @@ class CategoryForm
                 Section::make('Thông tin cơ bản')
                     ->columnSpan(2)
                     ->schema([
-                        Tabs::make('Translations')
-                            ->tabs([
-                                Tab::make('Tiếng Việt')
-                                    ->icon('heroicon-o-language')
-                                    ->schema([
-                                        TextInput::make('name.vi')
-                                            ->label('Tên danh mục (VI)')
-                                            ->required()
-                                            ->maxLength(255)
-                                            ->live(onBlur: true)
-                                            ->afterStateUpdated(function (Get $get, Set $set, ?string $old, ?string $state) {
-                                                if (($get('slug') ?? '') !== Str::slug($old)) {
-                                                    return;
-                                                }
-                                                $set('slug', Str::slug($state));
-                                            }),
-                                        
-                                        Textarea::make('description.vi')
-                                            ->label('Mô tả (VI)')
-                                            ->rows(3)
-                                            ->maxLength(500),
-                                    ]),
-                                
-                                Tab::make('English')
-                                    ->icon('heroicon-o-language')
-                                    ->schema([
-                                        TextInput::make('name.en')
-                                            ->label('Category Name (EN)')
-                                            ->maxLength(255),
-                                        
-                                        Textarea::make('description.en')
-                                            ->label('Description (EN)')
-                                            ->rows(3)
-                                            ->maxLength(500),
-                                    ]),
-                            ]),
+                        TextInput::make('name')
+                            ->label('Tên danh mục')
+                            ->required()
+                            ->maxLength(255)
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function (Get $get, Set $set, ?string $old, ?string $state) {
+                                if (($get('slug') ?? '') !== Str::slug($old)) {
+                                    return;
+                                }
+                                $set('slug', Str::slug($state));
+                            }),
+
+                        Textarea::make('description')
+                            ->label('Mô tả')
+                            ->rows(3)
+                            ->maxLength(500),
 
                         Grid::make(2)
                             ->schema([
@@ -77,21 +55,20 @@ class CategoryForm
                                         Action::make('generateSlug')
                                             ->icon('heroicon-m-arrow-path')
                                             ->action(function (Get $get, Set $set) {
-                                                $set('slug', Str::slug($get('name.vi')));
+                                                $set('slug', Str::slug($get('name')));
                                             })
                                     ),
 
                                 Select::make('parent_id')
                                     ->label('Danh mục cha')
-                                    ->relationship('parent', 'name', modifyQueryUsing: fn ($query) => $query->orderByRaw("name->>'vi'"))
+                                    ->relationship('parent', 'name')
                                     ->searchable()
                                     ->preload()
                                     ->native(false)
                                     ->placeholder('Chọn danh mục cha (để trống nếu là danh mục gốc)')
                                     ->getOptionLabelFromRecordUsing(fn (Category $record) => $record->full_name)
                                     ->options(function (?Category $record) {
-                                        $query = Category::query()
-                                            ->orderByRaw("name->>'vi'");
+                                        $query = Category::query()->orderBy('name');
 
                                         if ($record) {
                                             $query->where('id', '!=', $record->id);

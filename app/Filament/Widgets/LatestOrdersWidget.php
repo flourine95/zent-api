@@ -11,7 +11,7 @@ class LatestOrdersWidget extends BaseWidget
 {
     protected static ?int $sort = 2;
 
-    protected int | string | array $columnSpan = 'full';
+    protected int|string|array $columnSpan = 'full';
 
     public function table(Table $table): Table
     {
@@ -23,21 +23,21 @@ class LatestOrdersWidget extends BaseWidget
             )
             ->columns([
                 Tables\Columns\TextColumn::make('order_number')
-                    ->label(__('resources.orders.fields.order_number'))
+                    ->label('Mã đơn hàng')
                     ->searchable()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('customer_name')
-                    ->label(__('resources.orders.fields.customer_name'))
+                    ->label('Tên khách hàng')
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('total_amount')
-                    ->label(__('resources.orders.fields.total_amount'))
+                    ->label('Tổng tiền')
                     ->money('VND')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('status')
-                    ->label(__('resources.orders.fields.status'))
+                    ->label('Trạng thái')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'pending' => 'warning',
@@ -48,10 +48,10 @@ class LatestOrdersWidget extends BaseWidget
                     }),
 
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label(__('resources.orders.fields.created_at'))
+                    ->label('Ngày tạo')
                     ->dateTime()
                     ->sortable(),
             ])
-            ->heading(__('resources.orders.widgets.latest_orders'));
+            ->heading('Đơn hàng mới nhất');
     }
 }

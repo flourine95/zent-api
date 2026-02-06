@@ -2,12 +2,12 @@
 
 namespace App\Filament\Resources\Products\Schemas;
 
-use App\Filament\Components\TranslatableTabs;
 use App\Models\Category;
 use App\Models\Product;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\KeyValue;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -25,79 +25,95 @@ class ProductForm
         return $schema
             ->columns(3)
             ->schema([
-                Section::make(__('resources.products.sections.info'))
+                Section::make('Thông tin sản phẩm')
                     ->columnSpan(2)
                     ->schema([
-                        // Sử dụng TranslatableTabs component
-                        TranslatableTabs::make(
-                            fields: [
-                                'name' => 'text',
-                                'description' => 'textarea',
-                            ],
-                            labels: [
-                                'name' => __('resources.products.fields.name'),
-                                'description' => __('resources.products.fields.description'),
-                            ]
-                        ),
+                        TextInput::make('name')
+                            ->label('Tên sản phẩm')
+                            ->required()
+                            ->maxLength(255)
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function (Get $get, Set $set, ?string $state) {
+                                if (! $get('slug')) {
+                                    $set('slug', Str::slug($state));
+                                }
+                            }),
 
                         Grid::make(2)
                             ->schema([
                                 TextInput::make('slug')
-                                    ->label(__('resources.products.fields.slug'))
+                                    ->label('Slug')
                                     ->required()
                                     ->maxLength(255)
                                     ->unique(Product::class, 'slug', ignoreRecord: true)
-                                    ->helperText(__('resources.products.fields.slug_helper'))
+                                    ->helperText('URL thân thiện SEO')
                                     ->suffixAction(
                                         Action::make('generateSlug')
                                             ->icon('heroicon-m-arrow-path')
                                             ->action(function (Get $get, Set $set) {
-                                                // Lấy name từ locale mặc định
-                                                $defaultLocale = config('locales.default', 'vi');
-                                                $name = $get("name.{$defaultLocale}");
-                                                $set('slug', Str::slug($name));
+                                                $name = $get('name');
+                                                if ($name) {
+                                                    $set('slug', Str::slug($name));
+                                                }
                                             })
                                     ),
 
                                 Select::make('category_id')
-                                    ->label(__('resources.products.fields.category'))
-                                    ->relationship('category', 'name', modifyQueryUsing: fn ($query) => $query->orderByRaw("name->>'vi'"))
+                                    ->label('Danh mục')
+                                    ->relationship('category', 'name')
                                     ->searchable()
                                     ->preload()
                                     ->native(false)
-                                    ->placeholder(__('resources.products.fields.category_placeholder'))
+                                    ->placeholder('Chọn danh mục')
                                     ->getOptionLabelFromRecordUsing(fn (Category $record) => $record->name),
                             ]),
 
+                        RichEditor::make('description')
+                            ->label('Mô tả')
+                            ->toolbarButtons([
+                                'bold', 'italic', 'underline', 'strike',
+                                'h2', 'h3',
+                                'bulletList', 'orderedList', 'blockquote',
+                                'link', 'undo', 'redo',
+                            ])
+                            ->columnSpanFull(),
+
                         KeyValue::make('specs')
-                            ->label(__('resources.products.fields.specs'))
-                            ->keyLabel(__('resources.products.fields.specs_key'))
-                            ->valueLabel(__('resources.products.fields.specs_value'))
-                            ->addActionLabel(__('resources.products.fields.specs_add'))
-                            ->helperText(__('resources.products.fields.specs_helper'))
+                            ->label('Thông số kỹ thuật')
+                            ->keyLabel('Tên thông số')
+                            ->valueLabel('Giá trị')
+                            ->addActionLabel('Thêm thông số')
+                            ->helperText('Ví dụ: Thương hiệu => Nike, Chất liệu => Cotton')
                             ->columnSpanFull(),
                     ]),
 
-                Section::make(__('resources.products.sections.media'))
+                Section::make('Media & Trạng thái')
                     ->columnSpan(1)
                     ->schema([
                         FileUpload::make('thumbnail')
-                            ->label(__('resources.products.fields.thumbnail'))
+                            ->label('Hình ảnh đại diện')
                             ->image()
-                            ->directory('products')
+                            ->disk('public')
+                            ->directory('products/thumbnails')
+                            ->visibility('public')
                             ->imageEditor()
                             ->imageEditorAspectRatios([
                                 '16:9',
                                 '4:3',
                                 '1:1',
                             ])
+                            ->imageResizeMode('cover')
+                            ->imageCropAspectRatio('1:1')
+                            ->imageResizeTargetWidth('800')
+                            ->imageResizeTargetHeight('800')
                             ->maxSize(2048)
-                            ->helperText(__('resources.products.fields.thumbnail_helper')),
+                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                            ->helperText('Kích thước tối đa: 2MB'),
 
                         Toggle::make('is_active')
-                            ->label(__('resources.products.fields.is_active'))
+                            ->label('Kích hoạt')
                             ->default(true)
-                            ->helperText(__('resources.products.fields.is_active_helper')),
+                            ->helperText('Bật/tắt hiển thị sản phẩm'),
                     ]),
             ]);
     }

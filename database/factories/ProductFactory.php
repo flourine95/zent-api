@@ -18,26 +18,23 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         $prefixes = ['Premium', 'Basic', 'Essential', 'Vintage', 'Streetwear'];
-        $types = ['T-Shirt', 'Polo', 'Hoodie', 'Jeans', 'Jacket'];
+        $types = ['Áo thun', 'Áo polo', 'Áo hoodie', 'Quần jeans', 'Áo khoác'];
         $brands = ['Coolmate', 'Uniqlo', 'Adidas', 'Nike', 'Zara'];
 
-        $name = fake()->randomElement($prefixes) . ' ' .
-            fake()->randomElement($types) . ' ' .
-            fake()->randomElement($brands) . ' ' .
-            fake()->year();
+        $name = fake()->randomElement($prefixes).' '.
+            fake()->randomElement($types).' '.
+            fake()->randomElement($brands);
 
         return [
             'name' => $name,
-            'slug' => Str::slug($name) . '-' . Str::random(5),
+            'slug' => Str::slug($name).'-'.Str::random(5),
             'description' => fake()->paragraphs(2, true),
-            'thumbnail' => fake()->imageUrl(600, 600, 'fashion'),
-
-            // JSONB Specs: Giả lập thông số kỹ thuật
+            'thumbnail' => null,
             'specs' => [
-                'brand' => fake()->randomElement($brands),
-                'material' => fake()->randomElement(['100% Cotton', 'Polyester', 'Vải Kaki', 'Denim']),
-                'origin' => fake()->randomElement(['Vietnam', 'Korea', 'China']),
-                'weight' => fake()->numberBetween(200, 500) . 'g'
+                'Thương hiệu' => fake()->randomElement($brands),
+                'Chất liệu' => fake()->randomElement(['100% Cotton', 'Polyester', 'Vải Kaki', 'Denim']),
+                'Xuất xứ' => fake()->randomElement(['Việt Nam', 'Hàn Quốc', 'Trung Quốc']),
+                'Trọng lượng' => fake()->numberBetween(200, 500).'g',
             ],
             'is_active' => true,
         ];

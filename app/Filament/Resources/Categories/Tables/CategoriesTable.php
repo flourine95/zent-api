@@ -25,29 +25,22 @@ class CategoriesTable
                 ImageColumn::make('image')
                     ->label('Hình ảnh')
                     ->circular()
-                    ->defaultImageUrl(url('/images/placeholder.png'))
+                    ->defaultImageUrl(url('/images/placeholder.svg'))
                     ->size(40),
 
                 TextColumn::make('name')
                     ->label('Tên danh mục')
                     ->searchable()
-                    ->sortable(query: function ($query, $direction) {
-                        // Sort by JSON field for current locale
-                        return $query->orderByRaw("name->>'vi' {$direction}");
-                    })
+                    ->sortable()
                     ->weight('medium')
-                    ->description(fn(Category $record): string => $record->slug),
+                    ->description(fn (Category $record): string => $record->slug),
 
                 TextColumn::make('parent.name')
                     ->label('Danh mục cha')
                     ->badge()
                     ->color('gray')
                     ->default('—')
-                    ->sortable(query: function ($query, $direction) {
-                        // Sort by parent's JSON name field
-                        return $query->join('categories as parent_categories', 'categories.parent_id', '=', 'parent_categories.id')
-                            ->orderByRaw("parent_categories.name->>'vi' {$direction}");
-                    })
+                    ->sortable()
                     ->searchable(),
 
                 TextColumn::make('children_count')
@@ -89,7 +82,7 @@ class CategoriesTable
             ->filters([
                 SelectFilter::make('parent_id')
                     ->label('Danh mục cha')
-                    ->relationship('parent', 'name', modifyQueryUsing: fn ($query) => $query->orderByRaw("name->>'vi'"))
+                    ->relationship('parent', 'name')
                     ->searchable()
                     ->preload(),
 

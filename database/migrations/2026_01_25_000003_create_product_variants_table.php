@@ -16,18 +16,18 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
 
             $table->string('sku')->unique();
-            $table->decimal('price', 15);
-            $table->decimal('original_price', 15)->nullable();
-            $table->string('image')->nullable();
+            $table->decimal('price', 15, 2);
+            $table->decimal('original_price', 15, 2)->nullable();
 
-            // JSONB: Lưu Size/Color (Vd: {"size": "L", "color": "Red"})
-            $table->jsonb('options');
+            // JSON for multiple images array
+            $table->json('images')->nullable();
+
+            // JSON for variant options (size, color, etc.)
+            $table->json('options')->nullable();
 
             $table->softDeletes();
             $table->timestamps();
         });
-
-        DB::statement('CREATE INDEX product_variants_options_gin_index ON product_variants USING gin (options)');
     }
 
     /**
