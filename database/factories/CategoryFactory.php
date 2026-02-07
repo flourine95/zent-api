@@ -19,13 +19,14 @@ class CategoryFactory extends Factory
     {
         $name = fake()->unique()->randomElement([
             'Áo Thun', 'Áo Polo', 'Quần Jean', 'Quần Short',
-            'Giày Sneaker', 'Phụ Kiện', 'Jacket', 'Hoodie'
+            'Giày Sneaker', 'Phụ Kiện', 'Jacket', 'Hoodie',
         ]);
 
         return [
             'name' => $name,
             'slug' => Str::slug($name),
-            'image' => fake()->imageUrl(640, 480, 'fashion'),
+            'image' => null,
+            'description' => fake()->sentence(),
             'is_visible' => true,
         ];
     }

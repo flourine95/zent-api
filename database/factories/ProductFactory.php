@@ -28,13 +28,13 @@ class ProductFactory extends Factory
         return [
             'name' => $name,
             'slug' => Str::slug($name).'-'.Str::random(5),
-            'description' => fake()->paragraphs(2, true),
+            'description' => fake()->sentence(10),
             'thumbnail' => null,
             'specs' => [
-                'Thương hiệu' => fake()->randomElement($brands),
-                'Chất liệu' => fake()->randomElement(['100% Cotton', 'Polyester', 'Vải Kaki', 'Denim']),
-                'Xuất xứ' => fake()->randomElement(['Việt Nam', 'Hàn Quốc', 'Trung Quốc']),
-                'Trọng lượng' => fake()->numberBetween(200, 500).'g',
+                ['name' => 'Thương hiệu', 'value' => fake()->randomElement($brands)],
+                ['name' => 'Chất liệu', 'value' => fake()->randomElement(['100% Cotton', 'Polyester', 'Vải Kaki', 'Denim'])],
+                ['name' => 'Xuất xứ', 'value' => fake()->randomElement(['Việt Nam', 'Hàn Quốc', 'Trung Quốc'])],
+                ['name' => 'Trọng lượng', 'value' => fake()->numberBetween(200, 500).'g'],
             ],
             'is_active' => true,
         ];

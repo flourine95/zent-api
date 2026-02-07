@@ -6,7 +6,8 @@ use App\Models\Category;
 use App\Models\Product;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\KeyValue;
+use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -37,7 +38,9 @@ class ProductForm
                                 if (! $get('slug')) {
                                     $set('slug', Str::slug($state));
                                 }
-                            }),
+                            })
+                            ->autocomplete(false)
+                            ->columnSpanFull(),
 
                         Grid::make(2)
                             ->schema([
@@ -69,21 +72,37 @@ class ProductForm
                             ]),
 
                         RichEditor::make('description')
-                            ->label('Mô tả')
+                            ->label('Mô tả sản phẩm')
                             ->toolbarButtons([
                                 'bold', 'italic', 'underline', 'strike',
                                 'h2', 'h3',
                                 'bulletList', 'orderedList', 'blockquote',
                                 'link', 'undo', 'redo',
                             ])
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsDirectory('products/attachments')
+                            ->fileAttachmentsVisibility('public')
                             ->columnSpanFull(),
 
-                        KeyValue::make('specs')
+                        Repeater::make('specs')
                             ->label('Thông số kỹ thuật')
-                            ->keyLabel('Tên thông số')
-                            ->valueLabel('Giá trị')
+                            ->schema([
+                                TextInput::make('name')
+                                    ->label('Tên thông số')
+                                    ->required()
+                                    ->placeholder('VD: Thương hiệu, Chất liệu, Xuất xứ'),
+
+                                TextInput::make('value')
+                                    ->label('Giá trị')
+                                    ->required()
+                                    ->placeholder('VD: Nike, Cotton, Việt Nam'),
+                            ])
+                            ->columns(2)
                             ->addActionLabel('Thêm thông số')
-                            ->helperText('Ví dụ: Thương hiệu => Nike, Chất liệu => Cotton')
+                            ->reorderable()
+                            ->collapsible()
+                            ->itemLabel(fn (array $state): ?string => $state['name'] ?? null)
+                            ->defaultItems(0)
                             ->columnSpanFull(),
                     ]),
 
@@ -110,12 +129,24 @@ class ProductForm
                             ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
                             ->downloadable()
                             ->openable()
+                            ->previewable()
                             ->helperText('Kích thước tối đa: 2MB'),
 
                         Toggle::make('is_active')
                             ->label('Kích hoạt')
                             ->default(true)
+                            ->inline(false)
                             ->helperText('Bật/tắt hiển thị sản phẩm'),
+
+                        Placeholder::make('created_at')
+                            ->label('Ngày tạo')
+                            ->content(fn (?Product $record): string => $record?->created_at?->diffForHumans() ?? '-')
+                            ->visible(fn (?Product $record): bool => $record !== null),
+
+                        Placeholder::make('updated_at')
+                            ->label('Cập nhật lần cuối')
+                            ->content(fn (?Product $record): string => $record?->updated_at?->diffForHumans() ?? '-')
+                            ->visible(fn (?Product $record): bool => $record !== null),
                     ]),
             ]);
     }

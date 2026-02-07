@@ -78,8 +78,8 @@ class DatabaseSeeder extends Seeder
 
                     // JSONB Options: Vietnamese only
                     'options' => [
-                        'size' => $size === 'S' ? 'Nhỏ' : ($size === 'M' ? 'Vừa' : ($size === 'L' ? 'Lớn' : 'Rất lớn')),
-                        'color' => $color === 'Red' ? 'Đỏ' : ($color === 'Blue' ? 'Xanh' : ($color === 'Black' ? 'Đen' : 'Trắng')),
+                        ['attribute' => 'Kích thước', 'value' => $size === 'S' ? 'Nhỏ' : ($size === 'M' ? 'Vừa' : ($size === 'L' ? 'Lớn' : 'Rất lớn'))],
+                        ['attribute' => 'Màu sắc', 'value' => $color === 'Red' ? 'Đỏ' : ($color === 'Blue' ? 'Xanh' : ($color === 'Black' ? 'Đen' : 'Trắng'))],
                     ],
                 ]);
 

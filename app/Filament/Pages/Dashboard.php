@@ -16,7 +16,7 @@ class Dashboard extends BaseDashboard
         return __('navigation.dashboard');
     }
 
-    public function getColumns(): int | array
+    public function getColumns(): int|array
     {
         return [
             'md' => 2,

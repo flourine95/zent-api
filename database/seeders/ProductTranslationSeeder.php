@@ -161,7 +161,7 @@ class ProductTranslationSeeder extends Seeder
 
         foreach ($products as $productData) {
             $category = Category::where('slug', $productData['category_slug'])->first();
-            
+
             if ($category) {
                 Product::firstOrCreate(
                     ['slug' => $productData['slug']],
@@ -176,6 +176,6 @@ class ProductTranslationSeeder extends Seeder
             }
         }
 
-        $this->command->info('✅ Created ' . count($products) . ' sample products with translations');
+        $this->command->info('✅ Created '.count($products).' sample products with translations');
     }
 }

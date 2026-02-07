@@ -13,7 +13,15 @@ class Product extends Model
 {
     use HasFactory, Sluggable, SoftDeletes;
 
-    protected $fillable = ['category_id', 'name', 'slug', 'description', 'thumbnail', 'specs', 'is_active'];
+    protected $fillable = [
+        'category_id',
+        'name',
+        'slug',
+        'description',
+        'thumbnail',
+        'specs',
+        'is_active',
+    ];
 
     public function casts(): array
     {

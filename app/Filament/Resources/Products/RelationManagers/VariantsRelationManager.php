@@ -12,7 +12,8 @@ use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\KeyValue;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
@@ -52,12 +53,40 @@ class VariantsRelationManager extends RelationManager
                     ->minValue(0)
                     ->helperText('Giá trước khi giảm (tùy chọn)'),
 
-                KeyValue::make('options')
+                Repeater::make('options')
                     ->label('Thuộc tính biến thể')
-                    ->keyLabel('Thuộc tính')
-                    ->valueLabel('Giá trị')
+                    ->schema([
+                        Select::make('attribute')
+                            ->label('Thuộc tính')
+                            ->options([
+                                'Màu sắc' => 'Màu sắc',
+                                'Kích thước' => 'Kích thước',
+                                'Chất liệu' => 'Chất liệu',
+                                'Kiểu dáng' => 'Kiểu dáng',
+                            ])
+                            ->searchable()
+                            ->required()
+                            ->createOptionForm([
+                                TextInput::make('name')
+                                    ->label('Tên thuộc tính')
+                                    ->required(),
+                            ])
+                            ->createOptionUsing(fn (string $name): string => $name),
+
+                        TextInput::make('value')
+                            ->label('Giá trị')
+                            ->required()
+                            ->placeholder('VD: Đỏ, XL, Cotton'),
+                    ])
+                    ->columns(2)
                     ->addActionLabel('Thêm thuộc tính')
-                    ->helperText('Ví dụ: Màu sắc => Đỏ, Kích thước => XL')
+                    ->reorderable()
+                    ->collapsible()
+                    ->itemLabel(fn (array $state): ?string => isset($state['attribute'], $state['value'])
+                            ? "{$state['attribute']}: {$state['value']}"
+                            : null
+                    )
+                    ->defaultItems(1)
                     ->columnSpanFull(),
 
                 FileUpload::make('images')
@@ -116,10 +145,15 @@ class VariantsRelationManager extends RelationManager
                         }
 
                         return collect($state)
-                            ->map(fn ($value, $key) => "{$key}: {$value}")
+                            ->map(fn ($item) => is_array($item) && isset($item['attribute'], $item['value'])
+                                    ? "{$item['attribute']}: {$item['value']}"
+                                    : (is_array($item) ? implode(': ', $item) : $item)
+                            )
                             ->join(', ');
                     })
-                    ->wrap(),
+                    ->wrap()
+                    ->badge()
+                    ->separator(','),
 
                 TextColumn::make('price')
                     ->label('Giá bán')

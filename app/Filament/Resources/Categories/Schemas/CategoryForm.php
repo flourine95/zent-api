@@ -5,8 +5,9 @@ namespace App\Filament\Resources\Categories\Schemas;
 use App\Models\Category;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
@@ -36,12 +37,17 @@ class CategoryForm
                                     return;
                                 }
                                 $set('slug', Str::slug($state));
-                            }),
+                            })
+                            ->autocomplete(false)
+                            ->columnSpanFull(),
 
-                        Textarea::make('description')
-                            ->label('Mô tả')
-                            ->rows(3)
-                            ->maxLength(500),
+                        RichEditor::make('description')
+                            ->label('Mô tả danh mục')
+                            ->toolbarButtons([
+                                'bold', 'italic', 'bulletList', 'orderedList', 'link',
+                            ])
+                            ->maxLength(1000)
+                            ->columnSpanFull(),
 
                         Grid::make(2)
                             ->schema([
@@ -99,12 +105,24 @@ class CategoryForm
                             ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
                             ->downloadable()
                             ->openable()
+                            ->previewable()
                             ->helperText('Kích thước tối đa: 2MB'),
 
                         Toggle::make('is_visible')
                             ->label('Hiển thị công khai')
                             ->default(true)
+                            ->inline(false)
                             ->helperText('Bật/tắt hiển thị danh mục này trên website'),
+
+                        Placeholder::make('created_at')
+                            ->label('Ngày tạo')
+                            ->content(fn (?Category $record): string => $record?->created_at?->diffForHumans() ?? '-')
+                            ->visible(fn (?Category $record): bool => $record !== null),
+
+                        Placeholder::make('updated_at')
+                            ->label('Cập nhật lần cuối')
+                            ->content(fn (?Category $record): string => $record?->updated_at?->diffForHumans() ?? '-')
+                            ->visible(fn (?Category $record): bool => $record !== null),
                     ]),
             ]);
     }

@@ -3,8 +3,8 @@
 namespace App\Filament\Resources\Roles\Schemas;
 
 use Filament\Forms\Components\CheckboxList;
-use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Spatie\Permission\Models\Permission;
 
@@ -23,7 +23,7 @@ class RoleForm
                             ->maxLength(255)
                             ->placeholder('e.g., Super Admin, Manager, Staff')
                             ->helperText(__('resources.roles.fields.name_helper')),
-                        
+
                         TextInput::make('guard_name')
                             ->label(__('resources.roles.fields.guard_name'))
                             ->required()
@@ -33,7 +33,7 @@ class RoleForm
                             ->dehydrated(),
                     ])
                     ->columns(2),
-                
+
                 Section::make(__('resources.roles.sections.permissions'))
                     ->description(__('resources.roles.sections.permissions_description'))
                     ->schema(self::getPermissionSections())
@@ -46,6 +46,7 @@ class RoleForm
         $permissions = Permission::all()->groupBy(function ($permission) {
             // Extract resource name from permission (e.g., 'view_any_user' -> 'user')
             $parts = explode('_', $permission->name);
+
             return end($parts);
         });
 
@@ -100,7 +101,7 @@ class RoleForm
 
     protected static function getResourceDescription(string $resource): string
     {
-        return 'Manage permissions for ' . $resource . ' module';
+        return 'Manage permissions for '.$resource.' module';
     }
 
     protected static function getResourceIcon(string $resource): string
@@ -125,7 +126,7 @@ class RoleForm
         // Convert 'view_any_user' to 'View Any'
         $parts = explode('_', $permission);
         array_pop($parts); // Remove resource name
-        
+
         return ucwords(str_replace('_', ' ', implode('_', $parts)));
     }
 }

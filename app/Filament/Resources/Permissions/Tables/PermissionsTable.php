@@ -26,16 +26,18 @@ class PermissionsTable
                         $parts = explode('_', $state);
                         $resource = array_pop($parts);
                         $action = ucwords(str_replace('_', ' ', implode('_', $parts)));
+
                         return $action;
                     })
                     ->description(fn ($record) => $record->name)
                     ->icon(fn ($record) => self::getActionIcon($record->name)),
-                
+
                 TextColumn::make('resource')
                     ->label(__('resources.permissions.fields.resource'))
                     ->getStateUsing(function ($record) {
                         // Extract resource from permission name
                         $parts = explode('_', $record->name);
+
                         return ucfirst(end($parts));
                     })
                     ->badge()
@@ -44,14 +46,14 @@ class PermissionsTable
                     ->searchable(query: function (Builder $query, string $search): Builder {
                         return $query->where('name', 'like', "%_{$search}");
                     }),
-                
+
                 TextColumn::make('description')
                     ->label(__('resources.permissions.fields.description'))
                     ->searchable()
                     ->limit(50)
                     ->tooltip(fn ($record) => $record->description)
                     ->toggleable(),
-                
+
                 TextColumn::make('roles.name')
                     ->label(__('resources.permissions.fields.roles'))
                     ->badge()
@@ -60,14 +62,14 @@ class PermissionsTable
                     ->limitList(3)
                     ->searchable()
                     ->toggleable(),
-                
+
                 TextColumn::make('guard_name')
                     ->label(__('resources.permissions.fields.guard_name'))
                     ->badge()
                     ->color('gray')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                
+
                 TextColumn::make('created_at')
                     ->label(__('resources.permissions.fields.created_at'))
                     ->dateTime('d M Y, H:i')
@@ -82,9 +84,10 @@ class PermissionsTable
                         if (empty($data['value'])) {
                             return $query;
                         }
+
                         return $query->where('name', 'like', "%_{$data['value']}");
                     }),
-                
+
                 SelectFilter::make('guard_name')
                     ->label(__('resources.permissions.filters.guard'))
                     ->options([

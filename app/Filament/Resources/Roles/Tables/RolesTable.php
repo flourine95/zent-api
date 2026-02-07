@@ -21,31 +21,31 @@ class RolesTable
                     ->sortable()
                     ->weight('bold')
                     ->copyable(),
-                
+
                 TextColumn::make('permissions_count')
                     ->label('Permissions')
                     ->counts('permissions')
                     ->badge()
                     ->color('info'),
-                
+
                 TextColumn::make('users_count')
                     ->label('Users')
                     ->counts('users')
                     ->badge()
                     ->color('success'),
-                
+
                 TextColumn::make('guard_name')
                     ->label('Guard')
                     ->badge()
                     ->searchable()
                     ->sortable(),
-                
+
                 TextColumn::make('created_at')
                     ->label('Created')
                     ->dateTime('d M Y, H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                
+
                 TextColumn::make('updated_at')
                     ->label('Updated')
                     ->dateTime('d M Y, H:i')

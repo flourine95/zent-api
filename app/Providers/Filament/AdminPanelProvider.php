@@ -48,12 +48,12 @@ class AdminPanelProvider extends PanelProvider
             ->userMenuItems([
                 Action::make('language_vi')
                     ->label('🇻🇳 Tiếng Việt')
-                    ->url(fn () => url()->current() . '?switch_locale=vi')
-                    ->visible(fn () => !in_array(App::getLocale(), ['vi'])),
+                    ->url(fn () => url()->current().'?switch_locale=vi')
+                    ->visible(fn () => ! in_array(App::getLocale(), ['vi'])),
 
                 Action::make('language_en')
                     ->label('🇬🇧 English')
-                    ->url(fn () => url()->current() . '?switch_locale=en')
+                    ->url(fn () => url()->current().'?switch_locale=en')
                     ->visible(fn () => App::getLocale() !== 'en'),
             ])
             ->middleware([

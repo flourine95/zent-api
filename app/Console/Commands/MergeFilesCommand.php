@@ -23,12 +23,12 @@ class MergeFilesCommand extends Command
         '.idea',
         'storage',
         'public', // Thường chứa ảnh/assets nặng, bỏ qua nếu chỉ cần code
-        'bootstrap/cache'
+        'bootstrap/cache',
     ];
 
     // Danh sách đuôi file cần lấy (chỉ lấy code, bỏ qua ảnh/exe)
     protected $allowedExtensions = [
-        'php', 'js', 'ts', 'vue', 'blade.php', 'html', 'css', 'scss', 'json', 'sql', 'env'
+        'php', 'js', 'ts', 'vue', 'blade.php', 'html', 'css', 'scss', 'json', 'sql', 'env',
     ];
 
     public function handle()
@@ -41,13 +41,14 @@ class MergeFilesCommand extends Command
         $outputFileName = $this->argument('output') ?? 'all_code.txt';
         $outputFilePath = base_path($outputFileName);
 
-        if (!File::isDirectory($targetPath)) {
+        if (! File::isDirectory($targetPath)) {
             $this->error("❌ Thư mục không tồn tại: $targetPath");
+
             return 1;
         }
 
-        $this->info("📂 Đang quét: " . $targetPath);
-        $this->info("🚫 Đang bỏ qua: " . implode(', ', $this->ignoredFolders));
+        $this->info('📂 Đang quét: '.$targetPath);
+        $this->info('🚫 Đang bỏ qua: '.implode(', ', $this->ignoredFolders));
 
         // 2. Lấy TẤT CẢ file (bao gồm thư mục con - Recursive)
         // Dùng allFiles thay vì files
@@ -56,7 +57,9 @@ class MergeFilesCommand extends Command
         // 3. Lọc file (Bỏ vendor, node_modules và file không phải code)
         $filesToMerge = array_filter($allFiles, function (SplFileInfo $file) use ($outputFileName) {
             // A. Bỏ qua chính file output
-            if ($file->getFilename() === $outputFileName) return false;
+            if ($file->getFilename() === $outputFileName) {
+                return false;
+            }
 
             // B. Kiểm tra xem file có nằm trong thư mục bị cấm không
             $relativePath = $file->getRelativePath();
@@ -68,7 +71,7 @@ class MergeFilesCommand extends Command
             }
 
             // C. Chỉ lấy các đuôi file cho phép (Code)
-            if (!in_array($file->getExtension(), $this->allowedExtensions)) {
+            if (! in_array($file->getExtension(), $this->allowedExtensions)) {
                 return false;
             }
 
@@ -76,7 +79,8 @@ class MergeFilesCommand extends Command
         });
 
         if (empty($filesToMerge)) {
-            $this->warn("⚠️ Không tìm thấy file code nào phù hợp.");
+            $this->warn('⚠️ Không tìm thấy file code nào phù hợp.');
+
             return 0;
         }
 
@@ -91,15 +95,15 @@ class MergeFilesCommand extends Command
 
         foreach ($filesToMerge as $file) {
             // Header đẹp để AI hoặc người đọc dễ phân biệt
-            $header  = "\n" . str_repeat('=', 50) . "\n";
-            $header .= "FILE PATH: " . $file->getRelativePathname() . "\n";
-            $header .= str_repeat('=', 50) . "\n";
+            $header = "\n".str_repeat('=', 50)."\n";
+            $header .= 'FILE PATH: '.$file->getRelativePathname()."\n";
+            $header .= str_repeat('=', 50)."\n";
 
             fwrite($handle, $header);
 
             // Đọc và ghi nội dung
             $fileHandle = fopen($file->getRealPath(), 'r');
-            while (!feof($fileHandle)) {
+            while (! feof($fileHandle)) {
                 fwrite($handle, fread($fileHandle, 8192));
             }
             fclose($fileHandle);
