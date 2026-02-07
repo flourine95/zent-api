@@ -103,6 +103,12 @@ class ProductsTable
                     RestoreBulkAction::make(),
                 ]),
             ])
+            ->emptyStateHeading('Chưa có sản phẩm nào')
+            ->emptyStateDescription('Bắt đầu bằng cách tạo sản phẩm đầu tiên của bạn.')
+            ->emptyStateIcon('heroicon-o-cube')
+            ->emptyStateActions([
+                \Filament\Actions\CreateAction::make(),
+            ])
             ->defaultSort('created_at', 'desc');
     }
 }

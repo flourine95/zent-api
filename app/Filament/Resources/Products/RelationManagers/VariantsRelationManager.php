@@ -87,6 +87,52 @@ class VariantsRelationManager extends RelationManager
                             : null
                     )
                     ->defaultItems(1)
+                    ->live()
+                    ->afterStateUpdated(function ($state, callable $set, callable $get, $livewire) {
+                        // Kiểm tra trùng lặp options với variants khác
+                        if (empty($state)) {
+                            return;
+                        }
+
+                        $productId = $livewire->getOwnerRecord()->id;
+                        $currentVariantId = $livewire->getMountedTableActionRecord()?->id;
+
+                        // Chuẩn hóa options để so sánh
+                        $normalizedOptions = collect($state)
+                            ->sortBy('attribute')
+                            ->map(fn ($item) => [
+                                'attribute' => $item['attribute'] ?? '',
+                                'value' => $item['value'] ?? '',
+                            ])
+                            ->values()
+                            ->toArray();
+
+                        // Tìm variant trùng
+                        $duplicate = \App\Models\ProductVariant::where('product_id', $productId)
+                            ->when($currentVariantId, fn ($q) => $q->where('id', '!=', $currentVariantId))
+                            ->get()
+                            ->first(function ($variant) use ($normalizedOptions) {
+                                $variantOptions = collect($variant->options ?? [])
+                                    ->sortBy('attribute')
+                                    ->map(fn ($item) => [
+                                        'attribute' => $item['attribute'] ?? '',
+                                        'value' => $item['value'] ?? '',
+                                    ])
+                                    ->values()
+                                    ->toArray();
+
+                                return $variantOptions === $normalizedOptions;
+                            });
+
+                        if ($duplicate) {
+                            \Filament\Notifications\Notification::make()
+                                ->warning()
+                                ->title('Cảnh báo: Thuộc tính trùng lặp')
+                                ->body("Đã tồn tại variant với thuộc tính này (SKU: {$duplicate->sku})")
+                                ->persistent()
+                                ->send();
+                        }
+                    })
                     ->columnSpanFull(),
 
                 FileUpload::make('images')
@@ -199,6 +245,13 @@ class VariantsRelationManager extends RelationManager
                     RestoreBulkAction::make()
                         ->label('Khôi phục đã chọn'),
                 ]),
+            ])
+            ->emptyStateHeading('Chưa có biến thể nào')
+            ->emptyStateDescription('Tạo các biến thể với màu sắc, kích thước khác nhau cho sản phẩm này.')
+            ->emptyStateIcon('heroicon-o-tag')
+            ->emptyStateActions([
+                CreateAction::make()
+                    ->label('Thêm biến thể'),
             ])
             ->defaultSort('created_at', 'desc')
             ->modifyQueryUsing(fn (Builder $query) => $query

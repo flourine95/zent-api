@@ -45,6 +45,12 @@ class UsersTable
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
+            ])
+            ->emptyStateHeading('Chưa có người dùng nào')
+            ->emptyStateDescription('Thêm người dùng để quản lý hệ thống.')
+            ->emptyStateIcon('heroicon-o-users')
+            ->emptyStateActions([
+                \Filament\Actions\CreateAction::make(),
             ]);
     }
 }

@@ -109,6 +109,12 @@ class CategoriesTable
                     ForceDeleteBulkAction::make(),
                     RestoreBulkAction::make(),
                 ]),
+            ])
+            ->emptyStateHeading('Chưa có danh mục nào')
+            ->emptyStateDescription('Tạo danh mục để phân loại sản phẩm của bạn.')
+            ->emptyStateIcon('heroicon-o-folder')
+            ->emptyStateActions([
+                \Filament\Actions\CreateAction::make(),
             ]);
     }
 }

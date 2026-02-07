@@ -68,6 +68,12 @@ class RolesTable
                     DeleteBulkAction::make(),
                 ]),
             ])
+            ->emptyStateHeading('Chưa có vai trò nào')
+            ->emptyStateDescription('Tạo vai trò để phân quyền cho người dùng.')
+            ->emptyStateIcon('heroicon-o-user-group')
+            ->emptyStateActions([
+                \Filament\Actions\CreateAction::make(),
+            ])
             ->defaultSort('name');
     }
 }

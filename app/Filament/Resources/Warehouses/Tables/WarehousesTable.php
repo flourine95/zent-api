@@ -51,6 +51,12 @@ class WarehousesTable
                     ForceDeleteBulkAction::make(),
                     RestoreBulkAction::make(),
                 ]),
+            ])
+            ->emptyStateHeading('Chưa có kho nào')
+            ->emptyStateDescription('Tạo kho để quản lý hàng tồn kho của bạn.')
+            ->emptyStateIcon('heroicon-o-building-storefront')
+            ->emptyStateActions([
+                \Filament\Actions\CreateAction::make(),
             ]);
     }
 }

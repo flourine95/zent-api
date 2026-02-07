@@ -5,8 +5,6 @@ namespace App\Providers\Filament;
 use App\Filament\Pages\Dashboard;
 use App\Filament\Widgets\LatestOrdersWidget;
 use App\Filament\Widgets\StatsOverviewWidget;
-use App\Http\Middleware\SetLocale;
-use Filament\Actions\Action;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -20,7 +18,6 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
-use Illuminate\Support\Facades\App;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
@@ -45,17 +42,6 @@ class AdminPanelProvider extends PanelProvider
                 StatsOverviewWidget::class,
                 LatestOrdersWidget::class,
             ])
-            ->userMenuItems([
-                Action::make('language_vi')
-                    ->label('🇻🇳 Tiếng Việt')
-                    ->url(fn () => url()->current().'?switch_locale=vi')
-                    ->visible(fn () => ! in_array(App::getLocale(), ['vi'])),
-
-                Action::make('language_en')
-                    ->label('🇬🇧 English')
-                    ->url(fn () => url()->current().'?switch_locale=en')
-                    ->visible(fn () => App::getLocale() !== 'en'),
-            ])
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -66,11 +52,12 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-                SetLocale::class,
             ])
             ->authMiddleware([
                 Authenticate::class,
             ])
+            ->unsavedChangesAlerts()
+            ->sidebarCollapsibleOnDesktop()
             ->databaseNotifications()
             ->databaseNotificationsPolling('30s');
     }

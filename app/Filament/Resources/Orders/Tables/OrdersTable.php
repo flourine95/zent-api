@@ -54,6 +54,9 @@ class OrdersTable
                     ForceDeleteBulkAction::make(),
                     RestoreBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->emptyStateHeading('Chưa có đơn hàng nào')
+            ->emptyStateDescription('Đơn hàng sẽ xuất hiện ở đây khi khách hàng đặt mua.')
+            ->emptyStateIcon('heroicon-o-shopping-cart');
     }
 }

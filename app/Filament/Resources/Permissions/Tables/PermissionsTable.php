@@ -103,6 +103,12 @@ class PermissionsTable
                     DeleteBulkAction::make(),
                 ]),
             ])
+            ->emptyStateHeading('Chưa có quyền nào')
+            ->emptyStateDescription('Tạo quyền để kiểm soát truy cập hệ thống.')
+            ->emptyStateIcon('heroicon-o-lock-closed')
+            ->emptyStateActions([
+                \Filament\Actions\CreateAction::make(),
+            ])
             ->defaultSort('name');
     }
 
