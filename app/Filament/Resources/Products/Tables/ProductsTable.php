@@ -2,14 +2,20 @@
 
 namespace App\Filament\Resources\Products\Tables;
 
-use Filament\Actions\BulkActionGroup;
+use App\Filament\Exports\ProductExporter;
+use App\Filament\Imports\ProductImporter;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ExportAction;
 use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\ImportAction;
 use Filament\Actions\RestoreBulkAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
@@ -38,7 +44,15 @@ class ProductsTable
                     ->label('Tên sản phẩm')
                     ->searchable()
                     ->sortable()
-                    ->weight('medium'),
+                    ->weight('medium')
+                    ->description(fn ($record) => $record->slug),
+
+                TextColumn::make('variants_count')
+                    ->label('Biến thể')
+                    ->counts('variants')
+                    ->badge()
+                    ->color('info')
+                    ->alignCenter(),
 
                 TextColumn::make('description')
                     ->label('Mô tả')
@@ -68,7 +82,8 @@ class ProductsTable
                     ->copyable()
                     ->copyMessage('Đã sao chép slug')
                     ->badge()
-                    ->color('gray'),
+                    ->color('gray')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 IconColumn::make('is_active')
                     ->label('Kích hoạt')
@@ -91,13 +106,41 @@ class ProductsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                SelectFilter::make('category_id')
+                    ->label('Danh mục')
+                    ->relationship('category', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->multiple(),
+
+                SelectFilter::make('is_active')
+                    ->label('Trạng thái')
+                    ->options([
+                        '1' => 'Kích hoạt',
+                        '0' => 'Không kích hoạt',
+                    ])
+                    ->native(false),
+
                 TrashedFilter::make(),
             ])
             ->recordActions([
+                ViewAction::make(),
                 EditAction::make(),
             ])
+            ->headerActions([
+                ImportAction::make()
+                    ->importer(ProductImporter::class)
+                    ->label('Import sản phẩm')
+                    ->color('success')
+                    ->icon('heroicon-o-arrow-down-tray'),
+                ExportAction::make()
+                    ->exporter(ProductExporter::class)
+                    ->label('Export sản phẩm')
+                    ->color('warning')
+                    ->icon('heroicon-o-arrow-up-tray'),
+            ])
             ->toolbarActions([
-                BulkActionGroup::make([
+                ActionGroup::make([
                     DeleteBulkAction::make(),
                     ForceDeleteBulkAction::make(),
                     RestoreBulkAction::make(),
@@ -106,9 +149,6 @@ class ProductsTable
             ->emptyStateHeading('Chưa có sản phẩm nào')
             ->emptyStateDescription('Bắt đầu bằng cách tạo sản phẩm đầu tiên của bạn.')
             ->emptyStateIcon('heroicon-o-cube')
-            ->emptyStateActions([
-                \Filament\Actions\CreateAction::make(),
-            ])
             ->defaultSort('created_at', 'desc');
     }
 }

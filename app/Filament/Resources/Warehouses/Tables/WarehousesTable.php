@@ -2,11 +2,12 @@
 
 namespace App\Filament\Resources\Warehouses\Tables;
 
-use Filament\Actions\BulkActionGroup;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
@@ -43,10 +44,11 @@ class WarehousesTable
                 TrashedFilter::make(),
             ])
             ->recordActions([
+                ViewAction::make(),
                 EditAction::make(),
             ])
             ->toolbarActions([
-                BulkActionGroup::make([
+                ActionGroup::make([
                     DeleteBulkAction::make(),
                     ForceDeleteBulkAction::make(),
                     RestoreBulkAction::make(),
@@ -54,9 +56,6 @@ class WarehousesTable
             ])
             ->emptyStateHeading('Chưa có kho nào')
             ->emptyStateDescription('Tạo kho để quản lý hàng tồn kho của bạn.')
-            ->emptyStateIcon('heroicon-o-building-storefront')
-            ->emptyStateActions([
-                \Filament\Actions\CreateAction::make(),
-            ]);
+            ->emptyStateIcon('heroicon-o-building-storefront');
     }
 }

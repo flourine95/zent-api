@@ -90,7 +90,11 @@ class ProductForm
                                 TextInput::make('name')
                                     ->label('Tên thông số')
                                     ->required()
-                                    ->placeholder('VD: Thương hiệu, Chất liệu, Xuất xứ'),
+                                    ->placeholder('VD: Thương hiệu, Chất liệu, Xuất xứ')
+                                    ->distinct()
+                                    ->validationMessages([
+                                        'distinct' => 'Tên thông số đã tồn tại.',
+                                    ]),
 
                                 TextInput::make('value')
                                     ->label('Giá trị')

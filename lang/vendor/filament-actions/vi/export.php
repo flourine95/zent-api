@@ -26,6 +26,18 @@ return [
 
                 ],
 
+                'actions' => [
+
+                    'deselect_all' => [
+                        'label' => 'Bỏ chọn tất cả',
+                    ],
+
+                    'select_all' => [
+                        'label' => 'Chọn tất cả',
+                    ],
+
+                ],
+
             ],
 
         ],

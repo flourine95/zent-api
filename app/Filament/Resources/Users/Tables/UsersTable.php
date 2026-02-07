@@ -2,9 +2,10 @@
 
 namespace App\Filament\Resources\Users\Tables;
 
-use Filament\Actions\BulkActionGroup;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -39,18 +40,16 @@ class UsersTable
                 //
             ])
             ->recordActions([
+                ViewAction::make(),
                 EditAction::make(),
             ])
             ->toolbarActions([
-                BulkActionGroup::make([
+                ActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
             ])
             ->emptyStateHeading('Chưa có người dùng nào')
             ->emptyStateDescription('Thêm người dùng để quản lý hệ thống.')
-            ->emptyStateIcon('heroicon-o-users')
-            ->emptyStateActions([
-                \Filament\Actions\CreateAction::make(),
-            ]);
+            ->emptyStateIcon('heroicon-o-users');
     }
 }

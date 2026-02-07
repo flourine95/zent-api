@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\Categories\Tables;
 
 use App\Models\Category;
-use Filament\Actions\BulkActionGroup;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
@@ -104,7 +104,7 @@ class CategoriesTable
                 EditAction::make(),
             ])
             ->toolbarActions([
-                BulkActionGroup::make([
+                ActionGroup::make([
                     DeleteBulkAction::make(),
                     ForceDeleteBulkAction::make(),
                     RestoreBulkAction::make(),
@@ -112,9 +112,6 @@ class CategoriesTable
             ])
             ->emptyStateHeading('Chưa có danh mục nào')
             ->emptyStateDescription('Tạo danh mục để phân loại sản phẩm của bạn.')
-            ->emptyStateIcon('heroicon-o-folder')
-            ->emptyStateActions([
-                \Filament\Actions\CreateAction::make(),
-            ]);
+            ->emptyStateIcon('heroicon-o-folder');
     }
 }
