@@ -33,18 +33,18 @@ class RolePermissionSeeder extends Seeder
 
         // Define permission actions with descriptions
         $actions = [
-            'view_any' => 'Can view the list of records',
-            'view' => 'Can view individual record details',
-            'create' => 'Can create new records',
-            'update' => 'Can edit existing records',
-            'delete' => 'Can delete records',
-            'delete_any' => 'Can bulk delete multiple records',
-            'restore' => 'Can restore soft-deleted records',
-            'restore_any' => 'Can bulk restore multiple records',
-            'force_delete' => 'Can permanently delete records',
-            'force_delete_any' => 'Can bulk permanently delete records',
-            'replicate' => 'Can duplicate/clone records',
-            'reorder' => 'Can change the order of records',
+            'view_any' => 'Xem danh sách',
+            'view' => 'Xem chi tiết',
+            'create' => 'Tạo mới',
+            'update' => 'Chỉnh sửa',
+            'delete' => 'Xóa',
+            'delete_any' => 'Xóa hàng loạt',
+            'restore' => 'Khôi phục',
+            'restore_any' => 'Khôi phục hàng loạt',
+            'force_delete' => 'Xóa vĩnh viễn',
+            'force_delete_any' => 'Xóa vĩnh viễn hàng loạt',
+            'replicate' => 'Nhân bản',
+            'reorder' => 'Sắp xếp thứ tự',
         ];
 
         // Create permissions for each resource
@@ -125,7 +125,7 @@ class RolePermissionSeeder extends Seeder
         $adminUser = User::firstOrCreate(
             ['email' => 'admin@example.com'],
             [
-                'name' => 'Admin User',
+                'name' => 'Admin',
                 'password' => bcrypt('password'),
             ]
         );
@@ -134,7 +134,7 @@ class RolePermissionSeeder extends Seeder
         $managerUser = User::firstOrCreate(
             ['email' => 'manager@example.com'],
             [
-                'name' => 'Manager User',
+                'name' => 'Manager',
                 'password' => bcrypt('password'),
             ]
         );
@@ -143,14 +143,14 @@ class RolePermissionSeeder extends Seeder
         $editorUser = User::firstOrCreate(
             ['email' => 'editor@example.com'],
             [
-                'name' => 'Editor User',
+                'name' => 'Editor',
                 'password' => bcrypt('password'),
             ]
         );
         $editorUser->assignRole($editor);
 
-        $this->command->info('Roles and permissions seeded successfully!');
-        $this->command->info('Demo users created:');
+        $this->command->info('Vai trò và quyền đã được tạo thành công!');
+        $this->command->info('Tài khoản demo:');
         $this->command->info('- superadmin@example.com / password (Super Admin)');
         $this->command->info('- admin@example.com / password (Admin)');
         $this->command->info('- manager@example.com / password (Manager)');

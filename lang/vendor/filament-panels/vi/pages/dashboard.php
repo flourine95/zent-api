@@ -2,17 +2,17 @@
 
 return [
 
-    'title' => 'Bảng điều khiển',
+    'title' => 'Dashboard',
 
     'actions' => [
 
         'filter' => [
 
-            'label' => 'Bộ lọc',
+            'label' => 'Filter',
 
             'modal' => [
 
-                'heading' => 'Bộ lọc',
+                'heading' => 'Filter',
 
                 'actions' => [
 

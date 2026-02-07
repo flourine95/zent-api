@@ -20,23 +20,39 @@ class WarehousesTable
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->searchable(),
+                    ->label('Tên kho')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('code')
-                    ->searchable(),
+                    ->label('Mã kho')
+                    ->searchable()
+                    ->sortable()
+                    ->badge()
+                    ->color('gray'),
                 TextColumn::make('address')
-                    ->searchable(),
+                    ->label('Địa chỉ')
+                    ->searchable()
+                    ->limit(50),
                 IconColumn::make('is_active')
-                    ->boolean(),
+                    ->label('Kích hoạt')
+                    ->boolean()
+                    ->trueIcon('heroicon-o-check-circle')
+                    ->falseIcon('heroicon-o-x-circle')
+                    ->trueColor('success')
+                    ->falseColor('danger'),
                 TextColumn::make('deleted_at')
-                    ->dateTime()
+                    ->label('Xóa lúc')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Ngày tạo')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->label('Cập nhật')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])

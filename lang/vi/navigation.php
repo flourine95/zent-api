@@ -1,12 +1,12 @@
 <?php
 
 return [
-    'dashboard' => 'Bảng điều khiển',
+    'dashboard' => 'Dashboard',
     'groups' => [
-        'access_control' => 'Phân quyền',
-        'content_management' => 'Quản lý nội dung',
-        'sales_management' => 'Quản lý bán hàng',
-        'warehouse_management' => 'Quản lý kho',
-        'user_management' => 'Quản lý người dùng',
+        'access_control' => 'Hệ thống',
+        'content_management' => 'Quản lý',
+        'sales_management' => 'Bán hàng',
+        'warehouse_management' => 'Kho hàng',
+        'user_management' => 'Hệ thống',
     ],
 ];

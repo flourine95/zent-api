@@ -13,11 +13,20 @@ class WarehouseForm
         return $schema
             ->components([
                 TextInput::make('name')
-                    ->required(),
+                    ->label('Tên kho')
+                    ->required()
+                    ->maxLength(255),
                 TextInput::make('code')
-                    ->required(),
-                TextInput::make('address'),
+                    ->label('Mã kho')
+                    ->required()
+                    ->maxLength(50)
+                    ->unique(ignoreRecord: true),
+                TextInput::make('address')
+                    ->label('Địa chỉ')
+                    ->maxLength(500),
                 Toggle::make('is_active')
+                    ->label('Kích hoạt')
+                    ->default(true)
                     ->required(),
             ]);
     }
