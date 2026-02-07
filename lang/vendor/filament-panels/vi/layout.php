@@ -7,29 +7,29 @@ return [
     'actions' => [
 
         'billing' => [
-            'label' => 'Quản lý subscription',
+            'label' => 'Cài đặt',
         ],
 
         'logout' => [
-            'label' => 'Logout',
+            'label' => 'Đăng xuất',
         ],
 
         'open_database_notifications' => [
-            'label' => 'Mở notifications',
+            'label' => 'Mở thông báo',
         ],
 
         'open_user_menu' => [
-            'label' => 'User menu',
+            'label' => 'Menu người dùng',
         ],
 
         'sidebar' => [
 
             'collapse' => [
-                'label' => 'Thu gọn sidebar',
+                'label' => 'Thu gọn',
             ],
 
             'expand' => [
-                'label' => 'Mở rộng sidebar',
+                'label' => 'Mở rộng',
             ],
 
         ],
@@ -37,15 +37,15 @@ return [
         'theme_switcher' => [
 
             'dark' => [
-                'label' => 'Dark mode',
+                'label' => 'Chế độ tối',
             ],
 
             'light' => [
-                'label' => 'Light mode',
+                'label' => 'Chế độ sáng',
             ],
 
             'system' => [
-                'label' => 'System theme',
+                'label' => 'Theo hệ thống',
             ],
 
         ],

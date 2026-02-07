@@ -8,11 +8,11 @@ return [
 
         'filter' => [
 
-            'label' => 'Filter',
+            'label' => 'Bộ lọc',
 
             'modal' => [
 
-                'heading' => 'Filter',
+                'heading' => 'Bộ lọc',
 
                 'actions' => [
 

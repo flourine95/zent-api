@@ -2,11 +2,11 @@
 
 return [
 
-    'label' => 'Nhập :label',
+    'label' => 'Nhập dữ liệu',
 
     'modal' => [
 
-        'heading' => 'Nhập :label',
+        'heading' => 'Nhập dữ liệu',
 
         'form' => [
 
@@ -36,7 +36,7 @@ return [
             ],
 
             'import' => [
-                'label' => 'Nhập',
+                'label' => 'Nhập dữ liệu',
             ],
 
         ],

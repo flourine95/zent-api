@@ -92,15 +92,15 @@ return [
     'actions' => [
 
         'disable_reordering' => [
-            'label' => 'Hoàn thành việc sắp xếp lại bản ghi',
+            'label' => 'Hoàn thành sắp xếp',
         ],
 
         'enable_reordering' => [
-            'label' => 'Sắp xếp lại bản ghi',
+            'label' => 'Sắp xếp thứ tự',
         ],
 
         'filter' => [
-            'label' => 'Lọc',
+            'label' => 'Bộ lọc',
         ],
 
         'group' => [
@@ -108,7 +108,7 @@ return [
         ],
 
         'open_bulk_actions' => [
-            'label' => 'Tác vụ hàng loạt',
+            'label' => 'Hành động hàng loạt',
         ],
 
         'column_manager' => [
@@ -130,16 +130,16 @@ return [
         'actions' => [
 
             'apply' => [
-                'label' => 'Áp dụng bộ lọc',
+                'label' => 'Áp dụng',
             ],
 
             'remove' => [
-                'label' => 'Xóa bộ lọc',
+                'label' => 'Xóa',
             ],
 
             'remove_all' => [
-                'label' => 'Xóa toàn bộ bộ lọc',
-                'tooltip' => 'Xóa toàn bộ bộ lọc',
+                'label' => 'Xóa tất cả',
+                'tooltip' => 'Xóa tất cả',
             ],
 
             'reset' => [

@@ -2,11 +2,11 @@
 
 return [
 
-    'label' => 'Xuất :label',
+    'label' => 'Xuất dữ liệu',
 
     'modal' => [
 
-        'heading' => 'Xuất :label',
+        'heading' => 'Xuất dữ liệu',
 
         'form' => [
 
@@ -45,7 +45,7 @@ return [
         'actions' => [
 
             'export' => [
-                'label' => 'Xuất',
+                'label' => 'Xuất dữ liệu',
             ],
 
         ],

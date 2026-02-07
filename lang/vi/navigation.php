@@ -3,7 +3,7 @@
 return [
     'dashboard' => 'Dashboard',
     'groups' => [
-        'access_control' => 'Hệ thống',
+        'access_control' => 'Phân quyền',
         'content_management' => 'Quản lý',
         'sales_management' => 'Bán hàng',
         'warehouse_management' => 'Kho hàng',

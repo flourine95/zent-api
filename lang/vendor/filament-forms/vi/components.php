@@ -56,16 +56,16 @@ return [
 
             'edit' => [
 
-                'label' => 'Chỉnh sửa',
+                'label' => 'Cập nhật',
 
                 'modal' => [
 
-                    'heading' => 'Chỉnh sửa khối',
+                    'heading' => 'Cập nhật',
 
                     'actions' => [
 
                         'save' => [
-                            'label' => 'Lưu thay đổi',
+                            'label' => 'Lưu',
                         ],
 
                     ],
@@ -255,15 +255,15 @@ return [
         'actions' => [
 
             'add' => [
-                'label' => 'Thêm dòng',
+                'label' => 'Tạo mới',
             ],
 
             'delete' => [
-                'label' => 'Xóa dòng',
+                'label' => 'Xóa',
             ],
 
             'reorder' => [
-                'label' => 'Sắp xếp dòng',
+                'label' => 'Sắp xếp',
             ],
 
         ],
@@ -339,7 +339,7 @@ return [
         'actions' => [
 
             'add' => [
-                'label' => 'Thêm vào :label',
+                'label' => 'Tạo mới',
             ],
 
             'add_between' => [
@@ -446,7 +446,7 @@ return [
 
             'link' => [
 
-                'label' => 'Chỉnh sửa',
+                'label' => 'Cập nhật',
 
                 'modal' => [
 
@@ -607,16 +607,16 @@ return [
 
             'create_option' => [
 
-                'label' => 'Tạo',
+                'label' => 'Tạo mới',
 
                 'modal' => [
 
-                    'heading' => 'Tạo',
+                    'heading' => 'Tạo mới',
 
                     'actions' => [
 
                         'create' => [
-                            'label' => 'Tạo',
+                            'label' => 'Tạo mới',
                         ],
 
                         'create_another' => [
@@ -631,11 +631,11 @@ return [
 
             'edit_option' => [
 
-                'label' => 'Chỉnh sửa',
+                'label' => 'Cập nhật',
 
                 'modal' => [
 
-                    'heading' => 'Chỉnh sửa',
+                    'heading' => 'Cập nhật',
 
                     'actions' => [
 
@@ -662,7 +662,7 @@ return [
 
         'no_search_results_message' => 'Không có kết quả tìm kiếm phù hợp.',
 
-        'placeholder' => 'Chọn một tùy chọn',
+        'placeholder' => 'Tìm kiếm...',
 
         'searching_message' => 'Đang tìm...',
 
