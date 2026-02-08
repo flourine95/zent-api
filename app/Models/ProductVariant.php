@@ -35,12 +35,13 @@ class ProductVariant extends Model
 
     public function getFullNameAttribute()
     {
-        if (empty($this->options)) {
+        if (empty($this->options) || ! \is_array($this->options)) {
             return $this->product->name.' - '.$this->sku;
         }
 
         $optionsString = collect($this->options)
-            ->map(fn ($value, $key) => "{$key}: {$value}")
+            ->map(fn ($option) => ($option['attribute'] ?? '').' : '.($option['value'] ?? ''))
+            ->filter()
             ->join(' / ');
 
         return $this->product->name.' - '.$optionsString;

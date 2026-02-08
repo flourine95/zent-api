@@ -64,6 +64,7 @@ return [
             'is_active_helper' => 'Bật/tắt hiển thị sản phẩm',
             'created_at' => 'Ngày tạo',
             'updated_at' => 'Cập nhật lúc',
+            // Variant fields
             'sku' => 'SKU',
             'sku_copied' => 'SKU đã được sao chép!',
             'price' => 'Giá bán',
@@ -320,3 +321,27 @@ return [
         ],
     ],
 ];
+            'quantity' => 'Số lượng',
+            'status' => 'Trạng thái',
+            'expires_at' => 'Hết hạn',
+            'notes' => 'Ghi chú',
+            'created_at' => 'Ngày tạo',
+            'updated_at' => 'Cập nhật lúc',
+        ],
+        'status' => [
+            'pending' => 'Chờ xác nhận',
+            'confirmed' => 'Đã xác nhận',
+            'released' => 'Đã giải phóng',
+            'expired' => 'Hết hạn',
+        ],
+        'actions' => [
+            'create' => 'Tạo mới',
+            'edit' => 'Cập nhật',
+            'view' => 'Xem chi tiết',
+            'delete' => 'Xóa',
+        ],
+        'empty_state' => [
+            'heading' => 'Chưa có đặt trước nào',
+            'description' => 'Tạo đặt trước để giữ hàng cho đơn hàng.',
+        ],
+    ],
