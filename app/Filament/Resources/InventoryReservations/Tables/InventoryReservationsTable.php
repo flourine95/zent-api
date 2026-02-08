@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\InventoryReservations\Tables;
 
 use Filament\Actions\ActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
@@ -101,6 +102,7 @@ class InventoryReservationsTable
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 ActionGroup::make([
