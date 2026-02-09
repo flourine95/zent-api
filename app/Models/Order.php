@@ -11,7 +11,25 @@ class Order extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['user_id', 'code', 'status', 'payment_status', 'total_amount', 'note'];
+    protected $fillable = [
+        'user_id',
+        'code',
+        'status',
+        'payment_status',
+        'total_amount',
+        'shipping_address',
+        'billing_address',
+        'notes',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'shipping_address' => 'array',
+            'billing_address' => 'array',
+            'total_amount' => 'decimal:2',
+        ];
+    }
 
     public function items(): HasMany
     {

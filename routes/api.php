@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
 use Illuminate\Support\Facades\Route;
 
@@ -7,23 +10,32 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 | API Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
 */
 
 // Public API routes
 Route::prefix('v1')->group(function () {
 
-    // Products API
-    Route::prefix('products')->group(function () {
-        Route::get('/', [ProductController::class, 'index'])
-            ->name('api.products.index');
+    // Auth routes
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
 
-        Route::get('/{identifier}', [ProductController::class, 'show'])
-            ->name('api.products.show');
+    // Products API (public)
+    Route::get('/products', [ProductController::class, 'index']);
+    Route::get('/products/{identifier}', [ProductController::class, 'show']);
+
+    // Categories API (public)
+    Route::get('/categories', [CategoryController::class, 'index']);
+    Route::get('/categories/{identifier}', [CategoryController::class, 'show']);
+
+    // Protected routes
+    Route::middleware('auth:sanctum')->group(function () {
+        // Auth
+        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::get('/me', [AuthController::class, 'me']);
+
+        // Orders
+        Route::get('/orders', [OrderController::class, 'index']);
+        Route::post('/orders', [OrderController::class, 'store']);
+        Route::get('/orders/{order}', [OrderController::class, 'show']);
     });
-
 });
