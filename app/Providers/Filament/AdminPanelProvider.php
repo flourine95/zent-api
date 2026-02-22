@@ -59,6 +59,7 @@ class AdminPanelProvider extends PanelProvider
             ->unsavedChangesAlerts()
             ->sidebarCollapsibleOnDesktop()
             ->databaseNotifications()
-            ->databaseNotificationsPolling('30s');
+            ->databaseNotificationsPolling('30s')
+            ->spa();
     }
 }
