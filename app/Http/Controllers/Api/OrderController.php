@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\OrderResource;
 use App\Models\Order;
 use App\Models\ProductVariant;
+use App\Notifications\OrderCreatedNotification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -36,7 +37,7 @@ class OrderController extends Controller
     }
 
     /**
-     * Tạo đơn hàng mới
+     * Tạo đơn hàng mới với product snapshot và inventory reservation
      */
     public function store(Request $request): JsonResponse
     {
@@ -44,6 +45,7 @@ class OrderController extends Controller
             'items' => 'required|array|min:1',
             'items.*.product_variant_id' => 'required|exists:product_variants,id',
             'items.*.quantity' => 'required|integer|min:1',
+            'items.*.warehouse_id' => 'nullable|exists:warehouses,id',
             'shipping_address' => 'required|array',
             'billing_address' => 'nullable|array',
             'notes' => 'nullable|string',
@@ -52,20 +54,37 @@ class OrderController extends Controller
         try {
             DB::beginTransaction();
 
-            // Calculate total
+            // Calculate total and prepare order items with snapshot
             $totalAmount = 0;
             $orderItems = [];
 
             foreach ($request->items as $item) {
-                $variant = ProductVariant::findOrFail($item['product_variant_id']);
+                $variant = ProductVariant::with(['product.category'])->findOrFail($item['product_variant_id']);
+
+                // Create product snapshot
+                $snapshot = [
+                    'product_id' => $variant->product_id,
+                    'product_name' => $variant->product->name,
+                    'product_slug' => $variant->product->slug,
+                    'category_name' => $variant->product->category->name ?? null,
+                    'variant_id' => $variant->id,
+                    'sku' => $variant->sku,
+                    'price' => $variant->price,
+                    'original_price' => $variant->original_price,
+                    'options' => $variant->options,
+                    'images' => $variant->images,
+                ];
+
                 $subtotal = $variant->price * $item['quantity'];
                 $totalAmount += $subtotal;
 
                 $orderItems[] = [
                     'product_variant_id' => $variant->id,
+                    'warehouse_id' => $item['warehouse_id'] ?? null,
                     'quantity' => $item['quantity'],
                     'price' => $variant->price,
                     'subtotal' => $subtotal,
+                    'product_snapshot' => $snapshot,
                 ];
             }
 
@@ -81,9 +100,30 @@ class OrderController extends Controller
             ]);
 
             // Create order items
-            $order->items()->createMany($orderItems);
+            foreach ($orderItems as $itemData) {
+                $orderItem = $order->items()->create($itemData);
+
+                // Create inventory reservation (lock stock for 30 minutes)
+                if ($itemData['warehouse_id']) {
+                    $inventory = \App\Models\Inventory::where('product_variant_id', $itemData['product_variant_id'])
+                        ->where('warehouse_id', $itemData['warehouse_id'])
+                        ->first();
+
+                    if ($inventory) {
+                        \App\Models\InventoryReservation::create([
+                            'inventory_id' => $inventory->id,
+                            'order_id' => $order->id,
+                            'quantity' => $itemData['quantity'],
+                            'expires_at' => now()->addMinutes(30),
+                        ]);
+                    }
+                }
+            }
 
             DB::commit();
+
+            // Send notification
+            $request->user()->notify(new OrderCreatedNotification($order));
 
             $order->load(['items']);
 

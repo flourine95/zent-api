@@ -85,13 +85,21 @@ class AuthController extends Controller
     }
 
     /**
-     * Get authenticated user
+     * Get authenticated user with cart and wishlist counts
      */
     public function me(Request $request): JsonResponse
     {
+        $user = $request->user();
+        $cart = $user->cart;
+
         return response()->json([
             'success' => true,
-            'data' => new UserResource($request->user()),
+            'data' => [
+                'user' => new UserResource($user),
+                'cart_items_count' => $cart ? $cart->items()->count() : 0,
+                'wishlist_count' => $user->wishlists()->count(),
+                'unread_notifications_count' => $user->unreadNotifications()->count(),
+            ],
         ]);
     }
 }
