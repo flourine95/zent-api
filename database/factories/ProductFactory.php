@@ -2,20 +2,15 @@
 
 namespace Database\Factories;
 
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
+ * @extends Factory<Product>
  */
 class ProductFactory extends Factory
 {
-    /**
-     * NGUYÊN TẮC 1: GIỮ FACTORY SẠCH
-     * - Chỉ định nghĩa các column thuộc bảng products
-     * - KHÔNG gọi Category::factory() để tránh đẻ rác
-     * - category_id sẽ được gán qua ->for() hoặc ->recycle() từ Seeder
-     */
     public function definition(): array
     {
         $prefixes = ['Premium', 'Basic', 'Essential', 'Vintage', 'Streetwear'];
@@ -27,7 +22,6 @@ class ProductFactory extends Factory
             fake()->randomElement($brands);
 
         return [
-            // KHÔNG có category_id ở đây - sẽ được gán từ Seeder
             'name' => $name,
             'slug' => Str::slug($name).'-'.Str::random(5),
             'description' => fake()->sentence(10),

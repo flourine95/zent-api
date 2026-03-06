@@ -2,29 +2,21 @@
 
 namespace Database\Factories;
 
+use App\Models\ProductVariant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ProductVariant>
+ * @extends Factory<ProductVariant>
  */
 class ProductVariantFactory extends Factory
 {
-    /**
-     * NGUYÊN TẮC 1: GIỮ FACTORY SẠCH
-     * - KHÔNG gọi Product::factory() để tránh đẻ rác
-     * - product_id sẽ được gán tự động qua ->for() hoặc hasVariants()
-     *
-     * LƯU Ý: Dữ liệu ở đây là FALLBACK khi gọi trực tiếp
-     * Thực tế sẽ dùng sequence() từ Seeder để có data logic hơn
-     */
     public function definition(): array
     {
         $size = fake()->randomElement(['S', 'M', 'L', 'XL']);
         $color = fake()->randomElement(['Red', 'Blue', 'Black', 'White']);
 
         return [
-            // KHÔNG có product_id - sẽ được gán tự động
             'sku' => strtoupper(Str::random(8)),
             'price' => fake()->randomElement([150000, 200000, 350000, 500000]),
             'original_price' => null,

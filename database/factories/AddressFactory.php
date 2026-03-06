@@ -2,21 +2,17 @@
 
 namespace Database\Factories;
 
+use App\Models\Address;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Address>
+ * @extends Factory<Address>
  */
 class AddressFactory extends Factory
 {
-    /**
-     * NGUYÊN TẮC 1: GIỮ FACTORY SẠCH
-     * - KHÔNG gọi User::factory()
-     */
     public function definition(): array
     {
         return [
-            // KHÔNG có user_id
             'label' => fake()->randomElement(['Nhà riêng', 'Văn phòng', 'Nhà bố mẹ', null]),
             'recipient_name' => fake()->name(),
             'phone' => fake()->numerify('09########'),

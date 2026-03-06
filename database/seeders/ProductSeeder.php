@@ -11,9 +11,6 @@ use Illuminate\Support\Str;
 
 class ProductSeeder extends Seeder
 {
-    /**
-     * NGUYÊN TẮC: recycle(), has(), sequence(), afterCreating()
-     */
     public function run(): void
     {
         $productsPerCategory = 100;

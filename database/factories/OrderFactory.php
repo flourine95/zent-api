@@ -2,25 +2,20 @@
 
 namespace Database\Factories;
 
+use App\Models\Order;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Order>
+ * @extends Factory<Order>
  */
 class OrderFactory extends Factory
 {
-    /**
-     * NGUYÊN TẮC 1: GIỮ FACTORY SẠCH
-     * - KHÔNG gọi User::factory()
-     * - user_id sẽ được gán qua ->for() hoặc ->recycle()
-     */
     public function definition(): array
     {
         $statuses = ['pending', 'processing', 'completed', 'cancelled'];
         $paymentStatuses = ['pending', 'paid', 'failed', 'refunded'];
 
         return [
-            // KHÔNG có user_id
             'code' => 'ORD-'.strtoupper(fake()->bothify('???###')),
             'status' => fake()->randomElement($statuses),
             'payment_status' => fake()->randomElement($paymentStatuses),
