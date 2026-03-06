@@ -17,15 +17,12 @@ class CategoryFactory extends Factory
      */
     public function definition(): array
     {
-        $name = fake()->unique()->randomElement([
-            'Áo Thun', 'Áo Polo', 'Quần Jean', 'Quần Short',
-            'Giày Sneaker', 'Phụ Kiện', 'Jacket', 'Hoodie',
-        ]);
+        $name = fake()->words(2, true);
 
         return [
-            'name' => $name,
-            'slug' => Str::slug($name),
-            'image' => null,
+            'name' => ucfirst($name),
+            'slug' => Str::slug($name).'-'.fake()->unique()->numberBetween(1, 99999),
+            'image' => 'images/placeholder.svg',
             'description' => fake()->sentence(),
             'is_visible' => true,
         ];

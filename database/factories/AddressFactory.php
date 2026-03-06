@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -10,15 +9,19 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class AddressFactory extends Factory
 {
+    /**
+     * NGUYÊN TẮC 1: GIỮ FACTORY SẠCH
+     * - KHÔNG gọi User::factory()
+     */
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
-            'label' => fake()->randomElement(['Home', 'Office', 'Parent\'s House', null]),
+            // KHÔNG có user_id
+            'label' => fake()->randomElement(['Nhà riêng', 'Văn phòng', 'Nhà bố mẹ', null]),
             'recipient_name' => fake()->name(),
             'phone' => fake()->numerify('09########'),
             'address_line_1' => fake()->streetAddress(),
-            'address_line_2' => fake()->optional()->secondaryAddress(),
+            'address_line_2' => fake()->optional()->streetName(),
             'city' => fake()->randomElement(['Hà Nội', 'Hồ Chí Minh', 'Đà Nẵng', 'Hải Phòng', 'Cần Thơ']),
             'state' => fake()->optional()->randomElement(['HN', 'HCM', 'DN', 'HP', 'CT']),
             'postal_code' => fake()->numerify('######'),

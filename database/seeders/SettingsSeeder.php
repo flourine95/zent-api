@@ -46,6 +46,6 @@ class SettingsSeeder extends Seeder
             );
         }
 
-        $this->command->info('✅ Settings seeded successfully!');
+        // Settings seeded
     }
 }

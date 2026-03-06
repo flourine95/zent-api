@@ -11,9 +11,10 @@ use Illuminate\Support\Str;
 class ProductFactory extends Factory
 {
     /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
+     * NGUYÊN TẮC 1: GIỮ FACTORY SẠCH
+     * - Chỉ định nghĩa các column thuộc bảng products
+     * - KHÔNG gọi Category::factory() để tránh đẻ rác
+     * - category_id sẽ được gán qua ->for() hoặc ->recycle() từ Seeder
      */
     public function definition(): array
     {
@@ -26,10 +27,11 @@ class ProductFactory extends Factory
             fake()->randomElement($brands);
 
         return [
+            // KHÔNG có category_id ở đây - sẽ được gán từ Seeder
             'name' => $name,
             'slug' => Str::slug($name).'-'.Str::random(5),
             'description' => fake()->sentence(10),
-            'thumbnail' => null,
+            'thumbnail' => 'images/placeholder.svg',
             'specs' => [
                 ['name' => 'Thương hiệu', 'value' => fake()->randomElement($brands)],
                 ['name' => 'Chất liệu', 'value' => fake()->randomElement(['100% Cotton', 'Polyester', 'Vải Kaki', 'Denim'])],

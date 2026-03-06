@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -10,10 +9,14 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class CartFactory extends Factory
 {
+    /**
+     * NGUYÊN TẮC 1: GIỮ FACTORY SẠCH
+     * - KHÔNG gọi User::factory()
+     */
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
+            // KHÔNG có user_id - sẽ được gán qua ->for()
         ];
     }
 }

@@ -149,11 +149,6 @@ class RolePermissionSeeder extends Seeder
         );
         $editorUser->assignRole($editor);
 
-        $this->command->info('Vai trò và quyền đã được tạo thành công!');
-        $this->command->info('Tài khoản demo:');
-        $this->command->info('- superadmin@example.com / password (Super Admin)');
-        $this->command->info('- admin@example.com / password (Admin)');
-        $this->command->info('- manager@example.com / password (Manager)');
-        $this->command->info('- editor@example.com / password (Editor)');
+        // Roles and permissions seeded
     }
 }
