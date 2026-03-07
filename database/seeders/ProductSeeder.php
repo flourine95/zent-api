@@ -8,42 +8,59 @@ use App\Models\ProductVariant;
 use App\Models\Warehouse;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class ProductSeeder extends Seeder
 {
+    use WithoutModelEvents;
+
     public function run(): void
     {
-        $productsPerCategory = 100;
+        ini_set('memory_limit', '-1');
+        DB::disableQueryLog();
+
         $categories = Category::all();
         $warehouses = Warehouse::all();
 
-        $totalProducts = $categories->count() * $productsPerCategory;
+        $totalProducts = 10000;
+        $chunkSize = 2000;
+        $totalChunks = ceil($totalProducts / $chunkSize);
 
-        $this->command->info("📦 Creating {$totalProducts} products with variants and inventory...");
-        $progressBar = $this->command->getOutput()->createProgressBar($totalProducts);
-        $progressBar->start();
+        $this->command->info("📦 Bắt đầu cày {$totalProducts} Products (Kèm Variants & Inventory)...");
+        $this->command->info("🔄 Chia làm {$totalChunks} mẻ, mỗi mẻ {$chunkSize} products.");
 
-        Product::factory($productsPerCategory)
-            ->recycle($categories)
-            ->has(
-                ProductVariant::factory(8)
-                    ->sequence(fn ($sequence) => $this->getVariantSequence($sequence->index))
-                    ->afterCreating(function (ProductVariant $variant) use ($warehouses) {
-                        $variant->inventories()->create([
-                            'warehouse_id' => $warehouses->random()->id,
-                            'quantity' => fake()->numberBetween(10, 100),
-                            'shelf_location' => 'Kệ '.fake()->randomLetter().'-'.fake()->numberBetween(1, 50),
-                        ]);
-                    }),
-                'variants'
-            )
-            ->create()
-            ->each(function () use ($progressBar) {
-                $progressBar->advance();
+        for ($i = 0; $i < $totalChunks; $i++) {
+
+            DB::transaction(function () use ($chunkSize, $categories, $warehouses) {
+
+                Product::factory($chunkSize)
+                    ->recycle($categories)
+                    ->has(
+                        ProductVariant::factory(8)
+                            ->sequence(fn ($sequence) => $this->getVariantSequence($sequence->index))
+                            ->afterCreating(function (ProductVariant $variant) use ($warehouses) {
+                                $variant->inventories()->create([
+                                    'warehouse_id' => $warehouses->random()->id,
+                                    'quantity' => fake()->numberBetween(10, 100),
+                                    'shelf_location' => 'Kệ '.fake()->randomLetter().'-'.fake()->numberBetween(1, 50),
+                                ]);
+                            }),
+                        'variants'
+                    )
+                    ->create();
+
             });
 
-        $progressBar->finish();
-        $this->command->newLine();
+            $current = ($i + 1) * $chunkSize;
+            if ($current > $totalProducts) $current = $totalProducts;
+
+            $this->command->info("   -> Đã xử lý xong: {$current} / {$totalProducts}");
+
+            gc_collect_cycles();
+        }
+
+        $this->command->info("✅ Hoàn tất cực mượt!");
     }
 
     private function getVariantSequence(int $index): array
@@ -67,7 +84,7 @@ class ProductSeeder extends Seeder
         $color = $colors[$colorIndex];
 
         return [
-            'sku' => strtoupper(Str::random(3))."-{$color['code']}-{$size['code']}-".Str::random(3),
+            'sku' => strtoupper(Str::random(4))."-{$color['code']}-{$size['code']}-".Str::random(4),
             'price' => $size['price'],
             'original_price' => $size['price'] * 1.2,
             'images' => ['images/placeholder.svg'],
