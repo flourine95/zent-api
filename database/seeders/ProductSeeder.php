@@ -7,14 +7,11 @@ use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\Warehouse;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Support\Str;
 
 class ProductSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     public function run(): void
     {
         ini_set('memory_limit', '-1');
@@ -23,17 +20,16 @@ class ProductSeeder extends Seeder
         $categories = Category::all();
         $warehouses = Warehouse::all();
 
-        $totalProducts = 10000;
-        $chunkSize = 2000;
+        $totalProducts = 1000;
+        $chunkSize = 500;
         $totalChunks = ceil($totalProducts / $chunkSize);
 
-        $this->command->info("📦 Bắt đầu cày {$totalProducts} Products (Kèm Variants & Inventory)...");
-        $this->command->info("🔄 Chia làm {$totalChunks} mẻ, mỗi mẻ {$chunkSize} products.");
+        $this->command->info("📦 $totalProducts Products ($totalChunks chunks x $chunkSize)");
 
         for ($i = 0; $i < $totalChunks; $i++) {
+            $start = microtime(true);
 
             DB::transaction(function () use ($chunkSize, $categories, $warehouses) {
-
                 Product::factory($chunkSize)
                     ->recycle($categories)
                     ->has(
@@ -49,18 +45,17 @@ class ProductSeeder extends Seeder
                         'variants'
                     )
                     ->create();
-
             });
 
-            $current = ($i + 1) * $chunkSize;
-            if ($current > $totalProducts) $current = $totalProducts;
+            $time = round((microtime(true) - $start) * 1000);
+            $current = min(($i + 1) * $chunkSize, $totalProducts);
 
-            $this->command->info("   -> Đã xử lý xong: {$current} / {$totalProducts}");
+            $this->command->info("   $current/$totalProducts ({$time}ms)");
 
             gc_collect_cycles();
         }
 
-        $this->command->info("✅ Hoàn tất cực mượt!");
+        $this->command->info('✅ Done!');
     }
 
     private function getVariantSequence(int $index): array
@@ -77,11 +72,8 @@ class ProductSeeder extends Seeder
             ['code' => 'White', 'label' => 'Trắng'],
         ];
 
-        $sizeIndex = $index % 4;
-        $colorIndex = (int) ($index / 4) % 2;
-
-        $size = $sizes[$sizeIndex];
-        $color = $colors[$colorIndex];
+        $size = $sizes[$index % 4];
+        $color = $colors[(int) ($index / 4) % 2];
 
         return [
             'sku' => strtoupper(Str::random(4))."-{$color['code']}-{$size['code']}-".Str::random(4),
