@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProductVariantController;
 use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\ShippingController;
 use App\Http\Controllers\Api\WishlistController;
 use Illuminate\Support\Facades\Route;
 
@@ -40,6 +41,13 @@ Route::prefix('v1')->group(function () {
 
     // Product Variants - Check inventory (public)
     Route::get('/variants/{variantId}/inventory', [ProductVariantController::class, 'checkInventory']);
+
+    // Shipping (public)
+    Route::prefix('shipping')->group(function () {
+        Route::post('/calculate-fees', [ShippingController::class, 'calculateFees']);
+        Route::get('/providers', [ShippingController::class, 'getProviders']);
+        Route::get('/settings', [ShippingController::class, 'getSettings']);
+    });
 
     // Protected routes
     Route::middleware('auth:sanctum')->group(function () {

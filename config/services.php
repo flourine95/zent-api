@@ -35,4 +35,14 @@ return [
         ],
     ],
 
+    'ghtk' => [
+        'api_token' => env('GHTK_API_TOKEN'),
+        'partner_code' => env('GHTK_PARTNER_CODE'),
+    ],
+
+    'ghn' => [
+        'token' => env('GHN_TOKEN'),
+        'shop_id' => env('GHN_SHOP_ID'),
+    ],
+
 ];
