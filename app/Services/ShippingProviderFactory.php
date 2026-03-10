@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Contracts\ShippingProviderInterface;
-use App\Models\ShippingProvider;
+use App\Infrastructure\Models\ShippingProvider;
 use Illuminate\Support\Facades\Cache;
 
 class ShippingProviderFactory

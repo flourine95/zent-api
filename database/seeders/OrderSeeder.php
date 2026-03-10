@@ -6,7 +6,7 @@ use App\Infrastructure\Models\Order;
 use App\Infrastructure\Models\OrderItem;
 use App\Infrastructure\Models\ProductVariant;
 use App\Infrastructure\Models\User;
-use App\Models\Warehouse;
+use App\Infrastructure\Models\Warehouse;
 use Illuminate\Database\Seeder;
 
 class OrderSeeder extends Seeder

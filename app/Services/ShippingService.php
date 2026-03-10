@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Models\Shipment;
-use App\Models\ShippingProvider;
+use App\Infrastructure\Models\Shipment;
+use App\Infrastructure\Models\ShippingProvider;
 use Illuminate\Support\Facades\DB;
 
 class ShippingService

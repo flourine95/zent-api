@@ -31,7 +31,7 @@ class TestGhtkConnection extends Command
         }
 
         // Check if provider is configured in database
-        $provider = \App\Models\ShippingProvider::where('code', 'ghtk')->first();
+        $provider = \App\Infrastructure\Models\ShippingProvider::where('code', 'ghtk')->first();
 
         if (! $provider) {
             $this->error('GHTK provider not found in database');

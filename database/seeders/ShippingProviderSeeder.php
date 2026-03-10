@@ -2,14 +2,14 @@
 
 namespace Database\Seeders;
 
-use App\Models\ShippingProvider;
+use App\Infrastructure\Models\ShippingProvider;
 use Illuminate\Database\Seeder;
 
 class ShippingProviderSeeder extends Seeder
 {
     /**
      * Seed shipping providers with default configuration.
-     * 
+     *
      * Note: Credentials (tokens, API keys) should be set in .env file.
      * This seeder only creates providers with non-sensitive config.
      */

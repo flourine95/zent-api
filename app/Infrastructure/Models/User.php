@@ -61,7 +61,7 @@ class User extends Authenticatable
      */
     public function cart()
     {
-        return $this->hasOne(\App\Models\Cart::class);
+        return $this->hasOne(\App\Infrastructure\Models\Cart::class);
     }
 
     /**
@@ -69,7 +69,7 @@ class User extends Authenticatable
      */
     public function addresses()
     {
-        return $this->hasMany(\App\Models\Address::class);
+        return $this->hasMany(\App\Infrastructure\Models\Address::class);
     }
 
     /**
@@ -77,6 +77,6 @@ class User extends Authenticatable
      */
     public function wishlists()
     {
-        return $this->hasMany(\App\Models\Wishlist::class);
+        return $this->hasMany(\App\Infrastructure\Models\Wishlist::class);
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Policies;
 
 use App\Infrastructure\Models\User;
-use App\Models\Warehouse;
+use App\Infrastructure\Models\Warehouse;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class WarehousePolicy

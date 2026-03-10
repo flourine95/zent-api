@@ -1,17 +1,17 @@
 <?php
 
-use App\Http\Controllers\Api\AddressController;
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\CartController;
-use App\Http\Controllers\Api\CategoryController;
-use App\Http\Controllers\Api\ConfigController;
-use App\Http\Controllers\Api\NotificationController;
-use App\Http\Controllers\Api\OrderController;
-use App\Http\Controllers\Api\ProductController;
-use App\Http\Controllers\Api\ProductVariantController;
-use App\Http\Controllers\Api\ProfileController;
-use App\Http\Controllers\Api\ShippingController;
-use App\Http\Controllers\Api\WishlistController;
+use App\App\Address\Controllers\AddressController;
+use App\App\Cart\Controllers\CartController;
+use App\App\Category\Controllers\CategoryController;
+use App\App\Config\Controllers\ConfigController;
+use App\App\Notification\Controllers\NotificationController;
+use App\App\Order\Controllers\OrderController;
+use App\App\Product\Controllers\ProductController;
+use App\App\ProductVariant\Controllers\ProductVariantController;
+use App\App\Shipping\Controllers\ShippingController;
+use App\App\User\Controllers\AuthController;
+use App\App\User\Controllers\ProfileController;
+use App\App\Wishlist\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 
 /*

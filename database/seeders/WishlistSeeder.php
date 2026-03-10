@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use App\Infrastructure\Models\Product;
 use App\Infrastructure\Models\User;
-use App\Models\Wishlist;
+use App\Infrastructure\Models\Wishlist;
 use Illuminate\Database\Seeder;
 
 class WishlistSeeder extends Seeder

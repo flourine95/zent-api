@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Infrastructure\Models\Category;
 use App\Infrastructure\Models\Product;
 use App\Infrastructure\Models\ProductVariant;
-use App\Models\Warehouse;
+use App\Infrastructure\Models\Warehouse;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;

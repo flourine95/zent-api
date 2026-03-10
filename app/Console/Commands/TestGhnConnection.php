@@ -31,7 +31,7 @@ class TestGhnConnection extends Command
         }
 
         // Check if provider is configured in database
-        $provider = \App\Models\ShippingProvider::where('code', 'ghn')->first();
+        $provider = \App\Infrastructure\Models\ShippingProvider::where('code', 'ghn')->first();
 
         if (! $provider) {
             $this->error('GHN provider not found in database');

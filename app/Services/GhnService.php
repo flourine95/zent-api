@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Contracts\ShippingProviderInterface;
-use App\Models\Shipment;
+use App\Infrastructure\Models\Shipment;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
