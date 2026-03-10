@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Models\Product;
+use App\Infrastructure\Models\Product;
 use Illuminate\Support\Facades\Cache;
 
 class ProductObserver

@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Categories\Tables;
 
-use App\Models\Category;
+use App\Infrastructure\Models\Category;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;

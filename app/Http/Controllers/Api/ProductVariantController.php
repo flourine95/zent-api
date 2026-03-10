@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\ProductVariantResource;
-use App\Models\Product;
-use App\Models\ProductVariant;
+use App\Infrastructure\Models\Product;
+use App\Infrastructure\Models\ProductVariant;
 use Illuminate\Http\JsonResponse;
 
 class ProductVariantController extends Controller

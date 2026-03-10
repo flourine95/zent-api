@@ -21,9 +21,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Register observers
-        \App\Models\Category::observe(\App\Observers\CategoryObserver::class);
-        \App\Models\Product::observe(\App\Observers\ProductObserver::class);
-        \App\Models\Banner::observe(\App\Observers\BannerObserver::class);
+        \App\Infrastructure\Models\Category::observe(\App\Observers\CategoryObserver::class);
+        \App\Infrastructure\Models\Product::observe(\App\Observers\ProductObserver::class);
+        \App\Infrastructure\Models\Banner::observe(\App\Observers\BannerObserver::class);
         \App\Models\Setting::observe(\App\Observers\SettingObserver::class);
 
         // Implicitly grant "Super Admin" role all permissions

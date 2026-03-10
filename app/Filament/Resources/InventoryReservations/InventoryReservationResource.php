@@ -7,7 +7,7 @@ use App\Filament\Resources\InventoryReservations\Pages\EditInventoryReservation;
 use App\Filament\Resources\InventoryReservations\Pages\ListInventoryReservations;
 use App\Filament\Resources\InventoryReservations\Schemas\InventoryReservationForm;
 use App\Filament\Resources\InventoryReservations\Tables\InventoryReservationsTable;
-use App\Models\InventoryReservation;
+use App\Infrastructure\Models\InventoryReservation;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;

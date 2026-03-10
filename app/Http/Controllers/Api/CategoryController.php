@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\CategoryResource;
-use App\Models\Category;
+use App\Infrastructure\Models\Category;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 

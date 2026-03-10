@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Banner;
+use App\Infrastructure\Models\Banner;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

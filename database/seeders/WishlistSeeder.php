@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Product;
-use App\Models\User;
+use App\Infrastructure\Models\Product;
+use App\Infrastructure\Models\User;
 use App\Models\Wishlist;
 use Illuminate\Database\Seeder;
 

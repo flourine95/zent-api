@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Models\Category;
+use App\Infrastructure\Models\Category;
 use Illuminate\Support\Facades\Cache;
 
 class CategoryObserver

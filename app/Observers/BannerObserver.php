@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Models\Banner;
+use App\Infrastructure\Models\Banner;
 use Illuminate\Support\Facades\Cache;
 
 class BannerObserver

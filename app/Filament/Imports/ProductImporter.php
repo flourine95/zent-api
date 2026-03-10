@@ -2,7 +2,7 @@
 
 namespace App\Filament\Imports;
 
-use App\Models\Product;
+use App\Infrastructure\Models\Product;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
 use Filament\Actions\Imports\Models\Import;

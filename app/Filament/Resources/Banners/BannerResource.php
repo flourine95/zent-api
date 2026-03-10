@@ -7,7 +7,7 @@ use App\Filament\Resources\Banners\Pages\EditBanner;
 use App\Filament\Resources\Banners\Pages\ListBanners;
 use App\Filament\Resources\Banners\Schemas\BannerForm;
 use App\Filament\Resources\Banners\Tables\BannersTable;
-use App\Models\Banner;
+use App\Infrastructure\Models\Banner;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;

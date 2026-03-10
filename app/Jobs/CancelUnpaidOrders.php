@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\Order;
+use App\Infrastructure\Models\Order;
 use App\Models\Setting;
 use App\Notifications\OrderStatusChangedNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;

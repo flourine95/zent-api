@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Order;
-use App\Models\OrderItem;
-use App\Models\ProductVariant;
-use App\Models\User;
+use App\Infrastructure\Models\Order;
+use App\Infrastructure\Models\OrderItem;
+use App\Infrastructure\Models\ProductVariant;
+use App\Infrastructure\Models\User;
 use App\Models\Warehouse;
 use Illuminate\Database\Seeder;
 

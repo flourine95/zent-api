@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\OrderResource;
-use App\Models\Order;
-use App\Models\ProductVariant;
+use App\Infrastructure\Models\Order;
+use App\Infrastructure\Models\ProductVariant;
 use App\Notifications\OrderCreatedNotification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

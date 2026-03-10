@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Category;
-use App\Models\Product;
+use App\Infrastructure\Models\Category;
+use App\Infrastructure\Models\Product;
 
 describe('Product Rich Content', function () {
     beforeEach(function () {

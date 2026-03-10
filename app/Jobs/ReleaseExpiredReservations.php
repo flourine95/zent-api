@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\InventoryReservation;
+use App\Infrastructure\Models\InventoryReservation;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Log;

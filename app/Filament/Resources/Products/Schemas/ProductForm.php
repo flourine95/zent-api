@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\Products\Schemas;
 
-use App\Models\Category;
-use App\Models\Product;
+use App\Infrastructure\Models\Category;
+use App\Infrastructure\Models\Product;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Placeholder;

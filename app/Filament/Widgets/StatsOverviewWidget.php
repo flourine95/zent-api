@@ -2,10 +2,10 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\Category;
-use App\Models\Order;
-use App\Models\Product;
-use App\Models\User;
+use App\Infrastructure\Models\Category;
+use App\Infrastructure\Models\Order;
+use App\Infrastructure\Models\Product;
+use App\Infrastructure\Models\User;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
