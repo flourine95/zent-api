@@ -2,12 +2,15 @@
 
 namespace App\Infrastructure\Models;
 
+use Database\Factories\ProductVariantFactory;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+#[UseFactory(ProductVariantFactory::class)]
 class ProductVariant extends Model
 {
     use HasFactory, SoftDeletes;

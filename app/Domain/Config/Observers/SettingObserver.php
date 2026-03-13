@@ -2,7 +2,7 @@
 
 namespace App\Domain\Config\Observers;
 
-use App\Models\Setting;
+use App\Infrastructure\Models\Setting;
 use Illuminate\Support\Facades\Cache;
 
 class SettingObserver

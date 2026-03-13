@@ -2,10 +2,13 @@
 
 namespace App\Infrastructure\Models;
 
+use Database\Factories\CartItemFactory;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[UseFactory(CartItemFactory::class)]
 class CartItem extends Model
 {
     use HasFactory;

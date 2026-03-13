@@ -2,17 +2,23 @@
 
 namespace App\Infrastructure\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
+#[UseFactory(UserFactory::class)]
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasApiTokens, HasFactory, HasRoles, Notifiable;
+
+    /**
+     * The guard name for Spatie Permission
+     */
+    protected $guard_name = 'web';
 
     /**
      * The attributes that are mass assignable.
@@ -53,7 +59,7 @@ class User extends Authenticatable
      */
     public function orders()
     {
-        return $this->hasMany(\App\Infrastructure\Models\Order::class);
+        return $this->hasMany(Order::class);
     }
 
     /**
@@ -61,7 +67,7 @@ class User extends Authenticatable
      */
     public function cart()
     {
-        return $this->hasOne(\App\Infrastructure\Models\Cart::class);
+        return $this->hasOne(Cart::class);
     }
 
     /**
@@ -69,7 +75,7 @@ class User extends Authenticatable
      */
     public function addresses()
     {
-        return $this->hasMany(\App\Infrastructure\Models\Address::class);
+        return $this->hasMany(Address::class);
     }
 
     /**
@@ -77,6 +83,6 @@ class User extends Authenticatable
      */
     public function wishlists()
     {
-        return $this->hasMany(\App\Infrastructure\Models\Wishlist::class);
+        return $this->hasMany(Wishlist::class);
     }
 }

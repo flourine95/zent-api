@@ -2,9 +2,12 @@
 
 namespace App\Infrastructure\Models;
 
+use Database\Factories\BannerFactory;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+#[UseFactory(BannerFactory::class)]
 class Banner extends Model
 {
     use HasFactory;

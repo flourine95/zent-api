@@ -2,12 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Infrastructure\Models\Address;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends Factory<Address>
- */
 class AddressFactory extends Factory
 {
     public function definition(): array
