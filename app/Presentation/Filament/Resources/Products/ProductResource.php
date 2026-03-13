@@ -1,0 +1,82 @@
+<?php
+
+namespace App\Presentation\Filament\Resources\Products;
+
+use App\Infrastructure\Models\Product;
+use App\Presentation\Filament\Resources\Products\Pages\CreateProduct;
+use App\Presentation\Filament\Resources\Products\Pages\EditProduct;
+use App\Presentation\Filament\Resources\Products\Pages\ListProducts;
+use App\Presentation\Filament\Resources\Products\Pages\ViewProduct;
+use App\Presentation\Filament\Resources\Products\Schemas\ProductForm;
+use App\Presentation\Filament\Resources\Products\Tables\ProductsTable;
+use BackedEnum;
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+
+class ProductResource extends Resource
+{
+    protected static ?string $model = Product::class;
+
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+
+    protected static ?string $recordTitleAttribute = 'name';
+
+    public static function getNavigationLabel(): string
+    {
+        return __('resources.products.navigation_label');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('resources.products.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('resources.products.plural_label');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('resources.products.navigation_group');
+    }
+
+    public static function form(Schema $schema): Schema
+    {
+        return ProductForm::configure($schema);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return ProductsTable::configure($table);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            RelationManagers\VariantsRelationManager::class,
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => ListProducts::route('/'),
+            'create' => CreateProduct::route('/create'),
+            'view' => ViewProduct::route('/{record}'),
+            'edit' => EditProduct::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getRecordRouteBindingEloquentQuery(): Builder
+    {
+        return parent::getRecordRouteBindingEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
+    }
+}

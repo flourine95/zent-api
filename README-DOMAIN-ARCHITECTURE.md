@@ -6,25 +6,66 @@ Dự án này tuân thủ kiến trúc **Domain-Oriented Design** - một biến
 
 ## Cấu trúc thư mục
 
+### ⚠️ Cấu trúc hiện tại (Đang bị "lai căng")
+
 ```
 app/
 ├── App/                    # Tầng Delivery/HTTP
+├── Domain/                 # Tầng Business Logic
+├── Infrastructure/         # Tầng Framework/Database
+├── Jobs/                   # ❌ Nên thuộc Domain cụ thể
+├── Notifications/          # ❌ Nên thuộc Domain cụ thể
+├── Observers/              # ❌ Nên thuộc Domain cụ thể
+├── Policies/               # ❌ Nên thuộc Domain cụ thể
+├── Services/               # ❌ Shipping services nên vào Infrastructure
+├── Contracts/              # ❌ Nên thuộc Domain cụ thể
+├── Filament/               # ❌ UI layer nên tách riêng
+├── Providers/
+└── Console/
+```
+
+> 📖 **Xem chi tiết phân tích và roadmap refactoring trong file `REFACTORING-TO-CLEAN-DDD.md`**
+
+### ✅ Cấu trúc lý tưởng (Clean DDD)
+
+```
+app/
+├── App/                    # Application Layer (Controllers, Requests, Middleware)
 │   └── Category/
 │       ├── Controllers/    # Nhận request, trả response
 │       └── Requests/       # Form validation
 │
-├── Domain/                 # Tầng Business Logic (PHP thuần)
+├── Domain/                 # Domain Layer (Business Logic - PHP thuần)
 │   └── Category/
 │       ├── Actions/        # Use cases nghiệp vụ
 │       ├── DataTransferObjects/  # DTOs
 │       ├── Repositories/   # Interfaces (KHÔNG implementation)
-│       └── Exceptions/     # Domain exceptions
+│       ├── Exceptions/     # Domain exceptions
+│       ├── Jobs/           # ✅ Category-specific jobs
+│       ├── Notifications/  # ✅ Category-specific notifications
+│       ├── Observers/      # ✅ Category-specific observers
+│       ├── Policies/       # ✅ Category-specific policies
+│       └── Contracts/      # ✅ Category-specific contracts
 │
-├── Infrastructure/         # Tầng Framework/Database
-│   ├── Models/            # Eloquent Models
-│   └── Repositories/      # Repository implementations
+├── Infrastructure/         # Infrastructure Layer (Framework/Database)
+│   ├── Persistence/
+│   │   ├── Models/        # Eloquent Models
+│   │   └── Repositories/  # Repository implementations
+│   └── ExternalServices/
+│       ├── Ghn/           # GiaoHangNhanh integration
+│       ├── Ghtk/          # GiaoHangTietKiem integration
+│       └── ShippingProviderFactory.php
 │
-└── Support/               # Helpers & 3rd party integrations
+├── Presentation/           # Presentation Layer (UI)
+│   └── Filament/          # Admin panel
+│       ├── Resources/
+│       ├── Pages/
+│       └── Widgets/
+│
+└── Shared/                # Shared Kernel
+    ├── Providers/
+    ├── Console/
+    └── Helpers/
 ```
 
 ## Luồng dữ liệu

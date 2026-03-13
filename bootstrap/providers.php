@@ -1,8 +1,8 @@
 <?php
 
 return [
-    App\Providers\AppServiceProvider::class,
-    App\Providers\DomainServiceProvider::class,
-    App\Providers\Filament\AdminPanelProvider::class,
-    App\Providers\TelescopeServiceProvider::class,
+    App\Shared\Providers\AppServiceProvider::class,
+    App\Shared\Providers\DomainServiceProvider::class,
+    App\Shared\Providers\Filament\AdminPanelProvider::class,
+    App\Shared\Providers\TelescopeServiceProvider::class,
 ];
