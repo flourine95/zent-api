@@ -7,15 +7,14 @@ use App\Domain\Shipping\Actions\CalculateShippingFeesAction;
 use App\Domain\Shipping\Actions\GetShippingProvidersAction;
 use App\Domain\Shipping\Actions\GetShippingSettingsAction;
 use App\Domain\Shipping\DataTransferObjects\ShippingCalculationData;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 
-class ShippingController extends Controller
+final readonly class ShippingController
 {
     public function __construct(
-        protected CalculateShippingFeesAction $calculateShippingFeesAction,
-        protected GetShippingProvidersAction $getShippingProvidersAction,
-        protected GetShippingSettingsAction $getShippingSettingsAction
+        private CalculateShippingFeesAction $calculateShippingFeesAction,
+        private GetShippingProvidersAction $getShippingProvidersAction,
+        private GetShippingSettingsAction $getShippingSettingsAction
     ) {}
 
     public function calculateFees(CalculateShippingFeesRequest $request): JsonResponse
