@@ -14,13 +14,13 @@ use App\Http\Resources\Api\WishlistResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-final class WishlistController
+final readonly class WishlistController
 {
     public function __construct(
-        private readonly GetUserWishlistAction $getUserWishlistAction,
-        private readonly AddToWishlistAction $addToWishlistAction,
-        private readonly RemoveFromWishlistAction $removeFromWishlistAction,
-        private readonly CheckWishlistAction $checkWishlistAction,
+        private GetUserWishlistAction $getUserWishlistAction,
+        private AddToWishlistAction $addToWishlistAction,
+        private RemoveFromWishlistAction $removeFromWishlistAction,
+        private CheckWishlistAction $checkWishlistAction,
     ) {}
 
     public function index(Request $request): JsonResponse

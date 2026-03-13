@@ -14,13 +14,13 @@ use App\Domain\Category\Exceptions\InvalidCategoryHierarchyException;
 use App\Domain\Category\Repositories\CategoryRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 
-final class CategoryController
+final readonly class CategoryController
 {
     public function __construct(
-        private readonly CategoryRepositoryInterface $categoryRepository,
-        private readonly CreateCategoryAction $createCategoryAction,
-        private readonly UpdateCategoryAction $updateCategoryAction,
-        private readonly DeleteCategoryAction $deleteCategoryAction,
+        private CategoryRepositoryInterface $categoryRepository,
+        private CreateCategoryAction $createCategoryAction,
+        private UpdateCategoryAction $updateCategoryAction,
+        private DeleteCategoryAction $deleteCategoryAction,
     ) {}
 
     public function index(): JsonResponse

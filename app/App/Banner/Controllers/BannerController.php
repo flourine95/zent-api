@@ -14,13 +14,13 @@ use App\Domain\Banner\Exceptions\InvalidBannerException;
 use App\Domain\Banner\Repositories\BannerRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 
-final class BannerController
+final readonly class BannerController
 {
     public function __construct(
-        private readonly BannerRepositoryInterface $bannerRepository,
-        private readonly CreateBannerAction $createBannerAction,
-        private readonly UpdateBannerAction $updateBannerAction,
-        private readonly DeleteBannerAction $deleteBannerAction,
+        private BannerRepositoryInterface $bannerRepository,
+        private CreateBannerAction $createBannerAction,
+        private UpdateBannerAction $updateBannerAction,
+        private DeleteBannerAction $deleteBannerAction,
     ) {}
 
     public function index(): JsonResponse

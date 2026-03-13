@@ -11,14 +11,14 @@ use App\Domain\Notification\Exceptions\NotificationNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-final class NotificationController
+final readonly class NotificationController
 {
     public function __construct(
-        private readonly GetNotificationsAction $getNotificationsAction,
-        private readonly MarkAsReadAction $markAsReadAction,
-        private readonly MarkAllAsReadAction $markAllAsReadAction,
-        private readonly DeleteNotificationAction $deleteNotificationAction,
-        private readonly GetUnreadCountAction $getUnreadCountAction,
+        private GetNotificationsAction $getNotificationsAction,
+        private MarkAsReadAction $markAsReadAction,
+        private MarkAllAsReadAction $markAllAsReadAction,
+        private DeleteNotificationAction $deleteNotificationAction,
+        private GetUnreadCountAction $getUnreadCountAction,
     ) {}
 
     public function index(Request $request): JsonResponse

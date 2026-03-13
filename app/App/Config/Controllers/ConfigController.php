@@ -5,10 +5,10 @@ namespace App\App\Config\Controllers;
 use App\Domain\Config\Actions\GetAppConfigAction;
 use Illuminate\Http\JsonResponse;
 
-final class ConfigController
+final readonly class ConfigController
 {
     public function __construct(
-        private readonly GetAppConfigAction $getAppConfigAction
+        private GetAppConfigAction $getAppConfigAction
     ) {}
 
     public function index(): JsonResponse

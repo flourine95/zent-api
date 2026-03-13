@@ -12,11 +12,11 @@ use App\Domain\User\Exceptions\InvalidCredentialsException;
 use App\Domain\User\Exceptions\UserNotFoundException;
 use Illuminate\Http\JsonResponse;
 
-final class ProfileController
+final readonly class ProfileController
 {
     public function __construct(
-        private readonly UpdateProfileAction $updateProfileAction,
-        private readonly ChangePasswordAction $changePasswordAction,
+        private UpdateProfileAction $updateProfileAction,
+        private ChangePasswordAction $changePasswordAction,
     ) {}
 
     public function update(UpdateProfileRequest $request): JsonResponse

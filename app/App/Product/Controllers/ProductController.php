@@ -14,13 +14,13 @@ use App\Domain\Product\Exceptions\ProductNotFoundException;
 use App\Domain\Product\Repositories\ProductRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 
-final class ProductController
+final readonly class ProductController
 {
     public function __construct(
-        private readonly ProductRepositoryInterface $productRepository,
-        private readonly CreateProductAction $createProductAction,
-        private readonly UpdateProductAction $updateProductAction,
-        private readonly DeleteProductAction $deleteProductAction,
+        private ProductRepositoryInterface $productRepository,
+        private CreateProductAction $createProductAction,
+        private UpdateProductAction $updateProductAction,
+        private DeleteProductAction $deleteProductAction,
     ) {}
 
     public function index(): JsonResponse

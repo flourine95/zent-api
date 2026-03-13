@@ -17,14 +17,14 @@ use App\Http\Resources\Api\AddressResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-final class AddressController
+final readonly class AddressController
 {
     public function __construct(
-        private readonly GetUserAddressesAction $getUserAddressesAction,
-        private readonly CreateAddressAction $createAddressAction,
-        private readonly UpdateAddressAction $updateAddressAction,
-        private readonly DeleteAddressAction $deleteAddressAction,
-        private readonly SetDefaultAddressAction $setDefaultAddressAction,
+        private GetUserAddressesAction $getUserAddressesAction,
+        private CreateAddressAction $createAddressAction,
+        private UpdateAddressAction $updateAddressAction,
+        private DeleteAddressAction $deleteAddressAction,
+        private SetDefaultAddressAction $setDefaultAddressAction,
     ) {}
 
     public function index(Request $request): JsonResponse

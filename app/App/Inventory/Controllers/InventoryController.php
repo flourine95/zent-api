@@ -16,13 +16,13 @@ use App\Domain\Inventory\Exceptions\InventoryNotFoundException;
 use App\Domain\Inventory\Repositories\InventoryRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 
-final class InventoryController
+final readonly class InventoryController
 {
     public function __construct(
-        private readonly InventoryRepositoryInterface $inventoryRepository,
-        private readonly CreateInventoryAction $createInventoryAction,
-        private readonly UpdateInventoryAction $updateInventoryAction,
-        private readonly AdjustInventoryAction $adjustInventoryAction,
+        private InventoryRepositoryInterface $inventoryRepository,
+        private CreateInventoryAction $createInventoryAction,
+        private UpdateInventoryAction $updateInventoryAction,
+        private AdjustInventoryAction $adjustInventoryAction,
     ) {}
 
     public function index(): JsonResponse

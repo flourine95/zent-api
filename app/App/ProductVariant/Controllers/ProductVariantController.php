@@ -9,11 +9,11 @@ use App\Domain\ProductVariant\Exceptions\ProductVariantNotFoundException;
 use App\Http\Resources\Api\ProductVariantResource;
 use Illuminate\Http\JsonResponse;
 
-final class ProductVariantController
+final readonly class ProductVariantController
 {
     public function __construct(
-        private readonly GetProductVariantsAction $getProductVariantsAction,
-        private readonly CheckVariantInventoryAction $checkVariantInventoryAction,
+        private GetProductVariantsAction $getProductVariantsAction,
+        private CheckVariantInventoryAction $checkVariantInventoryAction,
     ) {}
 
     public function index(string $productIdentifier): JsonResponse

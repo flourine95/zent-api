@@ -14,13 +14,13 @@ use App\Domain\Order\Exceptions\OrderNotFoundException;
 use App\Domain\Order\Repositories\OrderRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 
-final class OrderController
+final readonly class OrderController
 {
     public function __construct(
-        private readonly OrderRepositoryInterface $orderRepository,
-        private readonly CreateOrderAction $createOrderAction,
-        private readonly UpdateOrderAction $updateOrderAction,
-        private readonly CancelOrderAction $cancelOrderAction,
+        private OrderRepositoryInterface $orderRepository,
+        private CreateOrderAction $createOrderAction,
+        private UpdateOrderAction $updateOrderAction,
+        private CancelOrderAction $cancelOrderAction,
     ) {}
 
     public function index(): JsonResponse

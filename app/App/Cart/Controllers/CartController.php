@@ -18,14 +18,14 @@ use App\Http\Resources\Api\CartResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-final class CartController
+final readonly class CartController
 {
     public function __construct(
-        private readonly GetCartAction $getCartAction,
-        private readonly AddCartItemAction $addCartItemAction,
-        private readonly UpdateCartItemAction $updateCartItemAction,
-        private readonly RemoveCartItemAction $removeCartItemAction,
-        private readonly ClearCartAction $clearCartAction,
+        private GetCartAction $getCartAction,
+        private AddCartItemAction $addCartItemAction,
+        private UpdateCartItemAction $updateCartItemAction,
+        private RemoveCartItemAction $removeCartItemAction,
+        private ClearCartAction $clearCartAction,
     ) {}
 
     public function index(Request $request): JsonResponse

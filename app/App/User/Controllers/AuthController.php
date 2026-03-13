@@ -14,12 +14,12 @@ use App\Domain\User\Repositories\UserRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-final class AuthController
+final readonly class AuthController
 {
     public function __construct(
-        private readonly UserRepositoryInterface $userRepository,
-        private readonly RegisterUserAction $registerUserAction,
-        private readonly LoginUserAction $loginUserAction,
+        private UserRepositoryInterface $userRepository,
+        private RegisterUserAction $registerUserAction,
+        private LoginUserAction $loginUserAction,
     ) {}
 
     public function register(RegisterRequest $request): JsonResponse
