@@ -5,6 +5,7 @@ namespace App\Infrastructure\ExternalServices\Ghtk;
 use App\Domain\Shipping\Contracts\ShippingProviderInterface;
 use App\Infrastructure\Models\Shipment;
 use Exception;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
@@ -36,6 +37,10 @@ class GhtkService implements ShippingProviderInterface
         ])->baseUrl($this->baseUrl);
     }
 
+    /**
+     * @throws ConnectionException
+     * @throws Exception
+     */
     public function createOrder(array $orderData): array
     {
         try {
@@ -53,6 +58,10 @@ class GhtkService implements ShippingProviderInterface
         }
     }
 
+    /**
+     * @throws ConnectionException
+     * @throws Exception
+     */
     public function calculateFee(array $params): array
     {
         try {
@@ -70,6 +79,10 @@ class GhtkService implements ShippingProviderInterface
         }
     }
 
+    /**
+     * @throws ConnectionException
+     * @throws Exception
+     */
     public function getStatus(string $providerOrderId): array
     {
         try {
@@ -89,6 +102,10 @@ class GhtkService implements ShippingProviderInterface
         }
     }
 
+    /**
+     * @throws ConnectionException
+     * @throws Exception
+     */
     public function cancel(string $providerOrderId): bool
     {
         try {
@@ -117,8 +134,9 @@ class GhtkService implements ShippingProviderInterface
 
     public function normalizeStatus(int|string $providerStatus): string
     {
-        return match ((int) $providerStatus) {
-            1, 2 => Shipment::STATUS_PENDING,
+        $status = (int) $providerStatus;
+
+        return match ($status) {
             12 => Shipment::STATUS_PICKING,
             3 => Shipment::STATUS_PICKED,
             4 => Shipment::STATUS_IN_TRANSIT,
@@ -128,7 +146,7 @@ class GhtkService implements ShippingProviderInterface
             9 => Shipment::STATUS_RETURNED,
             13 => Shipment::STATUS_CANCELLED,
             10 => Shipment::STATUS_LOST,
-            default => Shipment::STATUS_PENDING,
+            default => Shipment::STATUS_PENDING, // Covers 1, 2 and unknown statuses
         };
     }
 
@@ -139,12 +157,22 @@ class GhtkService implements ShippingProviderInterface
 
     /**
      * Create order builder with default pickup info
+     *
+     * @used-by External integrations may use this method
      */
     public function orderBuilder(): GhtkOrderBuilder
     {
         return GhtkOrderBuilder::make($this->defaultPickup);
     }
 
+    /**
+     * Test GHTK API connection
+     *
+     * @throws ConnectionException
+     * @throws Exception
+     *
+     * @used-by Testing and diagnostics
+     */
     public function testConnection(): array
     {
         try {
@@ -161,6 +189,11 @@ class GhtkService implements ShippingProviderInterface
         }
     }
 
+    /**
+     * Handle API response
+     *
+     * @throws Exception
+     */
     protected function handleResponse(Response $response): array
     {
         $data = $response->json();

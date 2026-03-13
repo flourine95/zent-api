@@ -5,6 +5,7 @@ namespace App\Infrastructure\ExternalServices\Ghn;
 use App\Domain\Shipping\Contracts\ShippingProviderInterface;
 use App\Infrastructure\Models\Shipment;
 use Exception;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
@@ -36,6 +37,10 @@ class GhnService implements ShippingProviderInterface
         ])->baseUrl($this->baseUrl);
     }
 
+    /**
+     * @throws ConnectionException
+     * @throws Exception
+     */
     public function createOrder(array $orderData): array
     {
         try {
@@ -53,6 +58,10 @@ class GhnService implements ShippingProviderInterface
         }
     }
 
+    /**
+     * @throws ConnectionException
+     * @throws Exception
+     */
     public function calculateFee(array $params): array
     {
         try {
@@ -70,6 +79,10 @@ class GhnService implements ShippingProviderInterface
         }
     }
 
+    /**
+     * @throws ConnectionException
+     * @throws Exception
+     */
     public function getStatus(string $providerOrderId): array
     {
         try {
@@ -89,6 +102,10 @@ class GhnService implements ShippingProviderInterface
         }
     }
 
+    /**
+     * @throws ConnectionException
+     * @throws Exception
+     */
     public function cancel(string $providerOrderId): bool
     {
         try {
@@ -151,6 +168,8 @@ class GhnService implements ShippingProviderInterface
 
     /**
      * Create order builder with default pickup info
+     *
+     * @used-by External integrations may use this method
      */
     public function orderBuilder(): GhnOrderBuilder
     {
@@ -159,6 +178,9 @@ class GhnService implements ShippingProviderInterface
 
     /**
      * Get available services
+     *
+     * @throws ConnectionException
+     * @throws Exception
      */
     public function getServices(int $fromDistrictId, int $toDistrictId): array
     {
@@ -182,6 +204,9 @@ class GhnService implements ShippingProviderInterface
 
     /**
      * Get province list
+     *
+     * @throws ConnectionException
+     * @throws Exception
      */
     public function getProvinces(): array
     {
@@ -201,6 +226,9 @@ class GhnService implements ShippingProviderInterface
 
     /**
      * Get district list
+     *
+     * @throws ConnectionException
+     * @throws Exception
      */
     public function getDistricts(int $provinceId): array
     {
@@ -222,6 +250,9 @@ class GhnService implements ShippingProviderInterface
 
     /**
      * Get ward list
+     *
+     * @throws ConnectionException
+     * @throws Exception
      */
     public function getWards(int $districtId): array
     {
@@ -241,6 +272,11 @@ class GhnService implements ShippingProviderInterface
         }
     }
 
+    /**
+     * Handle API response
+     *
+     * @throws Exception
+     */
     protected function handleResponse(Response $response): array
     {
         $data = $response->json();
