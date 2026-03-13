@@ -10,7 +10,6 @@ use App\Domain\Wishlist\Actions\RemoveFromWishlistAction;
 use App\Domain\Wishlist\DataTransferObjects\AddWishlistData;
 use App\Domain\Wishlist\Exceptions\ProductNotFoundException;
 use App\Domain\Wishlist\Exceptions\WishlistItemNotFoundException;
-use App\Http\Resources\Api\WishlistResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -29,7 +28,7 @@ final readonly class WishlistController
 
         return response()->json([
             'success' => true,
-            'data' => WishlistResource::collection(collect($wishlists)),
+            'data' => $wishlists,
         ]);
     }
 
@@ -46,7 +45,7 @@ final readonly class WishlistController
             return response()->json([
                 'success' => true,
                 'message' => 'Đã thêm vào danh sách yêu thích',
-                'data' => new WishlistResource((object) $wishlist),
+                'data' => $wishlist,
             ], 201);
         } catch (ProductNotFoundException $e) {
             return response()->json([

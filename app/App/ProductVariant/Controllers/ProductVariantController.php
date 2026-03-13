@@ -6,7 +6,6 @@ use App\Domain\ProductVariant\Actions\CheckVariantInventoryAction;
 use App\Domain\ProductVariant\Actions\GetProductVariantsAction;
 use App\Domain\ProductVariant\Exceptions\ProductNotFoundException;
 use App\Domain\ProductVariant\Exceptions\ProductVariantNotFoundException;
-use App\Http\Resources\Api\ProductVariantResource;
 use Illuminate\Http\JsonResponse;
 
 final readonly class ProductVariantController
@@ -23,7 +22,7 @@ final readonly class ProductVariantController
 
             return response()->json([
                 'success' => true,
-                'data' => ProductVariantResource::collection(collect($variants)),
+                'data' => $variants,
             ]);
         } catch (ProductNotFoundException $e) {
             return response()->json([

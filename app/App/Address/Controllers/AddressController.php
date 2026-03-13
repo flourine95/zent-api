@@ -13,7 +13,6 @@ use App\Domain\Address\DataTransferObjects\CreateAddressData;
 use App\Domain\Address\DataTransferObjects\UpdateAddressData;
 use App\Domain\Address\Exceptions\AddressNotFoundException;
 use App\Domain\Address\Exceptions\UnauthorizedAddressAccessException;
-use App\Http\Resources\Api\AddressResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -33,7 +32,7 @@ final readonly class AddressController
 
         return response()->json([
             'success' => true,
-            'data' => AddressResource::collection(collect($addresses)),
+            'data' => $addresses,
         ]);
     }
 
@@ -49,7 +48,7 @@ final readonly class AddressController
         return response()->json([
             'success' => true,
             'message' => 'Đã thêm địa chỉ mới',
-            'data' => new AddressResource((object) $address),
+            'data' => $address,
         ], 201);
     }
 
@@ -67,7 +66,7 @@ final readonly class AddressController
             return response()->json([
                 'success' => true,
                 'message' => 'Đã cập nhật địa chỉ',
-                'data' => new AddressResource((object) $updatedAddress),
+                'data' => $updatedAddress,
             ]);
         } catch (AddressNotFoundException $e) {
             return response()->json([
@@ -112,7 +111,7 @@ final readonly class AddressController
             return response()->json([
                 'success' => true,
                 'message' => 'Đã đặt làm địa chỉ mặc định',
-                'data' => new AddressResource((object) $updatedAddress),
+                'data' => $updatedAddress,
             ]);
         } catch (AddressNotFoundException $e) {
             return response()->json([

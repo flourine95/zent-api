@@ -14,7 +14,6 @@ use App\Domain\Cart\DataTransferObjects\UpdateCartItemData;
 use App\Domain\Cart\Exceptions\CartItemNotFoundException;
 use App\Domain\Cart\Exceptions\InvalidQuantityException;
 use App\Domain\Cart\Exceptions\ProductVariantNotFoundException;
-use App\Http\Resources\Api\CartResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -34,7 +33,7 @@ final readonly class CartController
 
         return response()->json([
             'success' => true,
-            'data' => new CartResource((object) $cart),
+            'data' => $cart,
         ]);
     }
 
@@ -52,7 +51,7 @@ final readonly class CartController
             return response()->json([
                 'success' => true,
                 'message' => 'Đã thêm sản phẩm vào giỏ hàng',
-                'data' => new CartResource((object) $cart),
+                'data' => $cart,
             ]);
         } catch (InvalidQuantityException|ProductVariantNotFoundException $e) {
             return response()->json([
@@ -76,7 +75,7 @@ final readonly class CartController
             return response()->json([
                 'success' => true,
                 'message' => 'Đã cập nhật giỏ hàng',
-                'data' => new CartResource((object) $cart),
+                'data' => $cart,
             ]);
         } catch (InvalidQuantityException|CartItemNotFoundException $e) {
             return response()->json([
