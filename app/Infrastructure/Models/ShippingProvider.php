@@ -19,7 +19,7 @@ class ShippingProvider extends Model
     {
         return [
             'is_active' => 'boolean',
-            'config' => 'encrypted:array', // Encrypt entire config for security
+            'config' => 'array', // Store as JSON (credentials should be in .env, not here)
             'priority' => 'integer',
         ];
     }

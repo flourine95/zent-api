@@ -143,7 +143,11 @@ class ShippingService
         foreach ($activeProviders as $provider) {
             try {
                 $providerService = ShippingProviderFactory::makeFromModel($provider);
-                $feeData = $providerService->calculateFee($params);
+                
+                // Adapt params for each provider
+                $adaptedParams = $this->adaptParamsForProvider($provider->code, $params);
+                
+                $feeData = $providerService->calculateFee($adaptedParams);
 
                 if ($feeData['success'] ?? false) {
                     $results[] = [
@@ -165,6 +169,36 @@ class ShippingService
         usort($results, fn ($a, $b) => $a['total'] <=> $b['total']);
 
         return $results;
+    }
+    
+    /**
+     * Adapt params for specific provider
+     */
+    protected function adaptParamsForProvider(string $providerCode, array $params): array
+    {
+        return match ($providerCode) {
+            'ghtk' => [
+                'pick_province' => $params['pick_province'],
+                'pick_district' => $params['pick_district'],
+                'pick_ward' => $params['pick_ward'] ?? null,
+                'province' => $params['province'],
+                'district' => $params['district'],
+                'ward' => $params['ward'] ?? null,
+                'weight' => $params['weight'],
+                'value' => $params['value'],
+                'transport' => $params['transport'] ?? 'road',
+            ],
+            'ghn' => [
+                'from_district_id' => $params['from_district_id'] ?? null,
+                'from_ward_code' => $params['from_ward_code'] ?? null,
+                'to_district_id' => $params['to_district_id'] ?? null,
+                'to_ward_code' => $params['to_ward_code'] ?? null,
+                'weight' => $params['weight'],
+                'insurance_value' => $params['value'],
+                'service_type_id' => 2, // E-commerce delivery
+            ],
+            default => $params,
+        };
     }
 
     /**

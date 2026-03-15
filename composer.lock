@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "070b111cf4a1c1093ad82149f422d4aa",
+    "content-hash": "1cd544e34f82d120d01fca4694d07e91",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -9008,24 +9008,24 @@
         },
         {
             "name": "laravel/boost",
-            "version": "v2.2.2",
+            "version": "v2.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/boost.git",
-                "reference": "2b0366559e9ff591c65ea0321dfb91fd950c2cbd"
+                "reference": "ba0a9e6497398b6ce8243f5517b67d6761509150"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/boost/zipball/2b0366559e9ff591c65ea0321dfb91fd950c2cbd",
-                "reference": "2b0366559e9ff591c65ea0321dfb91fd950c2cbd",
+                "url": "https://api.github.com/repos/laravel/boost/zipball/ba0a9e6497398b6ce8243f5517b67d6761509150",
+                "reference": "ba0a9e6497398b6ce8243f5517b67d6761509150",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/guzzle": "^7.9",
-                "illuminate/console": "^11.45.3|^12.41.1",
-                "illuminate/contracts": "^11.45.3|^12.41.1",
-                "illuminate/routing": "^11.45.3|^12.41.1",
-                "illuminate/support": "^11.45.3|^12.41.1",
+                "illuminate/console": "^11.45.3|^12.41.1|^13.0",
+                "illuminate/contracts": "^11.45.3|^12.41.1|^13.0",
+                "illuminate/routing": "^11.45.3|^12.41.1|^13.0",
+                "illuminate/support": "^11.45.3|^12.41.1|^13.0",
                 "laravel/mcp": "^0.5.1|^0.6.0",
                 "laravel/prompts": "^0.3.10",
                 "laravel/roster": "^0.5.0",
@@ -9034,7 +9034,7 @@
             "require-dev": {
                 "laravel/pint": "^1.27.0",
                 "mockery/mockery": "^1.6.12",
-                "orchestra/testbench": "^9.15.0|^10.6",
+                "orchestra/testbench": "^9.15.0|^10.6|^11.0",
                 "pestphp/pest": "^2.36.0|^3.8.4|^4.1.5",
                 "phpstan/phpstan": "^2.1.27",
                 "rector/rector": "^2.1"
@@ -9070,7 +9070,7 @@
                 "issues": "https://github.com/laravel/boost/issues",
                 "source": "https://github.com/laravel/boost"
             },
-            "time": "2026-03-03T14:36:03+00:00"
+            "time": "2026-03-12T09:06:47+00:00"
         },
         {
             "name": "laravel/mcp",

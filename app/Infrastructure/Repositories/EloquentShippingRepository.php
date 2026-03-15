@@ -3,8 +3,8 @@
 namespace App\Infrastructure\Repositories;
 
 use App\Domain\Shipping\Repositories\ShippingRepositoryInterface;
+use App\Domain\Shipping\Services\ShippingService;
 use App\Infrastructure\Models\ShippingProvider;
-use App\Services\ShippingService;
 
 class EloquentShippingRepository implements ShippingRepositoryInterface
 {

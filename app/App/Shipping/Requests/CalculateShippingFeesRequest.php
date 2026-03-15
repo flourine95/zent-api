@@ -14,10 +14,21 @@ class CalculateShippingFeesRequest extends FormRequest
     public function rules(): array
     {
         return [
+            // For GHTK (string names)
             'from_province' => ['required', 'string'],
             'from_district' => ['required', 'string'],
+            'from_ward' => ['nullable', 'string'],
             'to_province' => ['required', 'string'],
             'to_district' => ['required', 'string'],
+            'to_ward' => ['nullable', 'string'],
+            
+            // For GHN (IDs)
+            'from_district_id' => ['nullable', 'integer'],
+            'from_ward_code' => ['nullable', 'string'],
+            'to_district_id' => ['nullable', 'integer'],
+            'to_ward_code' => ['nullable', 'string'],
+            
+            // Common
             'weight' => ['required', 'integer', 'min:1'],
             'value' => ['required', 'integer', 'min:0'],
             'transport' => ['nullable', 'in:fly,road'],
