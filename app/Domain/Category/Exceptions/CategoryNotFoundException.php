@@ -2,10 +2,12 @@
 
 namespace App\Domain\Category\Exceptions;
 
-use Exception;
+use App\Shared\Exceptions\DomainException;
 
-final class CategoryNotFoundException extends Exception
+final class CategoryNotFoundException extends DomainException
 {
+    public string $errorCode = 'CATEGORY_NOT_FOUND';
+
     public static function withId(int $id): self
     {
         return new self("Category with ID {$id} not found.");

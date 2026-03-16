@@ -14,11 +14,14 @@ use App\Domain\Cart\DataTransferObjects\UpdateCartItemData;
 use App\Domain\Cart\Exceptions\CartItemNotFoundException;
 use App\Domain\Cart\Exceptions\InvalidQuantityException;
 use App\Domain\Cart\Exceptions\ProductVariantNotFoundException;
+use App\Shared\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 final readonly class CartController
 {
+    use ApiResponse;
+
     public function __construct(
         private GetCartAction $getCartAction,
         private AddCartItemAction $addCartItemAction,
@@ -29,12 +32,7 @@ final readonly class CartController
 
     public function index(Request $request): JsonResponse
     {
-        $cart = $this->getCartAction->execute($request->user()->id);
-
-        return response()->json([
-            'success' => true,
-            'data' => $cart,
-        ]);
+        return $this->success($this->getCartAction->execute($request->user()->id));
     }
 
     public function addItem(AddCartItemRequest $request): JsonResponse
@@ -46,18 +44,11 @@ final readonly class CartController
                 'quantity' => $request->input('quantity'),
             ]);
 
-            $cart = $this->addCartItemAction->execute($data);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Đã thêm sản phẩm vào giỏ hàng',
-                'data' => $cart,
-            ]);
-        } catch (InvalidQuantityException|ProductVariantNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 422);
+            return $this->success($this->addCartItemAction->execute($data));
+        } catch (ProductVariantNotFoundException $e) {
+            return $this->error($e->getMessage(), $e->errorCode, 404);
+        } catch (InvalidQuantityException $e) {
+            return $this->error($e->getMessage(), $e->errorCode, 422);
         }
     }
 
@@ -70,18 +61,11 @@ final readonly class CartController
                 'quantity' => $request->input('quantity'),
             ]);
 
-            $cart = $this->updateCartItemAction->execute($data);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Đã cập nhật giỏ hàng',
-                'data' => $cart,
-            ]);
-        } catch (InvalidQuantityException|CartItemNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 422);
+            return $this->success($this->updateCartItemAction->execute($data));
+        } catch (CartItemNotFoundException $e) {
+            return $this->error($e->getMessage(), $e->errorCode, 404);
+        } catch (InvalidQuantityException $e) {
+            return $this->error($e->getMessage(), $e->errorCode, 422);
         }
     }
 
@@ -90,15 +74,9 @@ final readonly class CartController
         try {
             $this->removeCartItemAction->execute($request->user()->id, $itemId);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Đã xóa sản phẩm khỏi giỏ hàng',
-            ]);
+            return $this->message('Đã xóa sản phẩm khỏi giỏ hàng');
         } catch (CartItemNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 404);
+            return $this->error($e->getMessage(), $e->errorCode, 404);
         }
     }
 
@@ -106,9 +84,6 @@ final readonly class CartController
     {
         $this->clearCartAction->execute($request->user()->id);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Đã xóa toàn bộ giỏ hàng',
-        ]);
+        return $this->message('Đã xóa toàn bộ giỏ hàng');
     }
 }

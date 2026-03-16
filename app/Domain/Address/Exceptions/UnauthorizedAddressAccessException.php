@@ -2,10 +2,12 @@
 
 namespace App\Domain\Address\Exceptions;
 
-use Exception;
+use App\Shared\Exceptions\DomainException;
 
-final class UnauthorizedAddressAccessException extends Exception
+final class UnauthorizedAddressAccessException extends DomainException
 {
+    public string $errorCode = 'UNAUTHORIZED_ADDRESS_ACCESS';
+
     public static function forUser(int $userId, int $addressId): self
     {
         return new self("User {$userId} is not authorized to access address {$addressId}.");

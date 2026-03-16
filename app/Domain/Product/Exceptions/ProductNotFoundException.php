@@ -2,10 +2,12 @@
 
 namespace App\Domain\Product\Exceptions;
 
-use Exception;
+use App\Shared\Exceptions\DomainException;
 
-final class ProductNotFoundException extends Exception
+final class ProductNotFoundException extends DomainException
 {
+    public string $errorCode = 'PRODUCT_NOT_FOUND';
+
     public static function withId(int $id): self
     {
         return new self("Product with ID {$id} not found.");

@@ -14,10 +14,13 @@ use App\Domain\Inventory\Exceptions\DuplicateInventoryException;
 use App\Domain\Inventory\Exceptions\InsufficientInventoryException;
 use App\Domain\Inventory\Exceptions\InventoryNotFoundException;
 use App\Domain\Inventory\Repositories\InventoryRepositoryInterface;
+use App\Shared\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 
 final readonly class InventoryController
 {
+    use ApiResponse;
+
     public function __construct(
         private InventoryRepositoryInterface $inventoryRepository,
         private CreateInventoryAction $createInventoryAction,
@@ -27,30 +30,22 @@ final readonly class InventoryController
 
     public function index(): JsonResponse
     {
-        $inventories = $this->inventoryRepository->getAll();
-
-        return response()->json(['data' => $inventories]);
+        return $this->success($this->inventoryRepository->getAll());
     }
 
     public function lowStock(int $threshold = 10): JsonResponse
     {
-        $inventories = $this->inventoryRepository->getLowStock($threshold);
-
-        return response()->json(['data' => $inventories]);
+        return $this->success($this->inventoryRepository->getLowStock($threshold));
     }
 
     public function byWarehouse(int $warehouseId): JsonResponse
     {
-        $inventories = $this->inventoryRepository->getByWarehouse($warehouseId);
-
-        return response()->json(['data' => $inventories]);
+        return $this->success($this->inventoryRepository->getByWarehouse($warehouseId));
     }
 
     public function byProductVariant(int $productVariantId): JsonResponse
     {
-        $inventories = $this->inventoryRepository->getByProductVariant($productVariantId);
-
-        return response()->json(['data' => $inventories]);
+        return $this->success($this->inventoryRepository->getByProductVariant($productVariantId));
     }
 
     public function show(int $id): JsonResponse
@@ -62,9 +57,9 @@ final readonly class InventoryController
                 throw InventoryNotFoundException::withId($id);
             }
 
-            return response()->json(['data' => $inventory]);
+            return $this->success($inventory);
         } catch (InventoryNotFoundException $e) {
-            return response()->json(['error' => $e->getMessage()], 404);
+            return $this->error($e->getMessage(), $e->errorCode, 404);
         }
     }
 
@@ -72,11 +67,10 @@ final readonly class InventoryController
     {
         try {
             $data = CreateInventoryData::fromArray($request->validated());
-            $inventory = $this->createInventoryAction->execute($data);
 
-            return response()->json(['data' => $inventory], 201);
+            return $this->created($this->createInventoryAction->execute($data));
         } catch (DuplicateInventoryException $e) {
-            return response()->json(['error' => $e->getMessage()], 422);
+            return $this->error($e->getMessage(), $e->errorCode, 422);
         }
     }
 
@@ -84,11 +78,10 @@ final readonly class InventoryController
     {
         try {
             $data = UpdateInventoryData::fromArray($id, $request->validated());
-            $inventory = $this->updateInventoryAction->execute($data);
 
-            return response()->json(['data' => $inventory]);
+            return $this->success($this->updateInventoryAction->execute($data));
         } catch (InventoryNotFoundException $e) {
-            return response()->json(['error' => $e->getMessage()], 404);
+            return $this->error($e->getMessage(), $e->errorCode, 404);
         }
     }
 
@@ -101,11 +94,11 @@ final readonly class InventoryController
                 $request->validated('reason')
             );
 
-            return response()->json(['data' => $inventory]);
+            return $this->success($inventory);
         } catch (InventoryNotFoundException $e) {
-            return response()->json(['error' => $e->getMessage()], 404);
+            return $this->error($e->getMessage(), $e->errorCode, 404);
         } catch (InsufficientInventoryException $e) {
-            return response()->json(['error' => $e->getMessage()], 422);
+            return $this->error($e->getMessage(), $e->errorCode, 422);
         }
     }
 }

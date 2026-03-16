@@ -10,10 +10,13 @@ use App\Domain\User\DataTransferObjects\UpdateProfileData;
 use App\Domain\User\Exceptions\EmailAlreadyExistsException;
 use App\Domain\User\Exceptions\InvalidCredentialsException;
 use App\Domain\User\Exceptions\UserNotFoundException;
+use App\Shared\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 
 final readonly class ProfileController
 {
+    use ApiResponse;
+
     public function __construct(
         private UpdateProfileAction $updateProfileAction,
         private ChangePasswordAction $changePasswordAction,
@@ -22,23 +25,11 @@ final readonly class ProfileController
     public function update(UpdateProfileRequest $request): JsonResponse
     {
         try {
-            $data = UpdateProfileData::fromArray(
-                $request->user()->id,
-                $request->validated()
-            );
+            $data = UpdateProfileData::fromArray($request->user()->id, $request->validated());
 
-            $user = $this->updateProfileAction->execute($data);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Đã cập nhật thông tin',
-                'data' => $user,
-            ]);
-        } catch (UserNotFoundException|EmailAlreadyExistsException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 422);
+            return $this->success($this->updateProfileAction->execute($data));
+        } catch (EmailAlreadyExistsException|UserNotFoundException $e) {
+            return $this->error($e->getMessage(), $e->errorCode, 422);
         }
     }
 
@@ -51,23 +42,11 @@ final readonly class ProfileController
                 $request->validated('password')
             );
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Đã đổi mật khẩu thành công',
-            ]);
+            return $this->message('Đã đổi mật khẩu thành công');
         } catch (InvalidCredentialsException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-                'errors' => [
-                    'current_password' => [$e->getMessage()],
-                ],
-            ], 422);
+            return $this->error($e->getMessage(), $e->errorCode, 422);
         } catch (UserNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 404);
+            return $this->error($e->getMessage(), $e->errorCode, 404);
         }
     }
 }

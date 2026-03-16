@@ -12,10 +12,13 @@ use App\Domain\Order\DataTransferObjects\UpdateOrderData;
 use App\Domain\Order\Exceptions\InvalidOrderException;
 use App\Domain\Order\Exceptions\OrderNotFoundException;
 use App\Domain\Order\Repositories\OrderRepositoryInterface;
+use App\Shared\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 
 final readonly class OrderController
 {
+    use ApiResponse;
+
     public function __construct(
         private OrderRepositoryInterface $orderRepository,
         private CreateOrderAction $createOrderAction,
@@ -25,9 +28,7 @@ final readonly class OrderController
 
     public function index(): JsonResponse
     {
-        $orders = $this->orderRepository->getAll();
-
-        return response()->json(['data' => $orders]);
+        return $this->success($this->orderRepository->getAll());
     }
 
     public function show(int $id): JsonResponse
@@ -39,9 +40,9 @@ final readonly class OrderController
                 throw OrderNotFoundException::withId($id);
             }
 
-            return response()->json(['data' => $order]);
+            return $this->success($order);
         } catch (OrderNotFoundException $e) {
-            return response()->json(['error' => $e->getMessage()], 404);
+            return $this->error($e->getMessage(), $e->errorCode, 404);
         }
     }
 
@@ -49,11 +50,10 @@ final readonly class OrderController
     {
         try {
             $data = CreateOrderData::fromArray($request->validated());
-            $order = $this->createOrderAction->execute($data);
 
-            return response()->json(['data' => $order], 201);
+            return $this->created($this->createOrderAction->execute($data));
         } catch (InvalidOrderException $e) {
-            return response()->json(['error' => $e->getMessage()], 422);
+            return $this->error($e->getMessage(), $e->errorCode, 422);
         }
     }
 
@@ -61,22 +61,19 @@ final readonly class OrderController
     {
         try {
             $data = UpdateOrderData::fromArray($id, $request->validated());
-            $order = $this->updateOrderAction->execute($data);
 
-            return response()->json(['data' => $order]);
+            return $this->success($this->updateOrderAction->execute($data));
         } catch (OrderNotFoundException $e) {
-            return response()->json(['error' => $e->getMessage()], 404);
+            return $this->error($e->getMessage(), $e->errorCode, 404);
         }
     }
 
     public function cancel(int $id): JsonResponse
     {
         try {
-            $order = $this->cancelOrderAction->execute($id);
-
-            return response()->json(['data' => $order]);
+            return $this->success($this->cancelOrderAction->execute($id));
         } catch (OrderNotFoundException|InvalidOrderException $e) {
-            return response()->json(['error' => $e->getMessage()], 422);
+            return $this->error($e->getMessage(), $e->errorCode, 422);
         }
     }
 }

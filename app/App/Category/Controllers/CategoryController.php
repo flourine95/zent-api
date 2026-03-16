@@ -12,10 +12,13 @@ use App\Domain\Category\DataTransferObjects\UpdateCategoryData;
 use App\Domain\Category\Exceptions\CategoryNotFoundException;
 use App\Domain\Category\Exceptions\InvalidCategoryHierarchyException;
 use App\Domain\Category\Repositories\CategoryRepositoryInterface;
+use App\Shared\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 
 final readonly class CategoryController
 {
+    use ApiResponse;
+
     public function __construct(
         private CategoryRepositoryInterface $categoryRepository,
         private CreateCategoryAction $createCategoryAction,
@@ -25,16 +28,12 @@ final readonly class CategoryController
 
     public function index(): JsonResponse
     {
-        $categories = $this->categoryRepository->getAll();
-
-        return response()->json(['data' => $categories]);
+        return $this->success($this->categoryRepository->getAll());
     }
 
     public function tree(): JsonResponse
     {
-        $tree = $this->categoryRepository->getTree();
-
-        return response()->json(['data' => $tree]);
+        return $this->success($this->categoryRepository->getTree());
     }
 
     public function show(int $id): JsonResponse
@@ -46,9 +45,9 @@ final readonly class CategoryController
                 throw CategoryNotFoundException::withId($id);
             }
 
-            return response()->json(['data' => $category]);
+            return $this->success($category);
         } catch (CategoryNotFoundException $e) {
-            return response()->json(['error' => $e->getMessage()], 404);
+            return $this->error($e->getMessage(), $e->errorCode, 404);
         }
     }
 
@@ -56,11 +55,10 @@ final readonly class CategoryController
     {
         try {
             $data = CreateCategoryData::fromArray($request->validated());
-            $category = $this->createCategoryAction->execute($data);
 
-            return response()->json(['data' => $category], 201);
+            return $this->created($this->createCategoryAction->execute($data));
         } catch (CategoryNotFoundException|InvalidCategoryHierarchyException $e) {
-            return response()->json(['error' => $e->getMessage()], 422);
+            return $this->error($e->getMessage(), $e->errorCode, 422);
         }
     }
 
@@ -68,11 +66,10 @@ final readonly class CategoryController
     {
         try {
             $data = UpdateCategoryData::fromArray($id, $request->validated());
-            $category = $this->updateCategoryAction->execute($data);
 
-            return response()->json(['data' => $category]);
+            return $this->success($this->updateCategoryAction->execute($data));
         } catch (CategoryNotFoundException|InvalidCategoryHierarchyException $e) {
-            return response()->json(['error' => $e->getMessage()], 422);
+            return $this->error($e->getMessage(), $e->errorCode, 422);
         }
     }
 
@@ -81,9 +78,9 @@ final readonly class CategoryController
         try {
             $this->deleteCategoryAction->execute($id);
 
-            return response()->json(['message' => 'Category deleted successfully']);
+            return $this->message('Category deleted successfully');
         } catch (CategoryNotFoundException $e) {
-            return response()->json(['error' => $e->getMessage()], 404);
+            return $this->error($e->getMessage(), $e->errorCode, 404);
         }
     }
 }

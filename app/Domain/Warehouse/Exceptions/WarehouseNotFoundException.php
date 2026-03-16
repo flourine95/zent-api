@@ -2,9 +2,14 @@
 
 namespace App\Domain\Warehouse\Exceptions;
 
-use Exception;
+use App\Shared\Exceptions\DomainException;
 
-class WarehouseNotFoundException extends Exception
+final class WarehouseNotFoundException extends DomainException
 {
-    //
+    public string $errorCode = 'WAREHOUSE_NOT_FOUND';
+
+    public static function withId(int $id): self
+    {
+        return new self("Warehouse with ID {$id} not found.");
+    }
 }

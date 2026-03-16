@@ -2,10 +2,12 @@
 
 namespace App\Domain\Order\Exceptions;
 
-use Exception;
+use App\Shared\Exceptions\DomainException;
 
-final class InvalidOrderException extends Exception
+final class InvalidOrderException extends DomainException
 {
+    public string $errorCode = 'INVALID_ORDER';
+
     public static function noItems(): self
     {
         return new self('Order must have at least one item.');
@@ -13,11 +15,17 @@ final class InvalidOrderException extends Exception
 
     public static function totalMismatch(float $expected, float $calculated): self
     {
-        return new self("Order total mismatch. Expected: {$expected}, Calculated: {$calculated}");
+        $e = new self("Order total mismatch. Expected: {$expected}, Calculated: {$calculated}");
+        $e->errorCode = 'ORDER_TOTAL_MISMATCH';
+
+        return $e;
     }
 
     public static function cannotCancel(string $currentStatus): self
     {
-        return new self("Cannot cancel order with status: {$currentStatus}");
+        $e = new self("Cannot cancel order with status: {$currentStatus}");
+        $e->errorCode = 'ORDER_CANNOT_CANCEL';
+
+        return $e;
     }
 }

@@ -2,10 +2,12 @@
 
 namespace App\Domain\User\Exceptions;
 
-use Exception;
+use App\Shared\Exceptions\DomainException;
 
-final class InvalidCredentialsException extends Exception
+final class InvalidCredentialsException extends DomainException
 {
+    public string $errorCode = 'INVALID_CREDENTIALS';
+
     public static function invalidEmailOrPassword(): self
     {
         return new self('Email hoặc mật khẩu không đúng.');
@@ -13,6 +15,9 @@ final class InvalidCredentialsException extends Exception
 
     public static function incorrectCurrentPassword(): self
     {
-        return new self('Mật khẩu hiện tại không đúng.');
+        $e = new self('Mật khẩu hiện tại không đúng.');
+        $e->errorCode = 'INCORRECT_CURRENT_PASSWORD';
+
+        return $e;
     }
 }

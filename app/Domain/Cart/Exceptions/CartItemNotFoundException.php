@@ -2,10 +2,12 @@
 
 namespace App\Domain\Cart\Exceptions;
 
-use Exception;
+use App\Shared\Exceptions\DomainException;
 
-final class CartItemNotFoundException extends Exception
+final class CartItemNotFoundException extends DomainException
 {
+    public string $errorCode = 'CART_ITEM_NOT_FOUND';
+
     public static function withId(int $id): self
     {
         return new self("Cart item with ID {$id} not found.");

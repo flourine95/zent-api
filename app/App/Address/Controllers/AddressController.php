@@ -13,11 +13,14 @@ use App\Domain\Address\DataTransferObjects\CreateAddressData;
 use App\Domain\Address\DataTransferObjects\UpdateAddressData;
 use App\Domain\Address\Exceptions\AddressNotFoundException;
 use App\Domain\Address\Exceptions\UnauthorizedAddressAccessException;
+use App\Shared\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 final readonly class AddressController
 {
+    use ApiResponse;
+
     public function __construct(
         private GetUserAddressesAction $getUserAddressesAction,
         private CreateAddressAction $createAddressAction,
@@ -30,10 +33,7 @@ final readonly class AddressController
     {
         $addresses = $this->getUserAddressesAction->execute($request->user()->id);
 
-        return response()->json([
-            'success' => true,
-            'data' => $addresses,
-        ]);
+        return $this->success($addresses);
     }
 
     public function store(CreateAddressRequest $request): JsonResponse
@@ -45,11 +45,7 @@ final readonly class AddressController
 
         $address = $this->createAddressAction->execute($data);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Đã thêm địa chỉ mới',
-            'data' => $address,
-        ], 201);
+        return $this->created($address, 'Đã thêm địa chỉ mới');
     }
 
     public function update(UpdateAddressRequest $request, int $address): JsonResponse
@@ -61,23 +57,11 @@ final readonly class AddressController
                 'user_id' => $request->user()->id,
             ]);
 
-            $updatedAddress = $this->updateAddressAction->execute($data);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Đã cập nhật địa chỉ',
-                'data' => $updatedAddress,
-            ]);
+            return $this->success($this->updateAddressAction->execute($data));
         } catch (AddressNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 404);
+            return $this->error($e->getMessage(), $e->errorCode, 404);
         } catch (UnauthorizedAddressAccessException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Không có quyền cập nhật địa chỉ này',
-            ], 403);
+            return $this->error($e->getMessage(), $e->errorCode, 403);
         }
     }
 
@@ -86,43 +70,24 @@ final readonly class AddressController
         try {
             $this->deleteAddressAction->execute($request->user()->id, $address);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Đã xóa địa chỉ',
-            ]);
+            return $this->message('Đã xóa địa chỉ');
         } catch (AddressNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 404);
+            return $this->error($e->getMessage(), $e->errorCode, 404);
         } catch (UnauthorizedAddressAccessException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Không có quyền xóa địa chỉ này',
-            ], 403);
+            return $this->error($e->getMessage(), $e->errorCode, 403);
         }
     }
 
     public function setDefault(Request $request, int $address): JsonResponse
     {
         try {
-            $updatedAddress = $this->setDefaultAddressAction->execute($request->user()->id, $address);
+            $updated = $this->setDefaultAddressAction->execute($request->user()->id, $address);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Đã đặt làm địa chỉ mặc định',
-                'data' => $updatedAddress,
-            ]);
+            return $this->success($updated);
         } catch (AddressNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 404);
+            return $this->error($e->getMessage(), $e->errorCode, 404);
         } catch (UnauthorizedAddressAccessException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Không có quyền thay đổi địa chỉ này',
-            ], 403);
+            return $this->error($e->getMessage(), $e->errorCode, 403);
         }
     }
 }

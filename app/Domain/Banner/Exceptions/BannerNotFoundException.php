@@ -2,10 +2,12 @@
 
 namespace App\Domain\Banner\Exceptions;
 
-use Exception;
+use App\Shared\Exceptions\DomainException;
 
-final class BannerNotFoundException extends Exception
+final class BannerNotFoundException extends DomainException
 {
+    public string $errorCode = 'BANNER_NOT_FOUND';
+
     public static function withId(int $id): self
     {
         return new self("Banner with ID {$id} not found.");

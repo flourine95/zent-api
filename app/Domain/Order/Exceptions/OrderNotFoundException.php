@@ -2,10 +2,12 @@
 
 namespace App\Domain\Order\Exceptions;
 
-use Exception;
+use App\Shared\Exceptions\DomainException;
 
-final class OrderNotFoundException extends Exception
+final class OrderNotFoundException extends DomainException
 {
+    public string $errorCode = 'ORDER_NOT_FOUND';
+
     public static function withId(int $id): self
     {
         return new self("Order with ID {$id} not found.");

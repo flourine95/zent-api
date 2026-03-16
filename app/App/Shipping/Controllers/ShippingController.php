@@ -7,14 +7,17 @@ use App\Domain\Shipping\Actions\CalculateShippingFeesAction;
 use App\Domain\Shipping\Actions\GetShippingProvidersAction;
 use App\Domain\Shipping\Actions\GetShippingSettingsAction;
 use App\Domain\Shipping\DataTransferObjects\ShippingCalculationData;
+use App\Shared\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 
 final readonly class ShippingController
 {
+    use ApiResponse;
+
     public function __construct(
         private CalculateShippingFeesAction $calculateShippingFeesAction,
         private GetShippingProvidersAction $getShippingProvidersAction,
-        private GetShippingSettingsAction $getShippingSettingsAction
+        private GetShippingSettingsAction $getShippingSettingsAction,
     ) {}
 
     public function calculateFees(CalculateShippingFeesRequest $request): JsonResponse
@@ -23,36 +26,23 @@ final readonly class ShippingController
             $data = ShippingCalculationData::fromArray($request->validated());
             $result = $this->calculateShippingFeesAction->execute($data);
 
-            return response()->json([
-                'success' => true,
-                'data' => $result['fees'],
-                'cheapest' => $result['cheapest'],
-            ]);
+            return $this->success($result);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 500);
+            return $this->error($e->getMessage(), 'SHIPPING_CALCULATION_FAILED', 500);
         }
     }
 
     public function getProviders(): JsonResponse
     {
-        $providers = $this->getShippingProvidersAction->execute();
-
-        return response()->json([
-            'success' => true,
-            'data' => $providers,
-        ]);
+        try {
+            return $this->success($this->getShippingProvidersAction->execute());
+        } catch (\Exception $e) {
+            return $this->error($e->getMessage(), 'SHIPPING_PROVIDERS_UNAVAILABLE', 500);
+        }
     }
 
     public function getSettings(): JsonResponse
     {
-        $settings = $this->getShippingSettingsAction->execute();
-
-        return response()->json([
-            'success' => true,
-            'data' => $settings,
-        ]);
+        return $this->success($this->getShippingSettingsAction->execute());
     }
 }

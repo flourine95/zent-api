@@ -2,10 +2,12 @@
 
 namespace App\Domain\Cart\Exceptions;
 
-use Exception;
+use App\Shared\Exceptions\DomainException;
 
-final class InvalidQuantityException extends Exception
+final class InvalidQuantityException extends DomainException
 {
+    public string $errorCode = 'INVALID_QUANTITY';
+
     public static function mustBePositive(): self
     {
         return new self('Quantity must be greater than 0.');

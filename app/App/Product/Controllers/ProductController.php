@@ -12,10 +12,13 @@ use App\Domain\Product\DataTransferObjects\CreateProductData;
 use App\Domain\Product\DataTransferObjects\UpdateProductData;
 use App\Domain\Product\Exceptions\ProductNotFoundException;
 use App\Domain\Product\Repositories\ProductRepositoryInterface;
+use App\Shared\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 
 final readonly class ProductController
 {
+    use ApiResponse;
+
     public function __construct(
         private ProductRepositoryInterface $productRepository,
         private CreateProductAction $createProductAction,
@@ -25,9 +28,7 @@ final readonly class ProductController
 
     public function index(): JsonResponse
     {
-        $products = $this->productRepository->getAll();
-
-        return response()->json(['data' => $products]);
+        return $this->success($this->productRepository->getAll());
     }
 
     public function show(int $id): JsonResponse
@@ -39,9 +40,9 @@ final readonly class ProductController
                 throw ProductNotFoundException::withId($id);
             }
 
-            return response()->json(['data' => $product]);
+            return $this->success($product);
         } catch (ProductNotFoundException $e) {
-            return response()->json(['error' => $e->getMessage()], 404);
+            return $this->error($e->getMessage(), $e->errorCode, 404);
         }
     }
 
@@ -49,11 +50,10 @@ final readonly class ProductController
     {
         try {
             $data = CreateProductData::fromArray($request->validated());
-            $product = $this->createProductAction->execute($data);
 
-            return response()->json(['data' => $product], 201);
+            return $this->created($this->createProductAction->execute($data));
         } catch (CategoryNotFoundException $e) {
-            return response()->json(['error' => $e->getMessage()], 422);
+            return $this->error($e->getMessage(), $e->errorCode, 422);
         }
     }
 
@@ -61,11 +61,10 @@ final readonly class ProductController
     {
         try {
             $data = UpdateProductData::fromArray($id, $request->validated());
-            $product = $this->updateProductAction->execute($data);
 
-            return response()->json(['data' => $product]);
+            return $this->success($this->updateProductAction->execute($data));
         } catch (ProductNotFoundException|CategoryNotFoundException $e) {
-            return response()->json(['error' => $e->getMessage()], 422);
+            return $this->error($e->getMessage(), $e->errorCode, 422);
         }
     }
 
@@ -74,9 +73,9 @@ final readonly class ProductController
         try {
             $this->deleteProductAction->execute($id);
 
-            return response()->json(['message' => 'Product deleted successfully']);
+            return $this->message('Product deleted successfully');
         } catch (ProductNotFoundException $e) {
-            return response()->json(['error' => $e->getMessage()], 404);
+            return $this->error($e->getMessage(), $e->errorCode, 404);
         }
     }
 }

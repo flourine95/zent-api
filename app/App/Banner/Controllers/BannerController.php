@@ -12,10 +12,13 @@ use App\Domain\Banner\DataTransferObjects\UpdateBannerData;
 use App\Domain\Banner\Exceptions\BannerNotFoundException;
 use App\Domain\Banner\Exceptions\InvalidBannerException;
 use App\Domain\Banner\Repositories\BannerRepositoryInterface;
+use App\Shared\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 
 final readonly class BannerController
 {
+    use ApiResponse;
+
     public function __construct(
         private BannerRepositoryInterface $bannerRepository,
         private CreateBannerAction $createBannerAction,
@@ -25,23 +28,17 @@ final readonly class BannerController
 
     public function index(): JsonResponse
     {
-        $banners = $this->bannerRepository->getAll();
-
-        return response()->json(['data' => $banners]);
+        return $this->success($this->bannerRepository->getAll());
     }
 
     public function active(): JsonResponse
     {
-        $banners = $this->bannerRepository->getActive();
-
-        return response()->json(['data' => $banners]);
+        return $this->success($this->bannerRepository->getActive());
     }
 
     public function byPosition(string $position): JsonResponse
     {
-        $banners = $this->bannerRepository->getByPosition($position);
-
-        return response()->json(['data' => $banners]);
+        return $this->success($this->bannerRepository->getByPosition($position));
     }
 
     public function show(int $id): JsonResponse
@@ -53,9 +50,9 @@ final readonly class BannerController
                 throw BannerNotFoundException::withId($id);
             }
 
-            return response()->json(['data' => $banner]);
+            return $this->success($banner);
         } catch (BannerNotFoundException $e) {
-            return response()->json(['error' => $e->getMessage()], 404);
+            return $this->error($e->getMessage(), $e->errorCode, 404);
         }
     }
 
@@ -63,11 +60,10 @@ final readonly class BannerController
     {
         try {
             $data = CreateBannerData::fromArray($request->validated());
-            $banner = $this->createBannerAction->execute($data);
 
-            return response()->json(['data' => $banner], 201);
+            return $this->created($this->createBannerAction->execute($data));
         } catch (InvalidBannerException $e) {
-            return response()->json(['error' => $e->getMessage()], 422);
+            return $this->error($e->getMessage(), $e->errorCode, 422);
         }
     }
 
@@ -75,11 +71,10 @@ final readonly class BannerController
     {
         try {
             $data = UpdateBannerData::fromArray($id, $request->validated());
-            $banner = $this->updateBannerAction->execute($data);
 
-            return response()->json(['data' => $banner]);
+            return $this->success($this->updateBannerAction->execute($data));
         } catch (BannerNotFoundException|InvalidBannerException $e) {
-            return response()->json(['error' => $e->getMessage()], 422);
+            return $this->error($e->getMessage(), $e->errorCode, 422);
         }
     }
 
@@ -88,9 +83,9 @@ final readonly class BannerController
         try {
             $this->deleteBannerAction->execute($id);
 
-            return response()->json(['message' => 'Banner deleted successfully']);
+            return $this->message('Banner deleted successfully');
         } catch (BannerNotFoundException $e) {
-            return response()->json(['error' => $e->getMessage()], 404);
+            return $this->error($e->getMessage(), $e->errorCode, 404);
         }
     }
 }

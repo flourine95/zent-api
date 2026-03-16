@@ -2,10 +2,12 @@
 
 namespace App\Domain\User\Exceptions;
 
-use Exception;
+use App\Shared\Exceptions\DomainException;
 
-final class UserNotFoundException extends Exception
+final class UserNotFoundException extends DomainException
 {
+    public string $errorCode = 'USER_NOT_FOUND';
+
     public static function withId(int $id): self
     {
         return new self("User with ID {$id} not found.");

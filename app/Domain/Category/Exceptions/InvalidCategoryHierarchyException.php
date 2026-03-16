@@ -2,10 +2,12 @@
 
 namespace App\Domain\Category\Exceptions;
 
-use Exception;
+use App\Shared\Exceptions\DomainException;
 
-final class InvalidCategoryHierarchyException extends Exception
+final class InvalidCategoryHierarchyException extends DomainException
 {
+    public string $errorCode = 'INVALID_CATEGORY_HIERARCHY';
+
     public static function circularReference(int $categoryId, int $parentId): self
     {
         return new self(
