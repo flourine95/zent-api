@@ -4,6 +4,7 @@ namespace App\App\Order\Controllers;
 
 use App\App\Order\Requests\CreateOrderRequest;
 use App\App\Order\Requests\UpdateOrderRequest;
+use App\Domain\Inventory\Exceptions\InsufficientStockException;
 use App\Domain\Order\Actions\CancelOrderAction;
 use App\Domain\Order\Actions\CreateOrderAction;
 use App\Domain\Order\Actions\UpdateOrderAction;
@@ -14,6 +15,8 @@ use App\Domain\Order\Exceptions\OrderNotFoundException;
 use App\Domain\Order\Repositories\OrderRepositoryInterface;
 use App\Shared\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 final readonly class OrderController
 {
@@ -26,9 +29,21 @@ final readonly class OrderController
         private CancelOrderAction $cancelOrderAction,
     ) {}
 
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        return $this->success($this->orderRepository->getAll());
+        $filters = $request->only(['status', 'payment_status', 'date_from', 'date_to']);
+
+        // Non-admin users only see their own orders
+        if (! $request->user()?->hasRole('admin')) {
+            $filters['user_id'] = $request->user()->id;
+        }
+
+        $perPage = (int) $request->query('per_page', 15);
+        $page = (int) $request->query('page', 1);
+
+        $result = $this->orderRepository->paginate($filters, $perPage, $page);
+
+        return $this->paginated($result['data'], $result['meta']);
     }
 
     public function show(int $id): JsonResponse
@@ -49,9 +64,15 @@ final readonly class OrderController
     public function store(CreateOrderRequest $request): JsonResponse
     {
         try {
-            $data = CreateOrderData::fromArray($request->validated());
+            $data = CreateOrderData::fromRequest(
+                userId: $request->user()->id,
+                code: 'ORD-'.strtoupper(Str::random(10)),
+                validated: $request->validated()
+            );
 
             return $this->created($this->createOrderAction->execute($data));
+        } catch (InsufficientStockException $e) {
+            return $this->error($e->getMessage(), $e->errorCode, 422);
         } catch (InvalidOrderException $e) {
             return $this->error($e->getMessage(), $e->errorCode, 422);
         }

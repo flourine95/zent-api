@@ -23,4 +23,23 @@ interface InventoryRepositoryInterface
     public function getAll(): array;
 
     public function getLowStock(int $threshold): array;
+
+    /**
+     * Check if enough stock is available for a variant in a specific warehouse.
+     * Must use pessimistic lock to prevent race conditions.
+     */
+    public function hasAvailableStock(int $warehouseId, int $productVariantId, int $quantity): bool;
+
+    /**
+     * Decrement quantity and create a reservation atomically.
+     * Must be called inside a DB transaction with pessimistic lock.
+     *
+     * @return array The created reservation as array
+     */
+    public function reserveStock(int $warehouseId, int $productVariantId, int $quantity, int $orderId): array;
+
+    /**
+     * Release all reservations for a given order and restore inventory quantities.
+     */
+    public function releaseReservations(int $orderId): void;
 }

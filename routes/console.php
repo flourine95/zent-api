@@ -1,7 +1,7 @@
 <?php
 
-use App\Domain\Order\Jobs\CancelUnpaidOrdersJob;
-use App\Domain\Order\Jobs\ReleaseExpiredReservationsJob;
+use App\Infrastructure\Jobs\CancelUnpaidOrdersJob;
+use App\Infrastructure\Jobs\ReleaseExpiredReservationsJob;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;

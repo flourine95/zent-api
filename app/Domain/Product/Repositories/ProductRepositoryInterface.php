@@ -20,6 +20,8 @@ interface ProductRepositoryInterface
 
     public function getAll(array $filters = []): array;
 
+    public function paginate(array $filters = [], int $perPage = 15, int $page = 1): array;
+
     public function getByCategoryId(int $categoryId): array;
 
     public function getActive(): array;

@@ -12,6 +12,7 @@ use App\Domain\Notification\Repositories\NotificationRepositoryInterface;
 use App\Domain\Order\Repositories\OrderRepositoryInterface;
 use App\Domain\Product\Repositories\ProductRepositoryInterface;
 use App\Domain\ProductVariant\Repositories\ProductVariantRepositoryInterface;
+use App\Domain\Shipping\Repositories\ShipmentRepositoryInterface;
 use App\Domain\Shipping\Repositories\ShippingRepositoryInterface;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 use App\Domain\Warehouse\Repositories\WarehouseRepositoryInterface;
@@ -26,6 +27,7 @@ use App\Infrastructure\Repositories\EloquentNotificationRepository;
 use App\Infrastructure\Repositories\EloquentOrderRepository;
 use App\Infrastructure\Repositories\EloquentProductRepository;
 use App\Infrastructure\Repositories\EloquentProductVariantRepository;
+use App\Infrastructure\Repositories\EloquentShipmentRepository;
 use App\Infrastructure\Repositories\EloquentShippingRepository;
 use App\Infrastructure\Repositories\EloquentUserRepository;
 use App\Infrastructure\Repositories\EloquentWarehouseRepository;
@@ -45,6 +47,7 @@ class DomainServiceProvider extends ServiceProvider
         OrderRepositoryInterface::class => EloquentOrderRepository::class,
         ProductRepositoryInterface::class => EloquentProductRepository::class,
         ProductVariantRepositoryInterface::class => EloquentProductVariantRepository::class,
+        ShipmentRepositoryInterface::class => EloquentShipmentRepository::class,
         ShippingRepositoryInterface::class => EloquentShippingRepository::class,
         UserRepositoryInterface::class => EloquentUserRepository::class,
         WarehouseRepositoryInterface::class => EloquentWarehouseRepository::class,

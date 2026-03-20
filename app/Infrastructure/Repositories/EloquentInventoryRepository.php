@@ -4,6 +4,8 @@ namespace App\Infrastructure\Repositories;
 
 use App\Domain\Inventory\Repositories\InventoryRepositoryInterface;
 use App\Infrastructure\Models\Inventory;
+use App\Infrastructure\Models\InventoryReservation;
+use Illuminate\Support\Facades\DB;
 
 final class EloquentInventoryRepository implements InventoryRepositoryInterface
 {
@@ -80,5 +82,54 @@ final class EloquentInventoryRepository implements InventoryRepositoryInterface
             ->orderBy('quantity')
             ->get()
             ->toArray();
+    }
+
+    public function hasAvailableStock(int $warehouseId, int $productVariantId, int $quantity): bool
+    {
+        $inventory = Inventory::where('warehouse_id', $warehouseId)
+            ->where('product_variant_id', $productVariantId)
+            ->lockForUpdate()
+            ->first();
+
+        return $inventory !== null && $inventory->quantity >= $quantity;
+    }
+
+    public function reserveStock(int $warehouseId, int $productVariantId, int $quantity, int $orderId): array
+    {
+        $inventory = Inventory::where('warehouse_id', $warehouseId)
+            ->where('product_variant_id', $productVariantId)
+            ->lockForUpdate()
+            ->firstOrFail();
+
+        $inventory->decrement('quantity', $quantity);
+
+        $reservation = InventoryReservation::create([
+            'inventory_id' => $inventory->id,
+            'order_id' => $orderId,
+            'product_variant_id' => $productVariantId,
+            'quantity' => $quantity,
+            'status' => 'pending',
+            'expires_at' => now()->addMinutes(30),
+        ]);
+
+        return $reservation->toArray();
+    }
+
+    public function releaseReservations(int $orderId): void
+    {
+        $reservations = InventoryReservation::where('order_id', $orderId)
+            ->where('status', 'pending')
+            ->get();
+
+        foreach ($reservations as $reservation) {
+            DB::transaction(function () use ($reservation) {
+                Inventory::where('id', $reservation->inventory_id)
+                    ->lockForUpdate()
+                    ->firstOrFail()
+                    ->increment('quantity', $reservation->quantity);
+
+                $reservation->update(['status' => 'released']);
+            });
+        }
     }
 }

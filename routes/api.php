@@ -1,13 +1,16 @@
 <?php
 
 use App\App\Address\Controllers\AddressController;
+use App\App\Banner\Controllers\BannerController;
 use App\App\Cart\Controllers\CartController;
 use App\App\Category\Controllers\CategoryController;
 use App\App\Config\Controllers\ConfigController;
+use App\App\Inventory\Controllers\InventoryController;
 use App\App\Notification\Controllers\NotificationController;
 use App\App\Order\Controllers\OrderController;
 use App\App\Product\Controllers\ProductController;
 use App\App\ProductVariant\Controllers\ProductVariantController;
+use App\App\Shipping\Controllers\ShipmentController;
 use App\App\Shipping\Controllers\ShippingController;
 use App\App\User\Controllers\AuthController;
 use App\App\User\Controllers\ProfileController;
@@ -37,7 +40,14 @@ Route::prefix('v1')->group(function () {
 
     // Categories API (public)
     Route::get('/categories', [CategoryController::class, 'index']);
+    Route::get('/categories/tree', [CategoryController::class, 'tree']);
     Route::get('/categories/{identifier}', [CategoryController::class, 'show']);
+
+    // Banners (public)
+    Route::get('/banners', [BannerController::class, 'index']);
+    Route::get('/banners/active', [BannerController::class, 'active']);
+    Route::get('/banners/position/{position}', [BannerController::class, 'byPosition']);
+    Route::get('/banners/{id}', [BannerController::class, 'show']);
 
     // Product Variants - Check inventory (public)
     Route::get('/variants/{variantId}/inventory', [ProductVariantController::class, 'checkInventory']);
@@ -83,6 +93,12 @@ Route::prefix('v1')->group(function () {
         Route::get('/orders', [OrderController::class, 'index']);
         Route::post('/orders', [OrderController::class, 'store']);
         Route::get('/orders/{order}', [OrderController::class, 'show']);
+        Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel']);
+
+        // Shipments (per order)
+        Route::post('/orders/{order}/shipment', [ShipmentController::class, 'store']);
+        Route::get('/orders/{order}/shipment', [ShipmentController::class, 'show']);
+        Route::post('/orders/{order}/shipment/cancel', [ShipmentController::class, 'cancel']);
 
         // Notifications
         Route::get('/notifications', [NotificationController::class, 'index']);
@@ -90,5 +106,34 @@ Route::prefix('v1')->group(function () {
         Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
         Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead']);
         Route::delete('/notifications/{id}', [NotificationController::class, 'destroy']);
+
+        // Admin routes
+        Route::middleware('role:admin')->group(function () {
+            // Products (write)
+            Route::post('/products', [ProductController::class, 'store']);
+            Route::put('/products/{id}', [ProductController::class, 'update']);
+            Route::delete('/products/{id}', [ProductController::class, 'destroy']);
+
+            // Categories (write)
+            Route::post('/categories', [CategoryController::class, 'store']);
+            Route::put('/categories/{id}', [CategoryController::class, 'update']);
+            Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
+
+            // Banners (write)
+            Route::post('/banners', [BannerController::class, 'store']);
+            Route::put('/banners/{id}', [BannerController::class, 'update']);
+            Route::delete('/banners/{id}', [BannerController::class, 'destroy']);
+
+            // Inventory
+            Route::get('/inventory', [InventoryController::class, 'index']);
+            Route::get('/inventory/low-stock', [InventoryController::class, 'lowStock']);
+            Route::get('/inventory/low-stock/{threshold}', [InventoryController::class, 'lowStock']);
+            Route::get('/inventory/warehouse/{warehouseId}', [InventoryController::class, 'byWarehouse']);
+            Route::get('/inventory/variant/{productVariantId}', [InventoryController::class, 'byProductVariant']);
+            Route::get('/inventory/{id}', [InventoryController::class, 'show']);
+            Route::post('/inventory', [InventoryController::class, 'store']);
+            Route::put('/inventory/{id}', [InventoryController::class, 'update']);
+            Route::post('/inventory/{id}/adjust', [InventoryController::class, 'adjust']);
+        });
     });
 });

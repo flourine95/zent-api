@@ -7,27 +7,23 @@ final readonly class CreateOrderData
     public function __construct(
         public int $userId,
         public string $code,
-        public string $status,
-        public string $paymentStatus,
         public float $totalAmount,
         public array $shippingAddress,
         public array $billingAddress,
         public ?string $notes,
-        public array $items, // Array of OrderItemData
+        public array $items,
     ) {}
 
-    public static function fromArray(array $data): self
+    public static function fromRequest(int $userId, string $code, array $validated): self
     {
         return new self(
-            userId: $data['user_id'],
-            code: $data['code'],
-            status: $data['status'] ?? 'pending',
-            paymentStatus: $data['payment_status'] ?? 'unpaid',
-            totalAmount: $data['total_amount'],
-            shippingAddress: $data['shipping_address'],
-            billingAddress: $data['billing_address'],
-            notes: $data['notes'] ?? null,
-            items: $data['items'] ?? [],
+            userId: $userId,
+            code: $code,
+            totalAmount: $validated['total_amount'],
+            shippingAddress: $validated['shipping_address'],
+            billingAddress: $validated['billing_address'] ?? $validated['shipping_address'],
+            notes: $validated['notes'] ?? null,
+            items: $validated['items'] ?? [],
         );
     }
 
@@ -36,8 +32,8 @@ final readonly class CreateOrderData
         return [
             'user_id' => $this->userId,
             'code' => $this->code,
-            'status' => $this->status,
-            'payment_status' => $this->paymentStatus,
+            'status' => 'pending',
+            'payment_status' => 'unpaid',
             'total_amount' => $this->totalAmount,
             'shipping_address' => $this->shippingAddress,
             'billing_address' => $this->billingAddress,

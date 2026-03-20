@@ -13,17 +13,7 @@ class CalculateShippingFeesAction
 
     public function execute(ShippingCalculationData $data): array
     {
-        $params = [
-            'pick_province' => $data->fromProvince,
-            'pick_district' => $data->fromDistrict,
-            'province' => $data->toProvince,
-            'district' => $data->toDistrict,
-            'weight' => $data->weight,
-            'value' => $data->value,
-            'transport' => $data->transport,
-        ];
-
-        $fees = $this->shippingRepository->calculateFees($params);
+        $fees = $this->shippingRepository->calculateFees($data->toParams());
 
         return [
             'fees' => $fees,

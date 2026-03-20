@@ -49,4 +49,9 @@ class Order extends Model
     {
         return $this->hasMany(InventoryReservation::class);
     }
+
+    public function shipment(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Shipment::class);
+    }
 }

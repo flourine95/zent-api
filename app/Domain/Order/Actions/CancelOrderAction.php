@@ -2,6 +2,7 @@
 
 namespace App\Domain\Order\Actions;
 
+use App\Domain\Inventory\Repositories\InventoryRepositoryInterface;
 use App\Domain\Order\Exceptions\InvalidOrderException;
 use App\Domain\Order\Exceptions\OrderNotFoundException;
 use App\Domain\Order\Repositories\OrderRepositoryInterface;
@@ -9,7 +10,8 @@ use App\Domain\Order\Repositories\OrderRepositoryInterface;
 final readonly class CancelOrderAction
 {
     public function __construct(
-        private OrderRepositoryInterface $orderRepository
+        private OrderRepositoryInterface $orderRepository,
+        private InventoryRepositoryInterface $inventoryRepository,
     ) {}
 
     /**
@@ -24,13 +26,12 @@ final readonly class CancelOrderAction
             throw OrderNotFoundException::withId($orderId);
         }
 
-        // Cannot cancel completed or already cancelled orders
         if (in_array($order['status'], ['completed', 'cancelled'])) {
             throw InvalidOrderException::cannotCancel($order['status']);
         }
 
-        return $this->orderRepository->update($orderId, [
-            'status' => 'cancelled',
-        ]);
+        $this->inventoryRepository->releaseReservations($orderId);
+
+        return $this->orderRepository->update($orderId, ['status' => 'cancelled']);
     }
 }

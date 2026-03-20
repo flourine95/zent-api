@@ -14,6 +14,7 @@ use App\Domain\Product\Exceptions\ProductNotFoundException;
 use App\Domain\Product\Repositories\ProductRepositoryInterface;
 use App\Shared\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 final readonly class ProductController
 {
@@ -26,9 +27,15 @@ final readonly class ProductController
         private DeleteProductAction $deleteProductAction,
     ) {}
 
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        return $this->success($this->productRepository->getAll());
+        $filters = $request->only(['category_id', 'is_active', 'search']);
+        $perPage = (int) $request->query('per_page', 15);
+        $page = (int) $request->query('page', 1);
+
+        $result = $this->productRepository->paginate($filters, $perPage, $page);
+
+        return $this->paginated($result['data'], $result['meta']);
     }
 
     public function show(int $id): JsonResponse
