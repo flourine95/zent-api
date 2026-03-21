@@ -10,12 +10,12 @@ final class InvalidCredentialsException extends DomainException
 
     public static function invalidEmailOrPassword(): self
     {
-        return new self('Email hoặc mật khẩu không đúng.');
+        return new self('Invalid email or password.');
     }
 
     public static function incorrectCurrentPassword(): self
     {
-        $e = new self('Mật khẩu hiện tại không đúng.');
+        $e = new self('Current password is incorrect.');
         $e->errorCode = 'INCORRECT_CURRENT_PASSWORD';
 
         return $e;

@@ -24,12 +24,12 @@ class OrderCreatedNotification extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Đơn hàng đã được tạo thành công')
-            ->greeting("Xin chào {$notifiable->name}!")
-            ->line("Đơn hàng #{$this->order->code} của bạn đã được tạo thành công.")
-            ->line('Tổng tiền: '.number_format($this->order->total_amount, 0, ',', '.').' VND')
-            ->action('Xem đơn hàng', url("/orders/{$this->order->id}"))
-            ->line('Cảm ơn bạn đã mua hàng!');
+            ->subject('Order Created Successfully')
+            ->greeting("Hello {$notifiable->name}!")
+            ->line("Your order #{$this->order->code} has been created successfully.")
+            ->line('Total amount: '.number_format($this->order->total_amount, 0, ',', '.').' VND')
+            ->action('View Order', url("/orders/{$this->order->id}"))
+            ->line('Thank you for your purchase!');
     }
 
     public function toArray(object $notifiable): array
@@ -39,7 +39,7 @@ class OrderCreatedNotification extends Notification implements ShouldQueue
             'order_code' => $this->order->code,
             'total_amount' => $this->order->total_amount,
             'status' => $this->order->status,
-            'message' => "Đơn hàng #{$this->order->code} đã được tạo thành công",
+            'message' => "Order #{$this->order->code} has been created successfully",
         ];
     }
 }

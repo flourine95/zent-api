@@ -71,6 +71,17 @@ final class EloquentUserRepository implements UserRepositoryInterface
         return Hash::check($plainPassword, $hashedPassword);
     }
 
+    public function verifyPasswordByEmail(string $email, string $plainPassword): bool
+    {
+        $user = User::where('email', $email)->first();
+
+        if ($user === null) {
+            return false;
+        }
+
+        return Hash::check($plainPassword, $user->password);
+    }
+
     public function updatePassword(int $userId, string $newPassword): bool
     {
         $user = User::findOrFail($userId);

@@ -23,8 +23,7 @@ final readonly class LoginUserAction
             throw InvalidCredentialsException::invalidEmailOrPassword();
         }
 
-        // Verify password
-        if (! $this->userRepository->verifyPassword($data->password, $user['password'])) {
+        if (! $this->userRepository->verifyPasswordByEmail($data->email, $data->password)) {
             throw InvalidCredentialsException::invalidEmailOrPassword();
         }
 

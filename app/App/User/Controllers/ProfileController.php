@@ -42,7 +42,7 @@ final readonly class ProfileController
                 $request->validated('password')
             );
 
-            return $this->message('Đã đổi mật khẩu thành công');
+            return $this->message('Password changed successfully');
         } catch (InvalidCredentialsException $e) {
             return $this->error($e->getMessage(), $e->errorCode, 422);
         } catch (UserNotFoundException $e) {

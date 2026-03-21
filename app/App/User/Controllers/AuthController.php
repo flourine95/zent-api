@@ -32,7 +32,7 @@ final readonly class AuthController
             $user = $this->registerUserAction->execute($data);
             $token = $this->userRepository->createToken($user['id'], 'auth-token');
 
-            return $this->created(['user' => $user, 'token' => $token], 'Đăng ký thành công');
+            return $this->created(['user' => $user, 'token' => $token], 'Registered successfully');
         } catch (EmailAlreadyExistsException $e) {
             return $this->error($e->getMessage(), $e->errorCode, 422);
         }
@@ -58,7 +58,7 @@ final readonly class AuthController
             $request->user()->currentAccessToken()->id
         );
 
-        return $this->message('Đăng xuất thành công');
+        return $this->message('Logged out successfully');
     }
 
     public function me(Request $request): JsonResponse

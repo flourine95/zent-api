@@ -22,6 +22,8 @@ interface UserRepositoryInterface
 
     public function verifyPassword(string $plainPassword, string $hashedPassword): bool;
 
+    public function verifyPasswordByEmail(string $email, string $plainPassword): bool;
+
     public function updatePassword(int $userId, string $newPassword): bool;
 
     public function getAll(): array;

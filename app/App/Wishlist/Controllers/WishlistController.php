@@ -38,7 +38,7 @@ final readonly class WishlistController
                 'product_id' => $request->input('product_id'),
             ]);
 
-            return $this->created($this->addToWishlistAction->execute($data), 'Đã thêm vào danh sách yêu thích');
+            return $this->created($this->addToWishlistAction->execute($data), 'Added to wishlist');
         } catch (ProductNotFoundException $e) {
             return $this->error($e->getMessage(), $e->errorCode, 404);
         }
@@ -49,7 +49,7 @@ final readonly class WishlistController
         try {
             $this->removeFromWishlistAction->execute($request->user()->id, $productId);
 
-            return $this->message('Đã xóa khỏi danh sách yêu thích');
+            return $this->message('Removed from wishlist');
         } catch (WishlistItemNotFoundException $e) {
             return $this->error($e->getMessage(), $e->errorCode, 404);
         }
