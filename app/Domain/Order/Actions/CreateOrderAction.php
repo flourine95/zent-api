@@ -51,7 +51,15 @@ final readonly class CreateOrderAction
             throw InvalidOrderException::emptyCart();
         }
 
-        // Build order items from cart, resolving warehouse per variant
+        // Batch-resolve warehouse availability in a single query
+        $variantQuantities = [];
+        foreach ($cart['items'] as $cartItem) {
+            $variantQuantities[$cartItem['product_variant']['id']] = $cartItem['quantity'];
+        }
+
+        $warehouseMap = $this->inventoryRepository->findAvailableWarehousesForVariants($variantQuantities);
+
+        // Build order items from cart
         $orderItems = [];
         $totalAmount = 0;
 
@@ -61,10 +69,7 @@ final readonly class CreateOrderAction
             $price = (float) $variant['price'];
             $subtotal = $price * $quantity;
 
-            $warehouseId = $this->inventoryRepository->findAvailableWarehouseForVariant(
-                $variant['id'],
-                $quantity
-            );
+            $warehouseId = $warehouseMap[$variant['id']] ?? null;
 
             if ($warehouseId === null) {
                 throw InvalidOrderException::noWarehouseAvailable($variant['id']);

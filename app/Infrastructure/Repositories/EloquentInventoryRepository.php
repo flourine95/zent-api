@@ -102,6 +102,32 @@ final class EloquentInventoryRepository implements InventoryRepositoryInterface
         return $inventory?->warehouse_id;
     }
 
+    public function findAvailableWarehousesForVariants(array $variantQuantities): array
+    {
+        if (empty($variantQuantities)) {
+            return [];
+        }
+
+        $variantIds = array_keys($variantQuantities);
+
+        $rows = Inventory::whereIn('product_variant_id', $variantIds)
+            ->where('quantity', '>', 0)
+            ->get(['product_variant_id', 'warehouse_id', 'quantity']);
+
+        $result = [];
+
+        foreach ($rows as $row) {
+            $variantId = $row->product_variant_id;
+            $required = $variantQuantities[$variantId] ?? 0;
+
+            if (! isset($result[$variantId]) && $row->quantity >= $required) {
+                $result[$variantId] = $row->warehouse_id;
+            }
+        }
+
+        return $result;
+    }
+
     public function reserveStock(string $warehouseId, string $productVariantId, int $quantity, string $orderId): array
     {
         $inventory = Inventory::where('warehouse_id', $warehouseId)

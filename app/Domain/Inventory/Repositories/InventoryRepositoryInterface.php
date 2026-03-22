@@ -33,6 +33,14 @@ interface InventoryRepositoryInterface
     public function findAvailableWarehouseForVariant(string $productVariantId, int $quantity): ?string;
 
     /**
+     * Batch-resolve available warehouse IDs for multiple variants in a single query.
+     *
+     * @param  array<string, int>  $variantQuantities  Map of variant_id => required_quantity
+     * @return array<string, string> Map of variant_id => warehouse_id (only variants with sufficient stock)
+     */
+    public function findAvailableWarehousesForVariants(array $variantQuantities): array;
+
+    /**
      * Decrement quantity and create a reservation atomically.
      * Must be called inside a DB transaction with pessimistic lock.
      *
