@@ -5,6 +5,7 @@ namespace App\App\Order\Controllers;
 use App\App\Order\Requests\CreateOrderRequest;
 use App\App\Order\Requests\UpdateOrderRequest;
 use App\Domain\Address\Exceptions\AddressNotFoundException;
+use App\Domain\Address\Exceptions\UnauthorizedAddressAccessException;
 use App\Domain\Inventory\Exceptions\InsufficientStockException;
 use App\Domain\Order\Actions\CancelOrderAction;
 use App\Domain\Order\Actions\CreateOrderAction;
@@ -17,7 +18,6 @@ use App\Domain\Order\Repositories\OrderRepositoryInterface;
 use App\Shared\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 final readonly class OrderController
 {
@@ -71,7 +71,6 @@ final readonly class OrderController
         try {
             $data = CreateOrderData::fromRequest(
                 userId: $request->user()->id,
-                code: 'ORD-'.strtoupper(Str::random(10)),
                 validated: $request->validated()
             );
 
@@ -82,6 +81,8 @@ final readonly class OrderController
             return $this->error($e->getMessage(), $e->errorCode, 422);
         } catch (AddressNotFoundException $e) {
             return $this->error($e->getMessage(), $e->errorCode, 404);
+        } catch (UnauthorizedAddressAccessException $e) {
+            return $this->error($e->getMessage(), $e->errorCode, 403);
         }
     }
 

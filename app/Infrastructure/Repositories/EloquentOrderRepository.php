@@ -97,6 +97,11 @@ final class EloquentOrderRepository implements OrderRepositoryInterface
         return Order::where('id', $id)->exists();
     }
 
+    public function belongsToUser(string $orderId, string $userId): bool
+    {
+        return Order::where('id', $orderId)->where('user_id', $userId)->exists();
+    }
+
     public function getByUserId(string $userId): array
     {
         return Order::with(['items'])

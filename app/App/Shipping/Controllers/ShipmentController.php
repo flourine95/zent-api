@@ -4,6 +4,7 @@ namespace App\App\Shipping\Controllers;
 
 use App\App\Shipping\Requests\CreateShipmentRequest;
 use App\Domain\Order\Exceptions\OrderNotFoundException;
+use App\Domain\Order\Exceptions\UnauthorizedOrderAccessException;
 use App\Domain\Shipping\Actions\CancelShipmentAction;
 use App\Domain\Shipping\Actions\CreateShipmentAction;
 use App\Domain\Shipping\Actions\GetShipmentAction;
@@ -13,6 +14,7 @@ use App\Domain\Shipping\Exceptions\ShipmentCancellationException;
 use App\Domain\Shipping\Exceptions\ShipmentNotFoundException;
 use App\Shared\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 final readonly class ShipmentController
 {
@@ -37,19 +39,31 @@ final readonly class ShipmentController
         }
     }
 
-    public function show(string $orderId): JsonResponse
+    public function show(Request $request, string $orderId): JsonResponse
     {
         try {
-            return $this->success($this->getShipmentAction->execute($orderId));
+            $isAdmin = $request->user()?->hasRole('admin') ?? false;
+
+            return $this->success($this->getShipmentAction->execute($orderId, $request->user()->id, $isAdmin));
+        } catch (OrderNotFoundException $e) {
+            return $this->error($e->getMessage(), $e->errorCode, 404);
+        } catch (UnauthorizedOrderAccessException $e) {
+            return $this->error($e->getMessage(), $e->errorCode, 403);
         } catch (ShipmentNotFoundException $e) {
             return $this->error($e->getMessage(), $e->errorCode, 404);
         }
     }
 
-    public function cancel(string $orderId): JsonResponse
+    public function cancel(Request $request, string $orderId): JsonResponse
     {
         try {
-            return $this->success($this->cancelShipmentAction->execute($orderId));
+            $isAdmin = $request->user()?->hasRole('admin') ?? false;
+
+            return $this->success($this->cancelShipmentAction->execute($orderId, $request->user()->id, $isAdmin));
+        } catch (OrderNotFoundException $e) {
+            return $this->error($e->getMessage(), $e->errorCode, 404);
+        } catch (UnauthorizedOrderAccessException $e) {
+            return $this->error($e->getMessage(), $e->errorCode, 403);
         } catch (ShipmentNotFoundException $e) {
             return $this->error($e->getMessage(), $e->errorCode, 404);
         } catch (ShipmentCancellationException $e) {

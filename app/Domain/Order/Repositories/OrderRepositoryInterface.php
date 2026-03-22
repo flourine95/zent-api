@@ -21,6 +21,8 @@ interface OrderRepositoryInterface
 
     public function exists(string $id): bool;
 
+    public function belongsToUser(string $orderId, string $userId): bool;
+
     public function getByUserId(string $userId): array;
 
     public function getAll(array $filters = []): array;

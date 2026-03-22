@@ -3,6 +3,7 @@
 namespace App\Domain\Order\Actions;
 
 use App\Domain\Address\Exceptions\AddressNotFoundException;
+use App\Domain\Address\Exceptions\UnauthorizedAddressAccessException;
 use App\Domain\Address\Repositories\AddressRepositoryInterface;
 use App\Domain\Cart\Repositories\CartRepositoryInterface;
 use App\Domain\Inventory\Repositories\InventoryRepositoryInterface;
@@ -22,6 +23,7 @@ final readonly class CreateOrderAction
     /**
      * @throws InvalidOrderException
      * @throws AddressNotFoundException
+     * @throws UnauthorizedAddressAccessException
      */
     public function execute(CreateOrderData $data): array
     {
@@ -35,6 +37,11 @@ final readonly class CreateOrderAction
                 throw AddressNotFoundException::withId($data->addressId);
             }
             throw InvalidOrderException::noShippingAddress();
+        }
+
+        // Verify address ownership when explicitly provided
+        if ($data->addressId !== null && ! $this->addressRepository->belongsToUser($data->addressId, $data->userId)) {
+            throw UnauthorizedAddressAccessException::message();
         }
 
         // Load cart with items
@@ -82,7 +89,7 @@ final readonly class CreateOrderAction
 
         $orderData = [
             'user_id' => $data->userId,
-            'code' => $data->code,
+            'code' => 'ORD-'.strtoupper(bin2hex(random_bytes(5))),
             'status' => 'pending',
             'payment_status' => 'unpaid',
             'total_amount' => $totalAmount,
