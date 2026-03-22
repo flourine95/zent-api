@@ -15,7 +15,7 @@ REST API cho nền tảng thương mại điện tử, xây dựng trên Laravel
 ### 1. Clone và cài dependencies
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/flourine95/zent-api
 cd zent-api
 composer install
 ```
@@ -67,16 +67,35 @@ GHN_TOKEN=your_token
 GHN_SHOP_ID=your_shop_id
 ```
 
-### 3. Khởi động Redis
+### 3. Khởi động Redis và PostgreSQL
 
+Tạo network dùng chung trước:
 ```bash
-docker run -d --name zent-redis -p 6379:6379 --restart unless-stopped \
+docker network create zent-network
+```
+
+**PostgreSQL:**
+```bash
+docker run -d --name zent-postgres --network zent-network \
+  -p 5432:5432 \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=password \
+  -e POSTGRES_DB=zent_api \
+  --restart unless-stopped \
+  postgres:alpine
+```
+
+**Redis:**
+```bash
+docker run -d --name zent-redis --network zent-network \
+  -p 6379:6379 \
+  --restart unless-stopped \
   redis:alpine redis-server --appendonly yes
 ```
 
 Lần sau nếu container bị stop:
 ```bash
-docker start zent-redis
+docker start zent-postgres zent-redis
 ```
 
 ### 4. Migrate và seed database
