@@ -24,12 +24,12 @@ class CreateShipmentRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'provider_code.required' => 'Mã đơn vị vận chuyển là bắt buộc',
-            'provider_code.in' => 'Đơn vị vận chuyển không hợp lệ',
-            'order_data.required' => 'Dữ liệu đơn hàng là bắt buộc',
-            'order_data.order.required' => 'Thông tin đơn hàng là bắt buộc',
-            'order_data.products.required' => 'Danh sách sản phẩm là bắt buộc',
-            'order_data.products.min' => 'Phải có ít nhất 1 sản phẩm',
+            'provider_code.required' => 'Shipping provider code is required.',
+            'provider_code.in' => 'Invalid shipping provider.',
+            'order_data.required' => 'Order data is required.',
+            'order_data.order.required' => 'Order information is required.',
+            'order_data.products.required' => 'Product list is required.',
+            'order_data.products.min' => 'At least 1 product is required.',
         ];
     }
 }

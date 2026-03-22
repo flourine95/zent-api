@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Product\Observers;
+namespace App\Infrastructure\Observers;
 
 use App\Infrastructure\Models\Product;
 use Illuminate\Support\Facades\Cache;

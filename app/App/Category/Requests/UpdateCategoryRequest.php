@@ -34,12 +34,12 @@ class UpdateCategoryRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'Tên danh mục là bắt buộc.',
-            'name.max' => 'Tên danh mục không được vượt quá 255 ký tự.',
-            'slug.required' => 'Slug là bắt buộc.',
-            'slug.unique' => 'Slug này đã được sử dụng.',
-            'description.max' => 'Mô tả không được vượt quá 1000 ký tự.',
-            'parent_id.exists' => 'Danh mục cha không tồn tại.',
+            'name.required' => 'Category name is required.',
+            'name.max' => 'Category name must not exceed 255 characters.',
+            'slug.required' => 'Slug is required.',
+            'slug.unique' => 'This slug is already taken.',
+            'description.max' => 'Description must not exceed 1000 characters.',
+            'parent_id.exists' => 'Parent category does not exist.',
         ];
     }
 }

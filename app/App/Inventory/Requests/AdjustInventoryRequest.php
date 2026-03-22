@@ -22,8 +22,8 @@ class AdjustInventoryRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'adjustment.required' => 'Số lượng điều chỉnh là bắt buộc.',
-            'reason.required' => 'Lý do điều chỉnh là bắt buộc.',
+            'adjustment.required' => 'Adjustment quantity is required.',
+            'reason.required' => 'Adjustment reason is required.',
         ];
     }
 }

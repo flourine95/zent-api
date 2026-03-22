@@ -45,7 +45,7 @@ final readonly class AddressController
 
         $address = $this->createAddressAction->execute($data);
 
-        return $this->created($address, 'Đã thêm địa chỉ mới');
+        return $this->created($address, 'Address created successfully');
     }
 
     public function update(UpdateAddressRequest $request, int $address): JsonResponse
@@ -70,7 +70,7 @@ final readonly class AddressController
         try {
             $this->deleteAddressAction->execute($request->user()->id, $address);
 
-            return $this->message('Đã xóa địa chỉ');
+            return $this->message('Address deleted successfully');
         } catch (AddressNotFoundException $e) {
             return $this->error($e->getMessage(), $e->errorCode, 404);
         } catch (UnauthorizedAddressAccessException $e) {

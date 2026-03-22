@@ -35,12 +35,12 @@ class CreateProductRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'category_id.required' => 'Danh mục là bắt buộc.',
-            'category_id.exists' => 'Danh mục không tồn tại.',
-            'name.required' => 'Tên sản phẩm là bắt buộc.',
-            'name.max' => 'Tên sản phẩm không được vượt quá 255 ký tự.',
-            'slug.required' => 'Slug là bắt buộc.',
-            'slug.unique' => 'Slug này đã được sử dụng.',
+            'category_id.required' => 'Category is required.',
+            'category_id.exists' => 'Category does not exist.',
+            'name.required' => 'Product name is required.',
+            'name.max' => 'Product name must not exceed 255 characters.',
+            'slug.required' => 'Slug is required.',
+            'slug.unique' => 'This slug is already taken.',
         ];
     }
 }

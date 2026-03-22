@@ -30,11 +30,11 @@ class CreateBannerRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'title.required' => 'Tiêu đề là bắt buộc.',
-            'image.required' => 'Hình ảnh là bắt buộc.',
-            'position.required' => 'Vị trí là bắt buộc.',
-            'position.in' => 'Vị trí không hợp lệ.',
-            'end_date.after_or_equal' => 'Ngày kết thúc phải sau hoặc bằng ngày bắt đầu.',
+            'title.required' => 'Title is required.',
+            'image.required' => 'Image is required.',
+            'position.required' => 'Position is required.',
+            'position.in' => 'Invalid position.',
+            'end_date.after_or_equal' => 'End date must be after or equal to start date.',
         ];
     }
 }

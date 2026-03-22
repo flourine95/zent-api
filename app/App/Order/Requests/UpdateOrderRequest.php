@@ -23,10 +23,10 @@ class UpdateOrderRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'status.required' => 'Trạng thái là bắt buộc.',
-            'status.in' => 'Trạng thái không hợp lệ.',
-            'payment_status.required' => 'Trạng thái thanh toán là bắt buộc.',
-            'payment_status.in' => 'Trạng thái thanh toán không hợp lệ.',
+            'status.required' => 'Status is required.',
+            'status.in' => 'Invalid status.',
+            'payment_status.required' => 'Payment status is required.',
+            'payment_status.in' => 'Invalid payment status.',
         ];
     }
 }

@@ -24,12 +24,12 @@ class CreateInventoryRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'warehouse_id.required' => 'Kho là bắt buộc.',
-            'warehouse_id.exists' => 'Kho không tồn tại.',
-            'product_variant_id.required' => 'Biến thể sản phẩm là bắt buộc.',
-            'product_variant_id.exists' => 'Biến thể sản phẩm không tồn tại.',
-            'quantity.required' => 'Số lượng là bắt buộc.',
-            'quantity.min' => 'Số lượng không được âm.',
+            'warehouse_id.required' => 'Warehouse is required.',
+            'warehouse_id.exists' => 'Warehouse does not exist.',
+            'product_variant_id.required' => 'Product variant is required.',
+            'product_variant_id.exists' => 'Product variant does not exist.',
+            'quantity.required' => 'Quantity is required.',
+            'quantity.min' => 'Quantity cannot be negative.',
         ];
     }
 }

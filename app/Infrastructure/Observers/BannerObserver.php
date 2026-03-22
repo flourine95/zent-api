@@ -1,23 +1,23 @@
 <?php
 
-namespace App\Domain\Category\Observers;
+namespace App\Infrastructure\Observers;
 
-use App\Infrastructure\Models\Category;
+use App\Infrastructure\Models\Banner;
 use Illuminate\Support\Facades\Cache;
 
-class CategoryObserver
+class BannerObserver
 {
-    public function created(Category $category): void
+    public function created(Banner $banner): void
     {
         $this->clearCache();
     }
 
-    public function updated(Category $category): void
+    public function updated(Banner $banner): void
     {
         $this->clearCache();
     }
 
-    public function deleted(Category $category): void
+    public function deleted(Banner $banner): void
     {
         $this->clearCache();
     }

@@ -2,14 +2,14 @@
 
 namespace App\Shared\Providers;
 
-use App\Domain\Banner\Observers\BannerObserver;
-use App\Domain\Category\Observers\CategoryObserver;
-use App\Domain\Config\Observers\SettingObserver;
-use App\Domain\Product\Observers\ProductObserver;
 use App\Infrastructure\Models\Banner;
 use App\Infrastructure\Models\Category;
 use App\Infrastructure\Models\Product;
 use App\Infrastructure\Models\Setting;
+use App\Infrastructure\Observers\BannerObserver;
+use App\Infrastructure\Observers\CategoryObserver;
+use App\Infrastructure\Observers\ProductObserver;
+use App\Infrastructure\Observers\SettingObserver;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 

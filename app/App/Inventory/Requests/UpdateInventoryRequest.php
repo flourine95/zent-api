@@ -22,8 +22,8 @@ class UpdateInventoryRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'quantity.required' => 'Số lượng là bắt buộc.',
-            'quantity.min' => 'Số lượng không được âm.',
+            'quantity.required' => 'Quantity is required.',
+            'quantity.min' => 'Quantity cannot be negative.',
         ];
     }
 }
