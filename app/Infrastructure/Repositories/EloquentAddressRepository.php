@@ -59,14 +59,21 @@ final class EloquentAddressRepository implements AddressRepositoryInterface
 
     public function setAsDefault(int $userId, int $addressId): array
     {
-        // Unset all defaults for user
         Address::where('user_id', $userId)->update(['is_default' => false]);
 
-        // Set this address as default
         $address = Address::findOrFail($addressId);
         $address->update(['is_default' => true]);
 
         return $address->fresh()->toArray();
+    }
+
+    public function getDefaultByUserId(int $userId): ?array
+    {
+        $address = Address::where('user_id', $userId)
+            ->where('is_default', true)
+            ->first();
+
+        return $address?->toArray();
     }
 
     public function unsetAllDefaults(int $userId): bool

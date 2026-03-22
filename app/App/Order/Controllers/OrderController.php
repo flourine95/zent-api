@@ -4,6 +4,7 @@ namespace App\App\Order\Controllers;
 
 use App\App\Order\Requests\CreateOrderRequest;
 use App\App\Order\Requests\UpdateOrderRequest;
+use App\Domain\Address\Exceptions\AddressNotFoundException;
 use App\Domain\Inventory\Exceptions\InsufficientStockException;
 use App\Domain\Order\Actions\CancelOrderAction;
 use App\Domain\Order\Actions\CreateOrderAction;
@@ -75,6 +76,8 @@ final readonly class OrderController
             return $this->error($e->getMessage(), $e->errorCode, 422);
         } catch (InvalidOrderException $e) {
             return $this->error($e->getMessage(), $e->errorCode, 422);
+        } catch (AddressNotFoundException $e) {
+            return $this->error($e->getMessage(), $e->errorCode, 404);
         }
     }
 

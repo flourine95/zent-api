@@ -74,7 +74,7 @@ final readonly class CartController
         try {
             $this->removeCartItemAction->execute($request->user()->id, $itemId);
 
-            return $this->message('Đã xóa sản phẩm khỏi giỏ hàng');
+            return $this->message('Item removed from cart');
         } catch (CartItemNotFoundException $e) {
             return $this->error($e->getMessage(), $e->errorCode, 404);
         }
@@ -84,6 +84,6 @@ final readonly class CartController
     {
         $this->clearCartAction->execute($request->user()->id);
 
-        return $this->message('Đã xóa toàn bộ giỏ hàng');
+        return $this->message('Cart cleared');
     }
 }

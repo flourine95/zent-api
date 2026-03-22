@@ -94,6 +94,15 @@ final class EloquentInventoryRepository implements InventoryRepositoryInterface
         return $inventory !== null && $inventory->quantity >= $quantity;
     }
 
+    public function findAvailableWarehouseForVariant(int $productVariantId, int $quantity): ?int
+    {
+        $inventory = Inventory::where('product_variant_id', $productVariantId)
+            ->where('quantity', '>=', $quantity)
+            ->first();
+
+        return $inventory?->warehouse_id;
+    }
+
     public function reserveStock(int $warehouseId, int $productVariantId, int $quantity, int $orderId): array
     {
         $inventory = Inventory::where('warehouse_id', $warehouseId)

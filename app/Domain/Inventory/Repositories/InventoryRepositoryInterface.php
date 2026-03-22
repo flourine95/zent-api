@@ -30,6 +30,8 @@ interface InventoryRepositoryInterface
      */
     public function hasAvailableStock(int $warehouseId, int $productVariantId, int $quantity): bool;
 
+    public function findAvailableWarehouseForVariant(int $productVariantId, int $quantity): ?int;
+
     /**
      * Decrement quantity and create a reservation atomically.
      * Must be called inside a DB transaction with pessimistic lock.

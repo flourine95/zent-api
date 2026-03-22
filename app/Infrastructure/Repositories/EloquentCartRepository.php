@@ -20,7 +20,7 @@ final class EloquentCartRepository implements CartRepositoryInterface
         $cart = Cart::with(['items.productVariant.product'])
             ->firstOrCreate(['user_id' => $userId]);
 
-        return $cart->toArray();
+        return $this->formatCart($cart);
     }
 
     public function addItem(int $userId, int $productVariantId, int $quantity): array
@@ -41,7 +41,7 @@ final class EloquentCartRepository implements CartRepositoryInterface
 
         $cart->load(['items.productVariant.product']);
 
-        return $cart->toArray();
+        return $this->formatCart($cart);
     }
 
     public function updateItem(int $userId, int $cartItemId, int $quantity): array
@@ -53,7 +53,7 @@ final class EloquentCartRepository implements CartRepositoryInterface
 
         $cart->load(['items.productVariant.product']);
 
-        return $cart->toArray();
+        return $this->formatCart($cart);
     }
 
     public function removeItem(int $userId, int $cartItemId): bool
@@ -102,5 +102,33 @@ final class EloquentCartRepository implements CartRepositoryInterface
         $item = $cart->items()->where('product_variant_id', $productVariantId)->first();
 
         return $item?->toArray();
+    }
+
+    private function formatCart(Cart $cart): array
+    {
+        return [
+            'id' => $cart->id,
+            'created_at' => $cart->created_at,
+            'updated_at' => $cart->updated_at,
+            'items' => $cart->items->map(fn ($item) => [
+                'id' => $item->id,
+                'quantity' => $item->quantity,
+                'created_at' => $item->created_at,
+                'updated_at' => $item->updated_at,
+                'product_variant' => [
+                    'id' => $item->productVariant->id,
+                    'sku' => $item->productVariant->sku,
+                    'price' => $item->productVariant->price,
+                    'original_price' => $item->productVariant->original_price,
+                    'images' => $item->productVariant->images,
+                    'options' => $item->productVariant->options,
+                    'product' => [
+                        'id' => $item->productVariant->product->id,
+                        'name' => $item->productVariant->product->name,
+                        'thumbnail' => $item->productVariant->product->thumbnail,
+                    ],
+                ],
+            ])->toArray(),
+        ];
     }
 }

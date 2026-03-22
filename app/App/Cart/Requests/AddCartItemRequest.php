@@ -22,11 +22,11 @@ class AddCartItemRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'product_variant_id.required' => 'Vui lòng chọn sản phẩm.',
-            'product_variant_id.exists' => 'Sản phẩm không tồn tại.',
-            'quantity.required' => 'Vui lòng nhập số lượng.',
-            'quantity.integer' => 'Số lượng phải là số nguyên.',
-            'quantity.min' => 'Số lượng phải lớn hơn 0.',
+            'product_variant_id.required' => 'Product variant is required.',
+            'product_variant_id.exists' => 'Product variant does not exist.',
+            'quantity.required' => 'Quantity is required.',
+            'quantity.integer' => 'Quantity must be an integer.',
+            'quantity.min' => 'Quantity must be greater than 0.',
         ];
     }
 }

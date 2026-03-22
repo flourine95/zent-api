@@ -20,6 +20,8 @@ interface AddressRepositoryInterface
 
     public function setAsDefault(int $userId, int $addressId): array;
 
+    public function getDefaultByUserId(int $userId): ?array;
+
     public function unsetAllDefaults(int $userId): bool;
 
     public function unsetOtherDefaults(int $userId, int $exceptAddressId): bool;

@@ -22,9 +22,9 @@ class LoginRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'email.required' => 'Email là bắt buộc.',
-            'email.email' => 'Email không hợp lệ.',
-            'password.required' => 'Mật khẩu là bắt buộc.',
+            'email.required' => 'Email is required.',
+            'email.email' => 'Email is invalid.',
+            'password.required' => 'Password is required.',
         ];
     }
 }

@@ -2,6 +2,9 @@
 
 namespace App\Domain\Order\Actions;
 
+use App\Domain\Address\Exceptions\AddressNotFoundException;
+use App\Domain\Address\Repositories\AddressRepositoryInterface;
+use App\Domain\Cart\Repositories\CartRepositoryInterface;
 use App\Domain\Inventory\Exceptions\InsufficientStockException;
 use App\Domain\Inventory\Repositories\InventoryRepositoryInterface;
 use App\Domain\Order\DataTransferObjects\CreateOrderData;
@@ -12,26 +15,75 @@ final readonly class CreateOrderAction
 {
     public function __construct(
         private OrderRepositoryInterface $orderRepository,
+        private CartRepositoryInterface $cartRepository,
+        private AddressRepositoryInterface $addressRepository,
         private InventoryRepositoryInterface $inventoryRepository,
     ) {}
 
     /**
      * @throws InvalidOrderException
+     * @throws AddressNotFoundException
      * @throws InsufficientStockException
      */
     public function execute(CreateOrderData $data): array
     {
-        if (empty($data->items)) {
-            throw InvalidOrderException::noItems();
+        // Resolve shipping address
+        $address = $data->addressId !== null
+            ? $this->addressRepository->findById($data->addressId)
+            : $this->addressRepository->getDefaultByUserId($data->userId);
+
+        if ($address === null) {
+            if ($data->addressId !== null) {
+                throw AddressNotFoundException::withId($data->addressId);
+            }
+            throw InvalidOrderException::noShippingAddress();
         }
 
-        $calculatedTotal = array_sum(array_column($data->items, 'subtotal'));
-        if (abs($calculatedTotal - $data->totalAmount) > 0.01) {
-            throw InvalidOrderException::totalMismatch($data->totalAmount, $calculatedTotal);
+        // Load cart with items
+        $cart = $this->cartRepository->getByUserIdWithItems($data->userId);
+
+        if (empty($cart['items'])) {
+            throw InvalidOrderException::emptyCart();
+        }
+
+        // Build order items from cart, resolving warehouse per variant
+        $orderItems = [];
+        $totalAmount = 0;
+
+        foreach ($cart['items'] as $cartItem) {
+            $variant = $cartItem['product_variant'];
+            $quantity = $cartItem['quantity'];
+            $price = (float) $variant['price'];
+            $subtotal = $price * $quantity;
+
+            $warehouseId = $this->inventoryRepository->findAvailableWarehouseForVariant(
+                $variant['id'],
+                $quantity
+            );
+
+            if ($warehouseId === null) {
+                throw InvalidOrderException::noWarehouseAvailable($variant['id']);
+            }
+
+            $orderItems[] = [
+                'product_variant_id' => $variant['id'],
+                'warehouse_id' => $warehouseId,
+                'quantity' => $quantity,
+                'price' => $price,
+                'subtotal' => $subtotal,
+                'product_snapshot' => [
+                    'name' => $variant['product']['name'],
+                    'sku' => $variant['sku'],
+                    'options' => $variant['options'],
+                    'thumbnail' => $variant['product']['thumbnail'],
+                ],
+            ];
+
+            $totalAmount += $subtotal;
         }
 
         // Check stock availability for all items before creating anything
-        foreach ($data->items as $item) {
+        foreach ($orderItems as $item) {
             if (! $this->inventoryRepository->hasAvailableStock(
                 $item['warehouse_id'],
                 $item['product_variant_id'],
@@ -46,6 +98,22 @@ final readonly class CreateOrderAction
             }
         }
 
-        return $this->orderRepository->createWithReservations($data->toArray(), $data->items);
+        $orderData = [
+            'user_id' => $data->userId,
+            'code' => $data->code,
+            'status' => 'pending',
+            'payment_status' => 'unpaid',
+            'total_amount' => $totalAmount,
+            'shipping_address' => $address,
+            'billing_address' => $address,
+            'notes' => $data->notes,
+        ];
+
+        $order = $this->orderRepository->createWithReservations($orderData, $orderItems);
+
+        // Clear cart after successful order
+        $this->cartRepository->clearCart($data->userId);
+
+        return $order;
     }
 }

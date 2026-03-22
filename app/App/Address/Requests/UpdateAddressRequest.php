@@ -30,11 +30,11 @@ class UpdateAddressRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'recipient_name.required' => 'Vui lòng nhập tên người nhận.',
-            'phone.required' => 'Vui lòng nhập số điện thoại.',
-            'address_line_1.required' => 'Vui lòng nhập địa chỉ.',
-            'city.required' => 'Vui lòng nhập thành phố.',
-            'postal_code.required' => 'Vui lòng nhập mã bưu điện.',
+            'recipient_name.required' => 'Recipient name is required.',
+            'phone.required' => 'Phone number is required.',
+            'address_line_1.required' => 'Address is required.',
+            'city.required' => 'City is required.',
+            'postal_code.required' => 'Postal code is required.',
         ];
     }
 }

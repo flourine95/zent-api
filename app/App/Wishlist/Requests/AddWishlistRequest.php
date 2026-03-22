@@ -21,8 +21,8 @@ class AddWishlistRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'product_id.required' => 'Vui lòng chọn sản phẩm.',
-            'product_id.exists' => 'Sản phẩm không tồn tại.',
+            'product_id.required' => 'Product is required.',
+            'product_id.exists' => 'Product does not exist.',
         ];
     }
 }

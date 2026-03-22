@@ -23,9 +23,9 @@ class ChangePasswordRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'current_password.required' => 'Mật khẩu hiện tại là bắt buộc.',
-            'password.required' => 'Mật khẩu mới là bắt buộc.',
-            'password.confirmed' => 'Xác nhận mật khẩu không khớp.',
+            'current_password.required' => 'Current password is required.',
+            'password.required' => 'New password is required.',
+            'password.confirmed' => 'Password confirmation does not match.',
         ];
     }
 }

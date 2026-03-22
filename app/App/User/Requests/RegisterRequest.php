@@ -24,11 +24,11 @@ class RegisterRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'Tên là bắt buộc.',
-            'email.required' => 'Email là bắt buộc.',
-            'email.email' => 'Email không hợp lệ.',
-            'password.required' => 'Mật khẩu là bắt buộc.',
-            'password.confirmed' => 'Xác nhận mật khẩu không khớp.',
+            'name.required' => 'Name is required.',
+            'email.required' => 'Email is required.',
+            'email.email' => 'Email is invalid.',
+            'password.required' => 'Password is required.',
+            'password.confirmed' => 'Password confirmation does not match.',
         ];
     }
 }
