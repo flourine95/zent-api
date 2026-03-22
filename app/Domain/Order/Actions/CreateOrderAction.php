@@ -5,7 +5,6 @@ namespace App\Domain\Order\Actions;
 use App\Domain\Address\Exceptions\AddressNotFoundException;
 use App\Domain\Address\Repositories\AddressRepositoryInterface;
 use App\Domain\Cart\Repositories\CartRepositoryInterface;
-use App\Domain\Inventory\Exceptions\InsufficientStockException;
 use App\Domain\Inventory\Repositories\InventoryRepositoryInterface;
 use App\Domain\Order\DataTransferObjects\CreateOrderData;
 use App\Domain\Order\Exceptions\InvalidOrderException;
@@ -23,7 +22,6 @@ final readonly class CreateOrderAction
     /**
      * @throws InvalidOrderException
      * @throws AddressNotFoundException
-     * @throws InsufficientStockException
      */
     public function execute(CreateOrderData $data): array
     {
@@ -80,22 +78,6 @@ final readonly class CreateOrderAction
             ];
 
             $totalAmount += $subtotal;
-        }
-
-        // Check stock availability for all items before creating anything
-        foreach ($orderItems as $item) {
-            if (! $this->inventoryRepository->hasAvailableStock(
-                $item['warehouse_id'],
-                $item['product_variant_id'],
-                $item['quantity']
-            )) {
-                throw InsufficientStockException::forVariant(
-                    $item['product_variant_id'],
-                    $item['warehouse_id'],
-                    $item['quantity'],
-                    0
-                );
-            }
         }
 
         $orderData = [

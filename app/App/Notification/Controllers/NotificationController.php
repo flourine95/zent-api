@@ -41,7 +41,7 @@ final readonly class NotificationController
         try {
             $this->markAsReadAction->execute($request->user()->id, $id);
 
-            return $this->message('Đã đánh dấu đã đọc');
+            return $this->message('Notification marked as read');
         } catch (NotificationNotFoundException $e) {
             return $this->error($e->getMessage(), $e->errorCode, 404);
         }
@@ -51,7 +51,7 @@ final readonly class NotificationController
     {
         $this->markAllAsReadAction->execute($request->user()->id);
 
-        return $this->message('Đã đánh dấu tất cả đã đọc');
+        return $this->message('All notifications marked as read');
     }
 
     public function destroy(Request $request, string $id): JsonResponse
@@ -59,7 +59,7 @@ final readonly class NotificationController
         try {
             $this->deleteNotificationAction->execute($request->user()->id, $id);
 
-            return $this->message('Đã xóa thông báo');
+            return $this->message('Notification deleted');
         } catch (NotificationNotFoundException $e) {
             return $this->error($e->getMessage(), $e->errorCode, 404);
         }

@@ -18,16 +18,25 @@ final readonly class DeleteAddressAction
      */
     public function execute(int $userId, int $addressId): bool
     {
-        // Validate address exists
         if (! $this->addressRepository->exists($addressId)) {
             throw AddressNotFoundException::withId($addressId);
         }
 
-        // Validate ownership
         if (! $this->addressRepository->belongsToUser($addressId, $userId)) {
             throw UnauthorizedAddressAccessException::forUser($userId, $addressId);
         }
 
-        return $this->addressRepository->delete($addressId);
+        $address = $this->addressRepository->findById($addressId);
+        $deleted = $this->addressRepository->delete($addressId);
+
+        // If deleted address was default, promote the next available address
+        if ($deleted && ($address['is_default'] ?? false)) {
+            $remaining = $this->addressRepository->getAllByUserId($userId);
+            if (! empty($remaining)) {
+                $this->addressRepository->setAsDefault($userId, $remaining[0]['id']);
+            }
+        }
+
+        return $deleted;
     }
 }

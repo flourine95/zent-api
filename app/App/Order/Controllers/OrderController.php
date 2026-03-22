@@ -47,13 +47,17 @@ final readonly class OrderController
         return $this->paginated($result['data'], $result['meta']);
     }
 
-    public function show(int $id): JsonResponse
+    public function show(Request $request, int $id): JsonResponse
     {
         try {
             $order = $this->orderRepository->findById($id);
 
             if ($order === null) {
                 throw OrderNotFoundException::withId($id);
+            }
+
+            if (! $request->user()?->hasRole('admin') && $order['user_id'] !== $request->user()->id) {
+                return $this->error('Unauthorized.', 'UNAUTHORIZED', 403);
             }
 
             return $this->success($order);
@@ -92,9 +96,19 @@ final readonly class OrderController
         }
     }
 
-    public function cancel(int $id): JsonResponse
+    public function cancel(Request $request, int $id): JsonResponse
     {
         try {
+            $order = $this->orderRepository->findById($id);
+
+            if ($order === null) {
+                throw OrderNotFoundException::withId($id);
+            }
+
+            if (! $request->user()?->hasRole('admin') && $order['user_id'] !== $request->user()->id) {
+                return $this->error('Unauthorized.', 'UNAUTHORIZED', 403);
+            }
+
             return $this->success($this->cancelOrderAction->execute($id));
         } catch (OrderNotFoundException|InvalidOrderException $e) {
             return $this->error($e->getMessage(), $e->errorCode, 422);

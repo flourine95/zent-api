@@ -88,7 +88,6 @@ final class EloquentInventoryRepository implements InventoryRepositoryInterface
     {
         $inventory = Inventory::where('warehouse_id', $warehouseId)
             ->where('product_variant_id', $productVariantId)
-            ->lockForUpdate()
             ->first();
 
         return $inventory !== null && $inventory->quantity >= $quantity;

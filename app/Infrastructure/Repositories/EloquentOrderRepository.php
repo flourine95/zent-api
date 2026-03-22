@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Repositories;
 
+use App\Domain\Inventory\Exceptions\InsufficientStockException;
 use App\Domain\Order\Repositories\OrderRepositoryInterface;
 use App\Infrastructure\Models\Inventory;
 use App\Infrastructure\Models\InventoryReservation;
@@ -31,11 +32,19 @@ final class EloquentOrderRepository implements OrderRepositoryInterface
             foreach ($items as $item) {
                 $order->items()->create($item);
 
-                // Lock inventory row and decrement quantity
                 $inventory = Inventory::where('warehouse_id', $item['warehouse_id'])
                     ->where('product_variant_id', $item['product_variant_id'])
                     ->lockForUpdate()
                     ->firstOrFail();
+
+                if ($inventory->quantity < $item['quantity']) {
+                    throw InsufficientStockException::forVariant(
+                        $item['product_variant_id'],
+                        $item['warehouse_id'],
+                        $item['quantity'],
+                        $inventory->quantity
+                    );
+                }
 
                 $inventory->decrement('quantity', $item['quantity']);
 
