@@ -4,15 +4,15 @@ namespace App\Domain\Wishlist\Repositories;
 
 interface WishlistRepositoryInterface
 {
-    public function getAllByUserId(int $userId): array;
+    public function getAllByUserId(string $userId): array;
 
-    public function addProduct(int $userId, int $productId): array;
+    public function addProduct(string $userId, string $productId): array;
 
-    public function removeProduct(int $userId, int $productId): bool;
+    public function removeProduct(string $userId, string $productId): bool;
 
-    public function isProductInWishlist(int $userId, int $productId): bool;
+    public function isProductInWishlist(string $userId, string $productId): bool;
 
-    public function productExists(int $productId): bool;
+    public function productExists(string $productId): bool;
 
-    public function findByUserAndProduct(int $userId, int $productId): ?array;
+    public function findByUserAndProduct(string $userId, string $productId): ?array;
 }

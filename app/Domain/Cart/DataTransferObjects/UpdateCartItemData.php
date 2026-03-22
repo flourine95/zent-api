@@ -5,8 +5,8 @@ namespace App\Domain\Cart\DataTransferObjects;
 final readonly class UpdateCartItemData
 {
     public function __construct(
-        public int $userId,
-        public int $cartItemId,
+        public string $userId,
+        public string $cartItemId,
         public int $quantity,
     ) {}
 

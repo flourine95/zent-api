@@ -10,7 +10,7 @@ final readonly class GetNotificationsAction
         private NotificationRepositoryInterface $notificationRepository
     ) {}
 
-    public function execute(int $userId, int $perPage = 20): array
+    public function execute(string $userId, int $perPage = 20): array
     {
         return $this->notificationRepository->getPaginated($userId, $perPage);
     }

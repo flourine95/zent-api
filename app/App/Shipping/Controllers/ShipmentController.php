@@ -24,7 +24,7 @@ final readonly class ShipmentController
         private CancelShipmentAction $cancelShipmentAction,
     ) {}
 
-    public function store(CreateShipmentRequest $request, int $orderId): JsonResponse
+    public function store(CreateShipmentRequest $request, string $orderId): JsonResponse
     {
         try {
             $data = CreateShipmentData::fromArray($orderId, $request->validated());
@@ -37,7 +37,7 @@ final readonly class ShipmentController
         }
     }
 
-    public function show(int $orderId): JsonResponse
+    public function show(string $orderId): JsonResponse
     {
         try {
             return $this->success($this->getShipmentAction->execute($orderId));
@@ -46,7 +46,7 @@ final readonly class ShipmentController
         }
     }
 
-    public function cancel(int $orderId): JsonResponse
+    public function cancel(string $orderId): JsonResponse
     {
         try {
             return $this->success($this->cancelShipmentAction->execute($orderId));

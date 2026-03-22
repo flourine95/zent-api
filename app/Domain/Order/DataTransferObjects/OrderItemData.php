@@ -5,8 +5,8 @@ namespace App\Domain\Order\DataTransferObjects;
 final readonly class OrderItemData
 {
     public function __construct(
-        public int $productVariantId,
-        public int $warehouseId,
+        public string $productVariantId,
+        public string $warehouseId,
         public int $quantity,
         public float $price,
         public float $subtotal,

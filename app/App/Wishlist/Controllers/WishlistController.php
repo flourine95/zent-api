@@ -44,7 +44,7 @@ final readonly class WishlistController
         }
     }
 
-    public function destroy(Request $request, int $productId): JsonResponse
+    public function destroy(Request $request, string $productId): JsonResponse
     {
         try {
             $this->removeFromWishlistAction->execute($request->user()->id, $productId);
@@ -55,7 +55,7 @@ final readonly class WishlistController
         }
     }
 
-    public function check(Request $request, int $productId): JsonResponse
+    public function check(Request $request, string $productId): JsonResponse
     {
         return $this->success([
             'in_wishlist' => $this->checkWishlistAction->execute($request->user()->id, $productId),

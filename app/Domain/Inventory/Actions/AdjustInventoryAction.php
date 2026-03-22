@@ -16,7 +16,7 @@ final readonly class AdjustInventoryAction
      * @throws InventoryNotFoundException
      * @throws InsufficientInventoryException
      */
-    public function execute(int $inventoryId, int $adjustment, string $reason): array
+    public function execute(string $inventoryId, int $adjustment, string $reason): array
     {
         $inventory = $this->inventoryRepository->findById($inventoryId);
 
@@ -26,7 +26,6 @@ final readonly class AdjustInventoryAction
 
         $newQuantity = $inventory['quantity'] + $adjustment;
 
-        // Cannot go below zero
         if ($newQuantity < 0) {
             throw InsufficientInventoryException::forAdjustment($inventoryId, $inventory['quantity'], $adjustment);
         }

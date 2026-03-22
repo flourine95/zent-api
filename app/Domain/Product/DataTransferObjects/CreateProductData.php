@@ -5,7 +5,7 @@ namespace App\Domain\Product\DataTransferObjects;
 final readonly class CreateProductData
 {
     public function __construct(
-        public int $categoryId,
+        public string $categoryId,
         public string $name,
         public string $slug,
         public ?string $description,

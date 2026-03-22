@@ -5,8 +5,8 @@ namespace App\Domain\Address\DataTransferObjects;
 final readonly class UpdateAddressData
 {
     public function __construct(
-        public int $id,
-        public int $userId,
+        public string $id,
+        public string $userId,
         public ?string $label,
         public string $recipientName,
         public string $phone,

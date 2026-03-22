@@ -4,15 +4,15 @@ namespace App\Domain\Notification\Repositories;
 
 interface NotificationRepositoryInterface
 {
-    public function getPaginated(int $userId, int $perPage = 20): array;
+    public function getPaginated(string $userId, int $perPage = 20): array;
 
-    public function markAsRead(int $userId, string $notificationId): bool;
+    public function markAsRead(string $userId, string $notificationId): bool;
 
-    public function markAllAsRead(int $userId): bool;
+    public function markAllAsRead(string $userId): bool;
 
-    public function delete(int $userId, string $notificationId): bool;
+    public function delete(string $userId, string $notificationId): bool;
 
-    public function getUnreadCount(int $userId): int;
+    public function getUnreadCount(string $userId): int;
 
-    public function exists(int $userId, string $notificationId): bool;
+    public function exists(string $userId, string $notificationId): bool;
 }

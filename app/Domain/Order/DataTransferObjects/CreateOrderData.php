@@ -5,13 +5,13 @@ namespace App\Domain\Order\DataTransferObjects;
 final readonly class CreateOrderData
 {
     public function __construct(
-        public int $userId,
+        public string $userId,
         public string $code,
-        public ?int $addressId,
+        public ?string $addressId,
         public ?string $notes,
     ) {}
 
-    public static function fromRequest(int $userId, string $code, array $validated): self
+    public static function fromRequest(string $userId, string $code, array $validated): self
     {
         return new self(
             userId: $userId,

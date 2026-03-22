@@ -18,7 +18,7 @@ final readonly class CancelOrderAction
      * @throws OrderNotFoundException
      * @throws InvalidOrderException
      */
-    public function execute(int $orderId): array
+    public function execute(string $orderId): array
     {
         $order = $this->orderRepository->findById($orderId);
 

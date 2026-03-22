@@ -14,7 +14,7 @@ final readonly class DeleteProductAction
     /**
      * @throws ProductNotFoundException
      */
-    public function execute(int $productId): bool
+    public function execute(string $productId): bool
     {
         if (! $this->productRepository->exists($productId)) {
             throw ProductNotFoundException::withId($productId);

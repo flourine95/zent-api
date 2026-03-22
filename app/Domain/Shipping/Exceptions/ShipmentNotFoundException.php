@@ -8,7 +8,7 @@ final class ShipmentNotFoundException extends DomainException
 {
     public string $errorCode = 'SHIPMENT_NOT_FOUND';
 
-    public static function forOrder(int $orderId): self
+    public static function forOrder(string $orderId): self
     {
         return new self("No shipment found for order ID {$orderId}.");
     }

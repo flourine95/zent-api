@@ -16,7 +16,7 @@ final readonly class DeleteAddressAction
      * @throws AddressNotFoundException
      * @throws UnauthorizedAddressAccessException
      */
-    public function execute(int $userId, int $addressId): bool
+    public function execute(string $userId, string $addressId): bool
     {
         if (! $this->addressRepository->exists($addressId)) {
             throw AddressNotFoundException::withId($addressId);
@@ -29,7 +29,6 @@ final readonly class DeleteAddressAction
         $address = $this->addressRepository->findById($addressId);
         $deleted = $this->addressRepository->delete($addressId);
 
-        // If deleted address was default, promote the next available address
         if ($deleted && ($address['is_default'] ?? false)) {
             $remaining = $this->addressRepository->getAllByUserId($userId);
             if (! empty($remaining)) {

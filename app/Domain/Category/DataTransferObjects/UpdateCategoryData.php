@@ -5,16 +5,16 @@ namespace App\Domain\Category\DataTransferObjects;
 final readonly class UpdateCategoryData
 {
     public function __construct(
-        public int $id,
+        public string $id,
         public string $name,
         public string $slug,
         public ?string $description,
-        public ?int $parentId,
+        public ?string $parentId,
         public ?string $image,
         public bool $isVisible,
     ) {}
 
-    public static function fromArray(int $id, array $data): self
+    public static function fromArray(string $id, array $data): self
     {
         return new self(
             id: $id,

@@ -8,7 +8,7 @@ final class WishlistItemNotFoundException extends DomainException
 {
     public string $errorCode = 'WISHLIST_ITEM_NOT_FOUND';
 
-    public static function forProduct(int $productId): self
+    public static function forProduct(string $productId): self
     {
         return new self("Product {$productId} not found in wishlist.");
     }

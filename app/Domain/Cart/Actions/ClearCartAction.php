@@ -10,7 +10,7 @@ final readonly class ClearCartAction
         private CartRepositoryInterface $cartRepository
     ) {}
 
-    public function execute(int $userId): bool
+    public function execute(string $userId): bool
     {
         return $this->cartRepository->clearCart($userId);
     }

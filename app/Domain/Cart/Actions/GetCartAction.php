@@ -10,7 +10,7 @@ final readonly class GetCartAction
         private CartRepositoryInterface $cartRepository
     ) {}
 
-    public function execute(int $userId): array
+    public function execute(string $userId): array
     {
         return $this->cartRepository->getByUserIdWithItems($userId);
     }

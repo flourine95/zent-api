@@ -14,7 +14,7 @@ final readonly class DeleteBannerAction
     /**
      * @throws BannerNotFoundException
      */
-    public function execute(int $bannerId): bool
+    public function execute(string $bannerId): bool
     {
         if (! $this->bannerRepository->exists($bannerId)) {
             throw BannerNotFoundException::withId($bannerId);

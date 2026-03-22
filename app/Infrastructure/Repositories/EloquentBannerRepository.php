@@ -14,7 +14,7 @@ final class EloquentBannerRepository implements BannerRepositoryInterface
         return $banner->toArray();
     }
 
-    public function update(int $id, array $data): array
+    public function update(string $id, array $data): array
     {
         $banner = Banner::findOrFail($id);
         $banner->update($data);
@@ -22,21 +22,21 @@ final class EloquentBannerRepository implements BannerRepositoryInterface
         return $banner->fresh()->toArray();
     }
 
-    public function delete(int $id): bool
+    public function delete(string $id): bool
     {
         $banner = Banner::findOrFail($id);
 
         return $banner->delete();
     }
 
-    public function findById(int $id): ?array
+    public function findById(string $id): ?array
     {
         $banner = Banner::find($id);
 
         return $banner?->toArray();
     }
 
-    public function exists(int $id): bool
+    public function exists(string $id): bool
     {
         return Banner::where('id', $id)->exists();
     }

@@ -15,7 +15,7 @@ class ShippingService
     public function createShipment(
         string $providerCode,
         array $orderData,
-        ?int $orderId = null
+        ?string $orderId = null
     ): Shipment {
         return DB::transaction(function () use ($providerCode, $orderData, $orderId) {
             $provider = ShippingProvider::byCode($providerCode)->firstOrFail();
@@ -210,7 +210,7 @@ class ShippingService
     /**
      * Create shipment with cheapest provider
      */
-    public function createShipmentWithCheapestProvider(array $orderData, ?int $orderId = null): Shipment
+    public function createShipmentWithCheapestProvider(array $orderData, ?string $orderId = null): Shipment
     {
         $feeParams = $this->extractFeeParams($orderData);
         $fees = $this->compareShippingFees($feeParams);
@@ -228,7 +228,7 @@ class ShippingService
     public function createShipmentWithBestProvider(
         array $orderData,
         string $criteria = 'cheapest',
-        ?int $orderId = null
+        ?string $orderId = null
     ): Shipment {
         $feeParams = $this->extractFeeParams($orderData);
         $fees = $this->compareShippingFees($feeParams);

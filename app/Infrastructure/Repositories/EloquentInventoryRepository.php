@@ -16,7 +16,7 @@ final class EloquentInventoryRepository implements InventoryRepositoryInterface
         return $inventory->load(['warehouse', 'productVariant'])->toArray();
     }
 
-    public function update(int $id, array $data): array
+    public function update(string $id, array $data): array
     {
         $inventory = Inventory::findOrFail($id);
         $inventory->update($data);
@@ -24,33 +24,33 @@ final class EloquentInventoryRepository implements InventoryRepositoryInterface
         return $inventory->fresh(['warehouse', 'productVariant'])->toArray();
     }
 
-    public function delete(int $id): bool
+    public function delete(string $id): bool
     {
         $inventory = Inventory::findOrFail($id);
 
         return $inventory->delete();
     }
 
-    public function findById(int $id): ?array
+    public function findById(string $id): ?array
     {
         $inventory = Inventory::with(['warehouse', 'productVariant'])->find($id);
 
         return $inventory?->toArray();
     }
 
-    public function exists(int $id): bool
+    public function exists(string $id): bool
     {
         return Inventory::where('id', $id)->exists();
     }
 
-    public function existsForWarehouseAndVariant(int $warehouseId, int $productVariantId): bool
+    public function existsForWarehouseAndVariant(string $warehouseId, string $productVariantId): bool
     {
         return Inventory::where('warehouse_id', $warehouseId)
             ->where('product_variant_id', $productVariantId)
             ->exists();
     }
 
-    public function getByWarehouse(int $warehouseId): array
+    public function getByWarehouse(string $warehouseId): array
     {
         return Inventory::with(['productVariant'])
             ->where('warehouse_id', $warehouseId)
@@ -59,7 +59,7 @@ final class EloquentInventoryRepository implements InventoryRepositoryInterface
             ->toArray();
     }
 
-    public function getByProductVariant(int $productVariantId): array
+    public function getByProductVariant(string $productVariantId): array
     {
         return Inventory::with(['warehouse'])
             ->where('product_variant_id', $productVariantId)
@@ -84,7 +84,7 @@ final class EloquentInventoryRepository implements InventoryRepositoryInterface
             ->toArray();
     }
 
-    public function hasAvailableStock(int $warehouseId, int $productVariantId, int $quantity): bool
+    public function hasAvailableStock(string $warehouseId, string $productVariantId, int $quantity): bool
     {
         $inventory = Inventory::where('warehouse_id', $warehouseId)
             ->where('product_variant_id', $productVariantId)
@@ -93,7 +93,7 @@ final class EloquentInventoryRepository implements InventoryRepositoryInterface
         return $inventory !== null && $inventory->quantity >= $quantity;
     }
 
-    public function findAvailableWarehouseForVariant(int $productVariantId, int $quantity): ?int
+    public function findAvailableWarehouseForVariant(string $productVariantId, int $quantity): ?string
     {
         $inventory = Inventory::where('product_variant_id', $productVariantId)
             ->where('quantity', '>=', $quantity)
@@ -102,7 +102,7 @@ final class EloquentInventoryRepository implements InventoryRepositoryInterface
         return $inventory?->warehouse_id;
     }
 
-    public function reserveStock(int $warehouseId, int $productVariantId, int $quantity, int $orderId): array
+    public function reserveStock(string $warehouseId, string $productVariantId, int $quantity, string $orderId): array
     {
         $inventory = Inventory::where('warehouse_id', $warehouseId)
             ->where('product_variant_id', $productVariantId)
@@ -123,7 +123,7 @@ final class EloquentInventoryRepository implements InventoryRepositoryInterface
         return $reservation->toArray();
     }
 
-    public function releaseReservations(int $orderId): void
+    public function releaseReservations(string $orderId): void
     {
         $reservations = InventoryReservation::where('order_id', $orderId)
             ->where('status', 'pending')

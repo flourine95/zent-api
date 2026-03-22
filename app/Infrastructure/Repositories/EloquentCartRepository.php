@@ -8,14 +8,14 @@ use App\Infrastructure\Models\ProductVariant;
 
 final class EloquentCartRepository implements CartRepositoryInterface
 {
-    public function getOrCreateByUserId(int $userId): array
+    public function getOrCreateByUserId(string $userId): array
     {
         $cart = Cart::firstOrCreate(['user_id' => $userId]);
 
         return $cart->toArray();
     }
 
-    public function getByUserIdWithItems(int $userId): array
+    public function getByUserIdWithItems(string $userId): array
     {
         $cart = Cart::with(['items.productVariant.product'])
             ->firstOrCreate(['user_id' => $userId]);
@@ -23,11 +23,10 @@ final class EloquentCartRepository implements CartRepositoryInterface
         return $this->formatCart($cart);
     }
 
-    public function addItem(int $userId, int $productVariantId, int $quantity): array
+    public function addItem(string $userId, string $productVariantId, int $quantity): array
     {
         $cart = Cart::firstOrCreate(['user_id' => $userId]);
 
-        // Check if item already exists
         $cartItem = $cart->items()->where('product_variant_id', $productVariantId)->first();
 
         if ($cartItem) {
@@ -44,7 +43,7 @@ final class EloquentCartRepository implements CartRepositoryInterface
         return $this->formatCart($cart);
     }
 
-    public function updateItem(int $userId, int $cartItemId, int $quantity): array
+    public function updateItem(string $userId, string $cartItemId, int $quantity): array
     {
         $cart = Cart::where('user_id', $userId)->firstOrFail();
         $cartItem = $cart->items()->findOrFail($cartItemId);
@@ -56,7 +55,7 @@ final class EloquentCartRepository implements CartRepositoryInterface
         return $this->formatCart($cart);
     }
 
-    public function removeItem(int $userId, int $cartItemId): bool
+    public function removeItem(string $userId, string $cartItemId): bool
     {
         $cart = Cart::where('user_id', $userId)->firstOrFail();
         $cartItem = $cart->items()->findOrFail($cartItemId);
@@ -64,7 +63,7 @@ final class EloquentCartRepository implements CartRepositoryInterface
         return $cartItem->delete();
     }
 
-    public function clearCart(int $userId): bool
+    public function clearCart(string $userId): bool
     {
         $cart = Cart::where('user_id', $userId)->first();
 
@@ -77,7 +76,7 @@ final class EloquentCartRepository implements CartRepositoryInterface
         return false;
     }
 
-    public function itemExists(int $userId, int $cartItemId): bool
+    public function itemExists(string $userId, string $cartItemId): bool
     {
         return Cart::where('user_id', $userId)
             ->whereHas('items', function ($query) use ($cartItemId) {
@@ -86,12 +85,12 @@ final class EloquentCartRepository implements CartRepositoryInterface
             ->exists();
     }
 
-    public function variantExists(int $productVariantId): bool
+    public function variantExists(string $productVariantId): bool
     {
         return ProductVariant::where('id', $productVariantId)->exists();
     }
 
-    public function getItemByVariant(int $userId, int $productVariantId): ?array
+    public function getItemByVariant(string $userId, string $productVariantId): ?array
     {
         $cart = Cart::where('user_id', $userId)->first();
 

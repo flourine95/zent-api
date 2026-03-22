@@ -5,8 +5,8 @@ namespace App\Domain\Cart\DataTransferObjects;
 final readonly class AddCartItemData
 {
     public function __construct(
-        public int $userId,
-        public int $productVariantId,
+        public string $userId,
+        public string $productVariantId,
         public int $quantity,
     ) {}
 

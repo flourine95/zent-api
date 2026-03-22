@@ -14,9 +14,8 @@ final readonly class RemoveCartItemAction
     /**
      * @throws CartItemNotFoundException
      */
-    public function execute(int $userId, int $cartItemId): bool
+    public function execute(string $userId, string $cartItemId): bool
     {
-        // Validate cart item exists for user
         if (! $this->cartRepository->itemExists($userId, $cartItemId)) {
             throw CartItemNotFoundException::forUser($userId, $cartItemId);
         }

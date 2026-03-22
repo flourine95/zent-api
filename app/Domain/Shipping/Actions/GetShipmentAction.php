@@ -11,7 +11,7 @@ class GetShipmentAction
         private readonly ShipmentRepositoryInterface $shipmentRepository,
     ) {}
 
-    public function execute(int $orderId): array
+    public function execute(string $orderId): array
     {
         $shipment = $this->shipmentRepository->findByOrderId($orderId);
 

@@ -27,7 +27,7 @@ final readonly class ProductVariantController
         }
     }
 
-    public function checkInventory(int $variantId): JsonResponse
+    public function checkInventory(string $variantId): JsonResponse
     {
         try {
             return $this->success($this->checkVariantInventoryAction->execute($variantId));

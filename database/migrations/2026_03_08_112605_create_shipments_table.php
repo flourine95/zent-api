@@ -6,53 +6,42 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('shipments', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('order_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('provider_id')->constrained('shipping_providers');
+            $table->uuid('id')->primary();
+            $table->uuid('order_id')->nullable();
+            $table->foreign('order_id')->references('id')->on('orders')->nullOnDelete();
+            $table->uuid('provider_id');
+            $table->foreign('provider_id')->references('id')->on('shipping_providers');
 
-            // Provider's order ID (partner_id for GHTK)
             $table->string('provider_order_id')->index();
             $table->unique(['provider_id', 'provider_order_id']);
 
-            // Tracking info
             $table->string('tracking_number')->nullable()->index();
             $table->string('label_id')->nullable();
 
-            // Standardized status (normalized across providers)
-            $table->string('status')->default('pending'); // pending, picked, in_transit, delivered, returned, cancelled
-            $table->string('provider_status')->nullable(); // Original status from provider
+            $table->string('status')->default('pending');
+            $table->string('provider_status')->nullable();
             $table->text('status_note')->nullable();
 
-            // Pricing
             $table->integer('fee')->nullable();
             $table->integer('insurance_fee')->nullable();
             $table->integer('cod_amount')->default(0);
             $table->integer('declared_value')->default(0);
-            $table->integer('weight')->default(0); // grams
+            $table->integer('weight')->default(0);
 
-            // Customer info (JSON for flexibility)
-            $table->json('customer_info'); // name, tel, address, province, district, ward
-
-            // Pickup info (JSON)
+            $table->json('customer_info');
             $table->json('pickup_info')->nullable();
 
-            // Estimated times
             $table->timestamp('estimated_pickup_at')->nullable();
             $table->timestamp('estimated_delivery_at')->nullable();
             $table->timestamp('actual_pickup_at')->nullable();
             $table->timestamp('actual_delivery_at')->nullable();
 
-            // Provider-specific data
-            $table->json('provider_metadata')->nullable(); // Store provider-specific fields
+            $table->json('provider_metadata')->nullable();
             $table->json('products')->nullable();
 
-            // Options
             $table->boolean('is_freeship')->default(false);
             $table->text('note')->nullable();
 
@@ -61,9 +50,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('shipments');

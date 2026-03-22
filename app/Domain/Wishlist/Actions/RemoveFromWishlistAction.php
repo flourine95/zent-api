@@ -14,9 +14,8 @@ final readonly class RemoveFromWishlistAction
     /**
      * @throws WishlistItemNotFoundException
      */
-    public function execute(int $userId, int $productId): bool
+    public function execute(string $userId, string $productId): bool
     {
-        // Check if product is in wishlist
         if (! $this->wishlistRepository->isProductInWishlist($userId, $productId)) {
             throw WishlistItemNotFoundException::forProduct($productId);
         }

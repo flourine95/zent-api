@@ -26,7 +26,7 @@ class EloquentWarehouseRepository implements WarehouseRepositoryInterface
             ->toArray();
     }
 
-    public function findById(int $id): ?array
+    public function findById(string $id): ?array
     {
         $warehouse = Warehouse::find($id);
 

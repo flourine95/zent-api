@@ -8,7 +8,7 @@ final class CategoryNotFoundException extends DomainException
 {
     public string $errorCode = 'CATEGORY_NOT_FOUND';
 
-    public static function withId(int $id): self
+    public static function withId(string $id): self
     {
         return new self("Category with ID {$id} not found.");
     }

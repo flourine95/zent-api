@@ -16,7 +16,7 @@ final readonly class ChangePasswordAction
      * @throws UserNotFoundException
      * @throws InvalidCredentialsException
      */
-    public function execute(int $userId, string $currentPassword, string $newPassword): bool
+    public function execute(string $userId, string $currentPassword, string $newPassword): bool
     {
         $user = $this->userRepository->findById($userId);
 
@@ -24,12 +24,10 @@ final readonly class ChangePasswordAction
             throw UserNotFoundException::withId($userId);
         }
 
-        // Verify current password
         if (! $this->userRepository->verifyPassword($currentPassword, $user['password'])) {
             throw InvalidCredentialsException::incorrectCurrentPassword();
         }
 
-        // Update password
         return $this->userRepository->updatePassword($userId, $newPassword);
     }
 }

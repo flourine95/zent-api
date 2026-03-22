@@ -6,15 +6,14 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('cart_items', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('cart_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('product_variant_id')->constrained()->cascadeOnDelete();
+            $table->uuid('id')->primary();
+            $table->uuid('cart_id');
+            $table->foreign('cart_id')->references('id')->on('carts')->cascadeOnDelete();
+            $table->uuid('product_variant_id');
+            $table->foreign('product_variant_id')->references('id')->on('product_variants')->cascadeOnDelete();
             $table->integer('quantity')->default(1);
             $table->timestamps();
 
@@ -22,9 +21,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('cart_items');

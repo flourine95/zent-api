@@ -10,7 +10,6 @@ final class EloquentUserRepository implements UserRepositoryInterface
 {
     public function create(array $data): array
     {
-        // Hash password before creating
         if (isset($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         }
@@ -20,7 +19,7 @@ final class EloquentUserRepository implements UserRepositoryInterface
         return $user->toArray();
     }
 
-    public function update(int $id, array $data): array
+    public function update(string $id, array $data): array
     {
         $user = User::findOrFail($id);
         $user->update($data);
@@ -28,14 +27,14 @@ final class EloquentUserRepository implements UserRepositoryInterface
         return $user->fresh()->toArray();
     }
 
-    public function delete(int $id): bool
+    public function delete(string $id): bool
     {
         $user = User::findOrFail($id);
 
         return $user->delete();
     }
 
-    public function findById(int $id): ?array
+    public function findById(string $id): ?array
     {
         $user = User::find($id);
 
@@ -49,7 +48,7 @@ final class EloquentUserRepository implements UserRepositoryInterface
         return $user?->toArray();
     }
 
-    public function exists(int $id): bool
+    public function exists(string $id): bool
     {
         return User::where('id', $id)->exists();
     }
@@ -59,7 +58,7 @@ final class EloquentUserRepository implements UserRepositoryInterface
         return User::where('email', $email)->exists();
     }
 
-    public function emailExistsExcept(string $email, int $exceptUserId): bool
+    public function emailExistsExcept(string $email, string $exceptUserId): bool
     {
         return User::where('email', $email)
             ->where('id', '!=', $exceptUserId)
@@ -82,7 +81,7 @@ final class EloquentUserRepository implements UserRepositoryInterface
         return Hash::check($plainPassword, $user->password);
     }
 
-    public function updatePassword(int $userId, string $newPassword): bool
+    public function updatePassword(string $userId, string $newPassword): bool
     {
         $user = User::findOrFail($userId);
 
@@ -96,21 +95,21 @@ final class EloquentUserRepository implements UserRepositoryInterface
         return User::orderBy('created_at', 'desc')->get()->toArray();
     }
 
-    public function createToken(int $userId, string $tokenName): string
+    public function createToken(string $userId, string $tokenName): string
     {
         $user = User::findOrFail($userId);
 
         return $user->createToken($tokenName)->plainTextToken;
     }
 
-    public function revokeToken(int $userId, string $tokenId): bool
+    public function revokeToken(string $userId, string $tokenId): bool
     {
         $user = User::findOrFail($userId);
 
         return $user->tokens()->where('id', $tokenId)->delete() > 0;
     }
 
-    public function revokeAllTokens(int $userId): bool
+    public function revokeAllTokens(string $userId): bool
     {
         $user = User::findOrFail($userId);
         $user->tokens()->delete();

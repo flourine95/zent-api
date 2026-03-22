@@ -38,17 +38,17 @@ final readonly class InventoryController
         return $this->success($this->inventoryRepository->getLowStock($threshold));
     }
 
-    public function byWarehouse(int $warehouseId): JsonResponse
+    public function byWarehouse(string $warehouseId): JsonResponse
     {
         return $this->success($this->inventoryRepository->getByWarehouse($warehouseId));
     }
 
-    public function byProductVariant(int $productVariantId): JsonResponse
+    public function byProductVariant(string $productVariantId): JsonResponse
     {
         return $this->success($this->inventoryRepository->getByProductVariant($productVariantId));
     }
 
-    public function show(int $id): JsonResponse
+    public function show(string $id): JsonResponse
     {
         try {
             $inventory = $this->inventoryRepository->findById($id);
@@ -74,7 +74,7 @@ final readonly class InventoryController
         }
     }
 
-    public function update(UpdateInventoryRequest $request, int $id): JsonResponse
+    public function update(UpdateInventoryRequest $request, string $id): JsonResponse
     {
         try {
             $data = UpdateInventoryData::fromArray($id, $request->validated());
@@ -85,7 +85,7 @@ final readonly class InventoryController
         }
     }
 
-    public function adjust(AdjustInventoryRequest $request, int $id): JsonResponse
+    public function adjust(AdjustInventoryRequest $request, string $id): JsonResponse
     {
         try {
             $inventory = $this->adjustInventoryAction->execute(

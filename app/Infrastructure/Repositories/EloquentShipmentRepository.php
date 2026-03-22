@@ -12,7 +12,7 @@ final class EloquentShipmentRepository implements ShipmentRepositoryInterface
         private readonly ShippingService $shippingService,
     ) {}
 
-    public function findByOrderId(int $orderId): ?array
+    public function findByOrderId(string $orderId): ?array
     {
         $shipment = Shipment::with(['provider', 'statusHistories'])
             ->where('order_id', $orderId)
@@ -32,7 +32,7 @@ final class EloquentShipmentRepository implements ShipmentRepositoryInterface
         return $shipment->load(['provider', 'statusHistories'])->toArray();
     }
 
-    public function updateStatus(int $shipmentId, string $status, ?string $providerStatus, ?string $note): array
+    public function updateStatus(string $shipmentId, string $status, ?string $providerStatus, ?string $note): array
     {
         $shipment = Shipment::findOrFail($shipmentId);
         $shipment->updateStatus($status, $providerStatus, $note);
@@ -40,7 +40,7 @@ final class EloquentShipmentRepository implements ShipmentRepositoryInterface
         return $shipment->fresh(['provider', 'statusHistories'])->toArray();
     }
 
-    public function cancel(int $shipmentId): array
+    public function cancel(string $shipmentId): array
     {
         $shipment = Shipment::with('provider')->findOrFail($shipmentId);
         $this->shippingService->cancelShipment($shipment);

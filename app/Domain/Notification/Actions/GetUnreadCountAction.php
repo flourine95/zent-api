@@ -10,7 +10,7 @@ final readonly class GetUnreadCountAction
         private NotificationRepositoryInterface $notificationRepository
     ) {}
 
-    public function execute(int $userId): int
+    public function execute(string $userId): int
     {
         return $this->notificationRepository->getUnreadCount($userId);
     }

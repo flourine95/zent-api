@@ -8,7 +8,7 @@ interface WarehouseRepositoryInterface
 
     public function getActive(): array;
 
-    public function findById(int $id): ?array;
+    public function findById(string $id): ?array;
 
     public function findByCode(string $code): ?array;
 }

@@ -14,7 +14,7 @@ final class EloquentProductRepository implements ProductRepositoryInterface
         return $product->toArray();
     }
 
-    public function update(int $id, array $data): array
+    public function update(string $id, array $data): array
     {
         $product = Product::findOrFail($id);
         $product->update($data);
@@ -22,14 +22,14 @@ final class EloquentProductRepository implements ProductRepositoryInterface
         return $product->fresh()->toArray();
     }
 
-    public function delete(int $id): bool
+    public function delete(string $id): bool
     {
         $product = Product::findOrFail($id);
 
         return $product->delete();
     }
 
-    public function findById(int $id): ?array
+    public function findById(string $id): ?array
     {
         $product = Product::with(['category', 'variants'])->find($id);
 
@@ -45,12 +45,12 @@ final class EloquentProductRepository implements ProductRepositoryInterface
         return $product?->toArray();
     }
 
-    public function exists(int $id): bool
+    public function exists(string $id): bool
     {
         return Product::where('id', $id)->exists();
     }
 
-    public function slugExists(string $slug, ?int $excludeId = null): bool
+    public function slugExists(string $slug, ?string $excludeId = null): bool
     {
         $query = Product::where('slug', $slug);
 
@@ -117,7 +117,7 @@ final class EloquentProductRepository implements ProductRepositoryInterface
         ];
     }
 
-    public function getByCategoryId(int $categoryId): array
+    public function getByCategoryId(string $categoryId): array
     {
         return Product::with(['variants'])
             ->where('category_id', $categoryId)

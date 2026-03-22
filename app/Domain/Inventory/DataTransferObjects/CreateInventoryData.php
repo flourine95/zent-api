@@ -5,8 +5,8 @@ namespace App\Domain\Inventory\DataTransferObjects;
 final readonly class CreateInventoryData
 {
     public function __construct(
-        public int $warehouseId,
-        public int $productVariantId,
+        public string $warehouseId,
+        public string $productVariantId,
         public int $quantity,
         public ?string $shelfLocation,
     ) {}

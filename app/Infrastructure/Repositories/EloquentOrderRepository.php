@@ -7,6 +7,7 @@ use App\Domain\Order\Repositories\OrderRepositoryInterface;
 use App\Infrastructure\Models\Inventory;
 use App\Infrastructure\Models\InventoryReservation;
 use App\Infrastructure\Models\Order;
+use App\Infrastructure\Models\OrderItem;
 use Illuminate\Support\Facades\DB;
 
 final class EloquentOrderRepository implements OrderRepositoryInterface
@@ -20,7 +21,7 @@ final class EloquentOrderRepository implements OrderRepositoryInterface
                 $order->items()->create($item);
             }
 
-            return $order->load(['items', 'user'])->toArray();
+            return $this->formatOrder($order->fresh(['items']));
         });
     }
 
@@ -58,56 +59,57 @@ final class EloquentOrderRepository implements OrderRepositoryInterface
                 ]);
             }
 
-            return $order->load(['items', 'user'])->toArray();
+            return $this->formatOrder($order->fresh(['items']));
         });
     }
 
-    public function update(int $id, array $data): array
+    public function update(string $id, array $data): array
     {
         $order = Order::findOrFail($id);
         $order->update($data);
 
-        return $order->fresh(['items', 'user'])->toArray();
+        return $this->formatOrder($order->fresh(['items']));
     }
 
-    public function delete(int $id): bool
+    public function delete(string $id): bool
     {
         $order = Order::findOrFail($id);
 
         return $order->delete();
     }
 
-    public function findById(int $id): ?array
+    public function findById(string $id): ?array
     {
-        $order = Order::with(['items', 'user', 'inventoryReservations'])->find($id);
+        $order = Order::with(['items'])->find($id);
 
-        return $order?->toArray();
+        return $order ? $this->formatOrder($order) : null;
     }
 
     public function findByCode(string $code): ?array
     {
-        $order = Order::with(['items', 'user'])->where('code', $code)->first();
+        $order = Order::with(['items'])->where('code', $code)->first();
 
-        return $order?->toArray();
+        return $order ? $this->formatOrder($order) : null;
     }
 
-    public function exists(int $id): bool
+    public function exists(string $id): bool
     {
         return Order::where('id', $id)->exists();
     }
 
-    public function getByUserId(int $userId): array
+    public function getByUserId(string $userId): array
     {
         return Order::with(['items'])
             ->where('user_id', $userId)
             ->orderBy('created_at', 'desc')
             ->get()
+            ->map(fn (Order $order) => $this->formatOrder($order))
             ->toArray();
     }
 
     public function getAll(array $filters = []): array
     {
-        $query = Order::with(['items', 'user']);
+        $query = Order::with(['items']);
 
         if (isset($filters['status'])) {
             $query->where('status', $filters['status']);
@@ -129,12 +131,15 @@ final class EloquentOrderRepository implements OrderRepositoryInterface
             $query->whereDate('created_at', '<=', $filters['date_to']);
         }
 
-        return $query->orderBy('created_at', 'desc')->get()->toArray();
+        return $query->orderBy('created_at', 'desc')
+            ->get()
+            ->map(fn (Order $order) => $this->formatOrder($order))
+            ->toArray();
     }
 
     public function paginate(array $filters = [], int $perPage = 15, int $page = 1): array
     {
-        $query = Order::with(['items', 'user']);
+        $query = Order::with(['items']);
 
         if (isset($filters['status'])) {
             $query->where('status', $filters['status']);
@@ -159,7 +164,9 @@ final class EloquentOrderRepository implements OrderRepositoryInterface
         $paginator = $query->orderBy('created_at', 'desc')->paginate($perPage, ['*'], 'page', $page);
 
         return [
-            'data' => $paginator->items(),
+            'data' => collect($paginator->items())
+                ->map(fn (Order $order) => $this->formatOrder($order))
+                ->toArray(),
             'meta' => [
                 'current_page' => $paginator->currentPage(),
                 'per_page' => $paginator->perPage(),
@@ -168,6 +175,31 @@ final class EloquentOrderRepository implements OrderRepositoryInterface
                 'from' => $paginator->firstItem(),
                 'to' => $paginator->lastItem(),
             ],
+        ];
+    }
+
+    private function formatOrder(Order $order): array
+    {
+        return [
+            'id' => $order->id,
+            'code' => $order->code,
+            'status' => $order->status,
+            'payment_status' => $order->payment_status,
+            'total_amount' => $order->total_amount,
+            'shipping_address' => $order->shipping_address,
+            'billing_address' => $order->billing_address,
+            'notes' => $order->notes,
+            'created_at' => $order->created_at,
+            'updated_at' => $order->updated_at,
+            'items' => $order->items->map(fn (OrderItem $item) => [
+                'id' => $item->id,
+                'product_variant_id' => $item->product_variant_id,
+                'warehouse_id' => $item->warehouse_id,
+                'quantity' => $item->quantity,
+                'price' => $item->price,
+                'subtotal' => $item->subtotal,
+                'product_snapshot' => $item->product_snapshot,
+            ])->toArray(),
         ];
     }
 }

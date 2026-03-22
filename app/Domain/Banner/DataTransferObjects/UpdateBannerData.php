@@ -7,7 +7,7 @@ use DateTimeInterface;
 final readonly class UpdateBannerData
 {
     public function __construct(
-        public int $id,
+        public string $id,
         public string $title,
         public ?string $description,
         public string $image,
@@ -20,7 +20,7 @@ final readonly class UpdateBannerData
         public ?DateTimeInterface $endDate,
     ) {}
 
-    public static function fromArray(int $id, array $data): self
+    public static function fromArray(string $id, array $data): self
     {
         return new self(
             id: $id,

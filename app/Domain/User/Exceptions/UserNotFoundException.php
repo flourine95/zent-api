@@ -8,7 +8,7 @@ final class UserNotFoundException extends DomainException
 {
     public string $errorCode = 'USER_NOT_FOUND';
 
-    public static function withId(int $id): self
+    public static function withId(string $id): self
     {
         return new self("User with ID {$id} not found.");
     }

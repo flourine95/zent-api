@@ -8,7 +8,7 @@ use App\Infrastructure\Models\ProductVariant;
 
 final class EloquentProductVariantRepository implements ProductVariantRepositoryInterface
 {
-    public function getByProductId(int $productId): array
+    public function getByProductId(string $productId): array
     {
         return ProductVariant::where('product_id', $productId)
             ->get()
@@ -26,14 +26,14 @@ final class EloquentProductVariantRepository implements ProductVariantRepository
         return $product->variants()->get()->toArray();
     }
 
-    public function findById(int $id): ?array
+    public function findById(string $id): ?array
     {
         $variant = ProductVariant::find($id);
 
         return $variant?->toArray();
     }
 
-    public function getInventoryDetails(int $variantId): ?array
+    public function getInventoryDetails(string $variantId): ?array
     {
         $variant = ProductVariant::with(['inventories.warehouse'])->find($variantId);
 
@@ -59,7 +59,7 @@ final class EloquentProductVariantRepository implements ProductVariantRepository
         ];
     }
 
-    public function productExists(int $productId): bool
+    public function productExists(string $productId): bool
     {
         return Product::where('id', $productId)->exists();
     }
@@ -69,7 +69,7 @@ final class EloquentProductVariantRepository implements ProductVariantRepository
         return Product::where('slug', $slug)->exists();
     }
 
-    public function variantExists(int $variantId): bool
+    public function variantExists(string $variantId): bool
     {
         return ProductVariant::where('id', $variantId)->exists();
     }

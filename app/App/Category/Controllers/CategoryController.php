@@ -36,7 +36,7 @@ final readonly class CategoryController
         return $this->success($this->categoryRepository->getTree());
     }
 
-    public function show(int $id): JsonResponse
+    public function show(string $id): JsonResponse
     {
         try {
             $category = $this->categoryRepository->findById($id);
@@ -62,7 +62,7 @@ final readonly class CategoryController
         }
     }
 
-    public function update(UpdateCategoryRequest $request, int $id): JsonResponse
+    public function update(UpdateCategoryRequest $request, string $id): JsonResponse
     {
         try {
             $data = UpdateCategoryData::fromArray($id, $request->validated());
@@ -73,7 +73,7 @@ final readonly class CategoryController
         }
     }
 
-    public function destroy(int $id): JsonResponse
+    public function destroy(string $id): JsonResponse
     {
         try {
             $this->deleteCategoryAction->execute($id);

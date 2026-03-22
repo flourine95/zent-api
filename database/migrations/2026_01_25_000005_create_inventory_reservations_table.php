@@ -6,26 +6,24 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('inventory_reservations', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignId('product_variant_id')->constrained('product_variants')->onDelete('cascade');
-
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->uuid('inventory_id');
+            $table->foreign('inventory_id')->references('id')->on('inventories')->cascadeOnDelete();
+            $table->uuid('order_id')->nullable();
+            $table->uuid('product_variant_id');
+            $table->foreign('product_variant_id')->references('id')->on('product_variants')->cascadeOnDelete();
 
             $table->integer('quantity');
+            $table->string('status')->default('pending'); // pending, confirmed, released, expired
+            $table->text('notes')->nullable();
             $table->timestamp('expires_at');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('inventory_reservations');

@@ -10,7 +10,7 @@ final readonly class GetUserAddressesAction
         private AddressRepositoryInterface $addressRepository
     ) {}
 
-    public function execute(int $userId): array
+    public function execute(string $userId): array
     {
         return $this->addressRepository->getAllByUserId($userId);
     }

@@ -48,7 +48,7 @@ final readonly class AddressController
         return $this->created($address, 'Address created successfully');
     }
 
-    public function update(UpdateAddressRequest $request, int $address): JsonResponse
+    public function update(UpdateAddressRequest $request, string $address): JsonResponse
     {
         try {
             $data = UpdateAddressData::fromArray([
@@ -65,7 +65,7 @@ final readonly class AddressController
         }
     }
 
-    public function destroy(Request $request, int $address): JsonResponse
+    public function destroy(Request $request, string $address): JsonResponse
     {
         try {
             $this->deleteAddressAction->execute($request->user()->id, $address);
@@ -78,7 +78,7 @@ final readonly class AddressController
         }
     }
 
-    public function setDefault(Request $request, int $address): JsonResponse
+    public function setDefault(Request $request, string $address): JsonResponse
     {
         try {
             $updated = $this->setDefaultAddressAction->execute($request->user()->id, $address);

@@ -5,8 +5,8 @@ namespace App\Domain\Wishlist\DataTransferObjects;
 final readonly class AddWishlistData
 {
     public function __construct(
-        public int $userId,
-        public int $productId,
+        public string $userId,
+        public string $productId,
     ) {}
 
     public static function fromArray(array $data): self

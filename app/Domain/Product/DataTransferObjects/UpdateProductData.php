@@ -5,8 +5,8 @@ namespace App\Domain\Product\DataTransferObjects;
 final readonly class UpdateProductData
 {
     public function __construct(
-        public int $id,
-        public int $categoryId,
+        public string $id,
+        public string $categoryId,
         public string $name,
         public string $slug,
         public ?string $description,
@@ -15,7 +15,7 @@ final readonly class UpdateProductData
         public bool $isActive,
     ) {}
 
-    public static function fromArray(int $id, array $data): self
+    public static function fromArray(string $id, array $data): self
     {
         return new self(
             id: $id,

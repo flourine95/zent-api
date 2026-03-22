@@ -8,7 +8,7 @@ use App\Infrastructure\Models\Wishlist;
 
 final class EloquentWishlistRepository implements WishlistRepositoryInterface
 {
-    public function getAllByUserId(int $userId): array
+    public function getAllByUserId(string $userId): array
     {
         return Wishlist::with(['product.category', 'product.variants'])
             ->where('user_id', $userId)
@@ -17,7 +17,7 @@ final class EloquentWishlistRepository implements WishlistRepositoryInterface
             ->toArray();
     }
 
-    public function addProduct(int $userId, int $productId): array
+    public function addProduct(string $userId, string $productId): array
     {
         $wishlist = Wishlist::firstOrCreate([
             'user_id' => $userId,
@@ -29,26 +29,26 @@ final class EloquentWishlistRepository implements WishlistRepositoryInterface
         return $wishlist->toArray();
     }
 
-    public function removeProduct(int $userId, int $productId): bool
+    public function removeProduct(string $userId, string $productId): bool
     {
         return Wishlist::where('user_id', $userId)
             ->where('product_id', $productId)
             ->delete() > 0;
     }
 
-    public function isProductInWishlist(int $userId, int $productId): bool
+    public function isProductInWishlist(string $userId, string $productId): bool
     {
         return Wishlist::where('user_id', $userId)
             ->where('product_id', $productId)
             ->exists();
     }
 
-    public function productExists(int $productId): bool
+    public function productExists(string $productId): bool
     {
         return Product::where('id', $productId)->exists();
     }
 
-    public function findByUserAndProduct(int $userId, int $productId): ?array
+    public function findByUserAndProduct(string $userId, string $productId): ?array
     {
         $wishlist = Wishlist::where('user_id', $userId)
             ->where('product_id', $productId)

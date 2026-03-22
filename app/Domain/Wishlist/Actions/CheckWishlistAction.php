@@ -10,7 +10,7 @@ final readonly class CheckWishlistAction
         private WishlistRepositoryInterface $wishlistRepository
     ) {}
 
-    public function execute(int $userId, int $productId): bool
+    public function execute(string $userId, string $productId): bool
     {
         return $this->wishlistRepository->isProductInWishlist($userId, $productId);
     }

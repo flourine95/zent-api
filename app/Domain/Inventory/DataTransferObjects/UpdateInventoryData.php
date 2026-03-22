@@ -5,12 +5,12 @@ namespace App\Domain\Inventory\DataTransferObjects;
 final readonly class UpdateInventoryData
 {
     public function __construct(
-        public int $id,
+        public string $id,
         public int $quantity,
         public ?string $shelfLocation,
     ) {}
 
-    public static function fromArray(int $id, array $data): self
+    public static function fromArray(string $id, array $data): self
     {
         return new self(
             id: $id,

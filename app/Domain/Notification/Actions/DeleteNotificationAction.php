@@ -14,7 +14,7 @@ final readonly class DeleteNotificationAction
     /**
      * @throws NotificationNotFoundException
      */
-    public function execute(int $userId, string $notificationId): bool
+    public function execute(string $userId, string $notificationId): bool
     {
         if (! $this->notificationRepository->exists($userId, $notificationId)) {
             throw NotificationNotFoundException::withId($notificationId);

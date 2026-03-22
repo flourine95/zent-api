@@ -5,13 +5,13 @@ namespace App\Domain\Order\DataTransferObjects;
 final readonly class UpdateOrderData
 {
     public function __construct(
-        public int $id,
+        public string $id,
         public string $status,
         public string $paymentStatus,
         public ?string $notes,
     ) {}
 
-    public static function fromArray(int $id, array $data): self
+    public static function fromArray(string $id, array $data): self
     {
         return new self(
             id: $id,

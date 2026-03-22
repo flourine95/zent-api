@@ -8,7 +8,7 @@ final class ProductVariantNotFoundException extends DomainException
 {
     public string $errorCode = 'PRODUCT_VARIANT_NOT_FOUND';
 
-    public static function withId(int $id): self
+    public static function withId(string $id): self
     {
         return new self("Product variant with ID {$id} not found.");
     }

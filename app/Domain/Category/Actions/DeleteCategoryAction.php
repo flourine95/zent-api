@@ -14,7 +14,7 @@ final readonly class DeleteCategoryAction
     /**
      * @throws CategoryNotFoundException
      */
-    public function execute(int $categoryId): bool
+    public function execute(string $categoryId): bool
     {
         if (! $this->categoryRepository->exists($categoryId)) {
             throw CategoryNotFoundException::withId($categoryId);

@@ -38,7 +38,7 @@ final readonly class ProductController
         return $this->paginated($result['data'], $result['meta']);
     }
 
-    public function show(int $id): JsonResponse
+    public function show(string $id): JsonResponse
     {
         try {
             $product = $this->productRepository->findById($id);
@@ -64,7 +64,7 @@ final readonly class ProductController
         }
     }
 
-    public function update(UpdateProductRequest $request, int $id): JsonResponse
+    public function update(UpdateProductRequest $request, string $id): JsonResponse
     {
         try {
             $data = UpdateProductData::fromArray($id, $request->validated());
@@ -75,7 +75,7 @@ final readonly class ProductController
         }
     }
 
-    public function destroy(int $id): JsonResponse
+    public function destroy(string $id): JsonResponse
     {
         try {
             $this->deleteProductAction->execute($id);

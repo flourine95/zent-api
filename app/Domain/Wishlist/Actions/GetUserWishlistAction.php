@@ -10,7 +10,7 @@ final readonly class GetUserWishlistAction
         private WishlistRepositoryInterface $wishlistRepository
     ) {}
 
-    public function execute(int $userId): array
+    public function execute(string $userId): array
     {
         return $this->wishlistRepository->getAllByUserId($userId);
     }

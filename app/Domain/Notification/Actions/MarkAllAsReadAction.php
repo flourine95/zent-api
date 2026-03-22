@@ -10,7 +10,7 @@ final readonly class MarkAllAsReadAction
         private NotificationRepositoryInterface $notificationRepository
     ) {}
 
-    public function execute(int $userId): bool
+    public function execute(string $userId): bool
     {
         return $this->notificationRepository->markAllAsRead($userId);
     }

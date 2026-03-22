@@ -47,7 +47,7 @@ final readonly class OrderController
         return $this->paginated($result['data'], $result['meta']);
     }
 
-    public function show(Request $request, int $id): JsonResponse
+    public function show(Request $request, string $id): JsonResponse
     {
         try {
             $order = $this->orderRepository->findById($id);
@@ -85,7 +85,7 @@ final readonly class OrderController
         }
     }
 
-    public function update(UpdateOrderRequest $request, int $id): JsonResponse
+    public function update(UpdateOrderRequest $request, string $id): JsonResponse
     {
         try {
             $data = UpdateOrderData::fromArray($id, $request->validated());
@@ -96,7 +96,7 @@ final readonly class OrderController
         }
     }
 
-    public function cancel(Request $request, int $id): JsonResponse
+    public function cancel(Request $request, string $id): JsonResponse
     {
         try {
             $order = $this->orderRepository->findById($id);

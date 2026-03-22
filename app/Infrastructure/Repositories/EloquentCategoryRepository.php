@@ -14,7 +14,7 @@ final class EloquentCategoryRepository implements CategoryRepositoryInterface
         return $category->toArray();
     }
 
-    public function update(int $id, array $data): array
+    public function update(string $id, array $data): array
     {
         $category = Category::findOrFail($id);
         $category->update($data);
@@ -22,14 +22,14 @@ final class EloquentCategoryRepository implements CategoryRepositoryInterface
         return $category->fresh()->toArray();
     }
 
-    public function delete(int $id): bool
+    public function delete(string $id): bool
     {
         $category = Category::findOrFail($id);
 
         return $category->delete();
     }
 
-    public function findById(int $id): ?array
+    public function findById(string $id): ?array
     {
         $category = Category::find($id);
 
@@ -43,12 +43,12 @@ final class EloquentCategoryRepository implements CategoryRepositoryInterface
         return $category?->toArray();
     }
 
-    public function exists(int $id): bool
+    public function exists(string $id): bool
     {
         return Category::where('id', $id)->exists();
     }
 
-    public function slugExists(string $slug, ?int $excludeId = null): bool
+    public function slugExists(string $slug, ?string $excludeId = null): bool
     {
         $query = Category::where('slug', $slug);
 
@@ -59,7 +59,7 @@ final class EloquentCategoryRepository implements CategoryRepositoryInterface
         return $query->exists();
     }
 
-    public function isDescendantOf(int $categoryId, int $potentialParentId): bool
+    public function isDescendantOf(string $categoryId, string $potentialParentId): bool
     {
         $category = Category::find($categoryId);
 
@@ -67,7 +67,6 @@ final class EloquentCategoryRepository implements CategoryRepositoryInterface
             return false;
         }
 
-        // Check all descendants recursively
         return $this->hasDescendant($category, $potentialParentId);
     }
 
@@ -81,7 +80,7 @@ final class EloquentCategoryRepository implements CategoryRepositoryInterface
         return Category::tree()->toArray();
     }
 
-    private function hasDescendant(Category $category, int $targetId): bool
+    private function hasDescendant(Category $category, string $targetId): bool
     {
         $children = $category->children;
 

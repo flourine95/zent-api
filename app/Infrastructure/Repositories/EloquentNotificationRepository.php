@@ -7,7 +7,7 @@ use App\Infrastructure\Models\User;
 
 final class EloquentNotificationRepository implements NotificationRepositoryInterface
 {
-    public function getPaginated(int $userId, int $perPage = 20): array
+    public function getPaginated(string $userId, int $perPage = 20): array
     {
         $user = User::findOrFail($userId);
         $notifications = $user->notifications()->paginate($perPage);
@@ -24,7 +24,7 @@ final class EloquentNotificationRepository implements NotificationRepositoryInte
         ];
     }
 
-    public function markAsRead(int $userId, string $notificationId): bool
+    public function markAsRead(string $userId, string $notificationId): bool
     {
         $user = User::findOrFail($userId);
         $notification = $user->notifications()->where('id', $notificationId)->first();
@@ -38,7 +38,7 @@ final class EloquentNotificationRepository implements NotificationRepositoryInte
         return false;
     }
 
-    public function markAllAsRead(int $userId): bool
+    public function markAllAsRead(string $userId): bool
     {
         $user = User::findOrFail($userId);
         $user->unreadNotifications->markAsRead();
@@ -46,7 +46,7 @@ final class EloquentNotificationRepository implements NotificationRepositoryInte
         return true;
     }
 
-    public function delete(int $userId, string $notificationId): bool
+    public function delete(string $userId, string $notificationId): bool
     {
         $user = User::findOrFail($userId);
         $notification = $user->notifications()->where('id', $notificationId)->first();
@@ -58,14 +58,14 @@ final class EloquentNotificationRepository implements NotificationRepositoryInte
         return false;
     }
 
-    public function getUnreadCount(int $userId): int
+    public function getUnreadCount(string $userId): int
     {
         $user = User::findOrFail($userId);
 
         return $user->unreadNotifications()->count();
     }
 
-    public function exists(int $userId, string $notificationId): bool
+    public function exists(string $userId, string $notificationId): bool
     {
         $user = User::findOrFail($userId);
 

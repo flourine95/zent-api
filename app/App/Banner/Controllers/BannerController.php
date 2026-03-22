@@ -41,7 +41,7 @@ final readonly class BannerController
         return $this->success($this->bannerRepository->getByPosition($position));
     }
 
-    public function show(int $id): JsonResponse
+    public function show(string $id): JsonResponse
     {
         try {
             $banner = $this->bannerRepository->findById($id);
@@ -67,7 +67,7 @@ final readonly class BannerController
         }
     }
 
-    public function update(UpdateBannerRequest $request, int $id): JsonResponse
+    public function update(UpdateBannerRequest $request, string $id): JsonResponse
     {
         try {
             $data = UpdateBannerData::fromArray($id, $request->validated());
@@ -78,7 +78,7 @@ final readonly class BannerController
         }
     }
 
-    public function destroy(int $id): JsonResponse
+    public function destroy(string $id): JsonResponse
     {
         try {
             $this->deleteBannerAction->execute($id);

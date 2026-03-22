@@ -11,7 +11,7 @@ class GetWarehouseByIdAction
         protected WarehouseRepositoryInterface $warehouseRepository
     ) {}
 
-    public function execute(int $id): array
+    public function execute(string $id): array
     {
         $warehouse = $this->warehouseRepository->findById($id);
 

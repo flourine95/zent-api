@@ -8,7 +8,7 @@ final class DuplicateInventoryException extends DomainException
 {
     public string $errorCode = 'DUPLICATE_INVENTORY';
 
-    public static function forWarehouseAndVariant(int $warehouseId, int $productVariantId): self
+    public static function forWarehouseAndVariant(string $warehouseId, string $productVariantId): self
     {
         return new self("Inventory already exists for warehouse {$warehouseId} and product variant {$productVariantId}.");
     }
