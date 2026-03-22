@@ -8,8 +8,11 @@ use App\Domain\Cart\Repositories\CartRepositoryInterface;
 use App\Domain\Category\Repositories\CategoryRepositoryInterface;
 use App\Domain\Config\Repositories\ConfigRepositoryInterface;
 use App\Domain\Inventory\Repositories\InventoryRepositoryInterface;
+use App\Domain\Inventory\Services\InventoryCacheServiceInterface;
 use App\Domain\Notification\Repositories\NotificationRepositoryInterface;
 use App\Domain\Order\Repositories\OrderRepositoryInterface;
+use App\Domain\Order\Services\OrderDispatchServiceInterface;
+use App\Domain\Order\Services\OrderNotificationServiceInterface;
 use App\Domain\Product\Repositories\ProductRepositoryInterface;
 use App\Domain\ProductVariant\Repositories\ProductVariantRepositoryInterface;
 use App\Domain\Shipping\Repositories\ShipmentRepositoryInterface;
@@ -32,6 +35,9 @@ use App\Infrastructure\Repositories\EloquentShippingRepository;
 use App\Infrastructure\Repositories\EloquentUserRepository;
 use App\Infrastructure\Repositories\EloquentWarehouseRepository;
 use App\Infrastructure\Repositories\EloquentWishlistRepository;
+use App\Infrastructure\Services\InventoryCacheService;
+use App\Infrastructure\Services\OrderDispatchService;
+use App\Infrastructure\Services\OrderNotificationService;
 use Illuminate\Support\ServiceProvider;
 
 class DomainServiceProvider extends ServiceProvider
@@ -43,8 +49,11 @@ class DomainServiceProvider extends ServiceProvider
         CategoryRepositoryInterface::class => EloquentCategoryRepository::class,
         ConfigRepositoryInterface::class => EloquentConfigRepository::class,
         InventoryRepositoryInterface::class => EloquentInventoryRepository::class,
+        InventoryCacheServiceInterface::class => InventoryCacheService::class,
         NotificationRepositoryInterface::class => EloquentNotificationRepository::class,
         OrderRepositoryInterface::class => EloquentOrderRepository::class,
+        OrderDispatchServiceInterface::class => OrderDispatchService::class,
+        OrderNotificationServiceInterface::class => OrderNotificationService::class,
         ProductRepositoryInterface::class => EloquentProductRepository::class,
         ProductVariantRepositoryInterface::class => EloquentProductVariantRepository::class,
         ShipmentRepositoryInterface::class => EloquentShipmentRepository::class,

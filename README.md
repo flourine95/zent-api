@@ -1,59 +1,150 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Zent API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+REST API cho nền tảng thương mại điện tử, xây dựng trên Laravel 12 với kiến trúc Domain-Oriented.
 
-## About Laravel
+## Yêu cầu
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- PHP 8.4+
+- PostgreSQL 14+
+- Redis (Docker hoặc local)
+- Composer
+- Node.js (chỉ cần nếu build frontend/admin)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Cài đặt
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 1. Clone và cài dependencies
 
-## Learning Laravel
+```bash
+git clone <repo-url>
+cd zent-api
+composer install
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### 2. Cấu hình môi trường
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-## Laravel Sponsors
+Mở `.env` và cấu hình các giá trị sau:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+**Database (PostgreSQL):**
+```env
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=zent_api
+DB_USERNAME=postgres
+DB_PASSWORD=your_password
+```
 
-### Premium Partners
+**Redis:**
+```env
+REDIS_CLIENT=predis
+REDIS_HOST=127.0.0.1
+REDIS_PORT=6379
+REDIS_PASSWORD=null
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+**Queue & Cache:**
+```env
+QUEUE_CONNECTION=database
+CACHE_STORE=database
+```
 
-## Contributing
+**Mail (dùng `log` để test local):**
+```env
+MAIL_MAILER=log
+MAIL_FROM_ADDRESS="hello@example.com"
+MAIL_FROM_NAME="Zent"
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+**Shipping providers (optional):**
+```env
+GHTK_API_TOKEN=your_token
+GHN_TOKEN=your_token
+GHN_SHOP_ID=your_shop_id
+```
 
-## Code of Conduct
+### 3. Khởi động Redis
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+docker run -d --name zent-redis -p 6379:6379 --restart unless-stopped \
+  redis:alpine redis-server --appendonly yes
+```
 
-## Security Vulnerabilities
+Lần sau nếu container bị stop:
+```bash
+docker start zent-redis
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 4. Migrate và seed database
 
-## License
+```bash
+php artisan migrate --seed
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Hoặc reset hoàn toàn:
+```bash
+php artisan migrate:fresh --seed
+```
+
+Seed tạo sẵn các tài khoản mặc định:
+
+| Email | Password | Role |
+|---|---|---|
+| admin@example.com | password | admin |
+| customer@example.com | password | customer |
+
+## Chạy dự án
+
+Cần mở **3 terminal** chạy song song:
+
+**Terminal 1 — API server:**
+```bash
+php artisan serve
+```
+
+**Terminal 2 — Queue worker** (xử lý order persistence, email, notifications):
+```bash
+php artisan queue:work --tries=3
+```
+
+**Terminal 3 — Scheduler** (auto-cancel đơn hết hạn, release reservations):
+```bash
+php artisan schedule:work
+```
+
+API base URL: `http://localhost:8000/api/v1`
+
+## Kiến trúc
+
+Dự án dùng Domain-Oriented Architecture với 3 layer:
+
+```
+app/App/            → HTTP layer (Controllers, FormRequests)
+app/Domain/         → Business logic (Actions, DTOs, Exceptions, Repository Interfaces)
+app/Infrastructure/ → Database & external services (Eloquent Models, Repositories, Jobs)
+```
+
+Chi tiết kỹ thuật và các quyết định thiết kế xem tại [`docs/roadmap.md`](docs/roadmap.md).
+
+## Các lệnh hữu ích
+
+```bash
+# Xem tất cả routes
+php artisan route:list
+
+# Chạy tests
+php artisan test --compact
+
+# Format code
+vendor/bin/pint
+
+# Xem failed jobs
+php artisan queue:failed
+
+# Retry failed jobs
+php artisan queue:retry all
+```

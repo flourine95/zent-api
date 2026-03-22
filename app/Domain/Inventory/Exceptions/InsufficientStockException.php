@@ -14,4 +14,9 @@ final class InsufficientStockException extends DomainException
             "Insufficient stock for variant {$productVariantId} in warehouse {$warehouseId}. Requested: {$requested}, Available: {$available}."
         );
     }
+
+    public static function forVariantId(string $productVariantId): self
+    {
+        return new self("Insufficient stock for variant {$productVariantId}.");
+    }
 }

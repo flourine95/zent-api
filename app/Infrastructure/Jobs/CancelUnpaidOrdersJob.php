@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Jobs;
 
+use App\Domain\Inventory\Services\InventoryCacheServiceInterface;
 use App\Infrastructure\Models\Inventory;
 use App\Infrastructure\Models\InventoryReservation;
 use App\Infrastructure\Models\Order;
@@ -16,7 +17,7 @@ class CancelUnpaidOrdersJob implements ShouldQueue
 
     public function __construct() {}
 
-    public function handle(): void
+    public function handle(InventoryCacheServiceInterface $inventoryCache): void
     {
         $timeoutMinutes = (int) config('order.auto_cancel_minutes', 30);
 
@@ -28,7 +29,9 @@ class CancelUnpaidOrdersJob implements ShouldQueue
         $count = 0;
 
         foreach ($orders as $order) {
-            DB::transaction(function () use ($order, &$count) {
+            $variantQuantities = [];
+
+            DB::transaction(function () use ($order, &$count, &$variantQuantities) {
                 $reservations = InventoryReservation::where('order_id', $order->id)
                     ->where('status', 'pending')
                     ->get();
@@ -40,11 +43,19 @@ class CancelUnpaidOrdersJob implements ShouldQueue
                         ->increment('quantity', $reservation->quantity);
 
                     $reservation->update(['status' => 'released']);
+
+                    $variantId = $reservation->product_variant_id;
+                    $variantQuantities[$variantId] = ($variantQuantities[$variantId] ?? 0) + $reservation->quantity;
                 }
 
                 $order->update(['status' => 'cancelled']);
                 $count++;
             });
+
+            // Sync Redis after DB transaction succeeds
+            if (! empty($variantQuantities)) {
+                $inventoryCache->incrementBatch($variantQuantities);
+            }
         }
 
         if ($count > 0) {

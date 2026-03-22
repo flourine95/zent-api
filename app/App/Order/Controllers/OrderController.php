@@ -18,6 +18,7 @@ use App\Domain\Order\Repositories\OrderRepositoryInterface;
 use App\Shared\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 final readonly class OrderController
 {
@@ -70,6 +71,7 @@ final readonly class OrderController
     {
         try {
             $data = CreateOrderData::fromRequest(
+                orderId: (string) Str::orderedUuid(),
                 userId: $request->user()->id,
                 validated: $request->validated()
             );

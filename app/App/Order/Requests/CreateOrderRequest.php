@@ -14,7 +14,8 @@ class CreateOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'address_id' => ['nullable', 'integer', 'exists:addresses,id'],
+            'address_id' => ['nullable', 'uuid', 'exists:addresses,id'],
+            'billing_address_id' => ['nullable', 'uuid', 'exists:addresses,id'],
             'notes' => ['nullable', 'string'],
         ];
     }
@@ -22,7 +23,8 @@ class CreateOrderRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'address_id.exists' => 'Address not found.',
+            'address_id.exists' => 'Shipping address not found.',
+            'billing_address_id.exists' => 'Billing address not found.',
         ];
     }
 }
