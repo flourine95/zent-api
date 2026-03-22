@@ -11,7 +11,6 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('parent_id')->nullable();
-            $table->foreign('parent_id')->references('id')->on('categories')->nullOnDelete();
 
             $table->string('name');
             $table->string('slug')->unique();
@@ -22,6 +21,10 @@ return new class extends Migration
             $table->softDeletes();
             $table->timestamps();
             $table->index(['parent_id', 'is_visible']);
+        });
+
+        Schema::table('categories', function (Blueprint $table) {
+            $table->foreign('parent_id')->references('id')->on('categories')->nullOnDelete();
         });
     }
 

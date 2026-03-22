@@ -18,6 +18,7 @@ class OrderItemFactory extends Factory
         return [
             'quantity' => $quantity,
             'price' => $price,
+            'subtotal' => $quantity * $price,
             'product_snapshot' => [
                 'name' => fake()->words(3, true),
                 'sku' => fake()->bothify('SKU-###-???'),

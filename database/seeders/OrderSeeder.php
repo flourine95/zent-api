@@ -32,7 +32,7 @@ class OrderSeeder extends Seeder
             'status' => 'completed',
             'payment_status' => 'paid',
             'total_amount' => $variants[0]->price,
-            'note' => 'Giao hàng giờ hành chính',
+            'notes' => 'Deliver during business hours',
         ]);
 
         OrderItem::create([
@@ -41,6 +41,7 @@ class OrderSeeder extends Seeder
             'warehouse_id' => $warehouse->id,
             'quantity' => 1,
             'price' => $variants[0]->price,
+            'subtotal' => $variants[0]->price * 1,
             'product_snapshot' => [
                 'name' => $variants[0]->product->name,
                 'sku' => $variants[0]->sku,
@@ -54,7 +55,7 @@ class OrderSeeder extends Seeder
             'status' => 'processing',
             'payment_status' => 'paid',
             'total_amount' => $variants[1]->price * 2,
-            'note' => null,
+            'notes' => null,
         ]);
 
         OrderItem::create([
@@ -63,6 +64,7 @@ class OrderSeeder extends Seeder
             'warehouse_id' => $warehouse->id,
             'quantity' => 2,
             'price' => $variants[1]->price,
+            'subtotal' => $variants[1]->price * 2,
             'product_snapshot' => [
                 'name' => $variants[1]->product->name,
                 'sku' => $variants[1]->sku,

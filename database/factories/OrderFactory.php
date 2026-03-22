@@ -20,7 +20,7 @@ class OrderFactory extends Factory
             'status' => fake()->randomElement($statuses),
             'payment_status' => fake()->randomElement($paymentStatuses),
             'total_amount' => fake()->randomFloat(2, 100000, 5000000),
-            'note' => fake()->optional()->sentence(),
+            'notes' => fake()->optional()->sentence(),
         ];
     }
 }
